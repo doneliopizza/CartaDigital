@@ -38,7 +38,7 @@ def convertir_valor(valor):
 
 
 # ============================================================
-# EJECUTAR COMANDO GIT
+# EJECUTAR GIT
 # ============================================================
 
 def ejecutar_git(comando):
@@ -120,19 +120,11 @@ def exportar_productos():
 
     print(f"Productos encontrados: {len(productos)}")
 
-    # ========================================================
-    # CREAR JSON
-    # ========================================================
-
     nuevo_json = json.dumps(
         productos,
         ensure_ascii=False,
         indent=4
     )
-
-    # ========================================================
-    # GUARDAR JSON
-    # ========================================================
 
     JSON_FILE.write_text(
         nuevo_json,
@@ -146,7 +138,7 @@ def exportar_productos():
 
 
 # ============================================================
-# PUBLICAR EN GITHUB
+# PUBLICAR GITHUB
 # ============================================================
 
 def publicar_github():
@@ -157,11 +149,30 @@ def publicar_github():
 
 
     # ========================================================
-    # 1. TRAER INFORMACIÓN DE GITHUB
+    # 1. CANCELAR CUALQUIER REBASE PENDIENTE
     # ========================================================
 
     print()
-    print("Sincronizando con GitHub...")
+    print("Verificando estado de Git...")
+
+    subprocess.run(
+        [
+            "git",
+            "rebase",
+            "--abort"
+        ],
+        cwd=CARTA_DIR,
+        capture_output=True,
+        text=True
+    )
+
+
+    # ========================================================
+    # 2. TRAER INFORMACIÓN DE GITHUB
+    # ========================================================
+
+    print()
+    print("Sincronizando referencias...")
 
     if not ejecutar_git([
         "git",
@@ -169,14 +180,17 @@ def publicar_github():
         "origin"
     ]):
 
-        print("ERROR haciendo git fetch.")
+        print("ERROR en git fetch.")
 
         return False
 
 
     # ========================================================
-    # 2. HACER ADD
+    # 3. HACER QUE LOCAL SEA LA VERSIÓN DEFINITIVA
     # ========================================================
+
+    print()
+    print("Preparando publicación local...")
 
     if not ejecutar_git([
         "git",
@@ -190,15 +204,18 @@ def publicar_github():
 
 
     # ========================================================
-    # 3. COMMIT
+    # 4. CREAR COMMIT
     # ========================================================
 
-    resultado_commit = subprocess.run(
+    print()
+    print("Creando commit...")
+
+    resultado = subprocess.run(
         [
             "git",
             "commit",
             "-m",
-            "Actualizar productos de la carta"
+            "Actualizar carta digital"
         ],
         cwd=CARTA_DIR,
         capture_output=True,
@@ -207,80 +224,24 @@ def publicar_github():
         errors="replace"
     )
 
+    if resultado.stdout:
+        print(resultado.stdout)
 
-    if resultado_commit.stdout:
-        print(resultado_commit.stdout)
-
-    if resultado_commit.stderr:
-        print(resultado_commit.stderr)
-
-
-    # ========================================================
-    # 4. SINCRONIZAR CAMBIOS REMOTOS
-    # ========================================================
-
-    print()
-    print("Integrando cambios de GitHub...")
-
-    resultado_pull = subprocess.run(
-        [
-            "git",
-            "pull",
-            "--rebase",
-            "origin",
-            "main"
-        ],
-        cwd=CARTA_DIR,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-        errors="replace"
-    )
-
-
-    if resultado_pull.stdout:
-        print(resultado_pull.stdout)
-
-    if resultado_pull.stderr:
-        print(resultado_pull.stderr)
+    if resultado.stderr:
+        print(resultado.stderr)
 
 
     # ========================================================
-    # SI EL REBASE FALLÓ
-    # ========================================================
-
-    if resultado_pull.returncode != 0:
-
-        print()
-        print("ERROR sincronizando con GitHub.")
-
-        print()
-        print("Abortando rebase...")
-
-        subprocess.run(
-            [
-                "git",
-                "rebase",
-                "--abort"
-            ],
-            cwd=CARTA_DIR,
-            capture_output=True,
-            text=True
-        )
-
-        return False
-
-
-    # ========================================================
-    # 5. PUSH
+    # 5. FORZAR PUSH
     # ========================================================
 
     print()
-    print("Enviando cambios a GitHub...")
+    print("Publicando en GitHub...")
 
     if not ejecutar_git([
         "git",
         "push",
+        "--force",
         "origin",
         "main"
     ]):
