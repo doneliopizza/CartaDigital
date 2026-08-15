@@ -375,3 +375,142 @@ main {
 
     color: #777;
 }
+
+/* ============================================================
+   FORMULARIO - DISEÑO VERTICAL
+   ============================================================ */
+
+#formulario-pedido {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.datos-pedido {
+    width: 100%;
+    background: #f8f8f8;
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.datos-pedido h3 {
+    display: block;
+    width: 100%;
+    margin: 20px 0 12px 0;
+}
+
+.datos-pedido h3:first-child {
+    margin-top: 0;
+}
+
+.datos-pedido label {
+    display: block !important;
+    width: 100% !important;
+    margin: 12px 0 5px 0 !important;
+}
+
+.datos-pedido input[type="text"],
+.datos-pedido input[type="tel"],
+.datos-pedido input[type="number"] {
+    display: block !important;
+    width: 100% !important;
+    height: 44px;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: white;
+    font-size: 16px;
+}
+
+
+/* ============================================================
+   MEDIOS DE PAGO
+   ============================================================ */
+
+.medios-pago {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.medio-opcion {
+    display: flex !important;
+    align-items: center;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 12px;
+    gap: 10px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.medio-opcion input[type="radio"] {
+    width: 18px !important;
+    height: 18px;
+    margin: 0;
+}
+
+
+/* ============================================================
+   DETALLE DEL PAGO
+   ============================================================ */
+
+#detalle-pago {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.detalle-efectivo,
+.detalle-transferencia,
+.detalle-mercadopago {
+    width: 100%;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+
+/* ============================================================
+   ALIAS
+   ============================================================ */
+
+.alias-transferencia {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.alias-transferencia span {
+    flex: 1;
+    background: #f1f1f1;
+    padding: 10px;
+    border-radius: 7px;
+    font-weight: bold;
+}
+
+.alias-transferencia button {
+    border: none;
+    background: #25d366;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 7px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
+/* ============================================================
+   LOGO
+   ============================================================ */
+
+.logo-don-elio {
+    display: block;
+    width: 130px;
+    max-width: 60%;
+    height: auto;
+    margin: 0 auto 12px auto;
+}
