@@ -2,31 +2,46 @@
 <html lang="es">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  #  <title>Don Elio - Carta Digital</title>
-    <header class="encabezado">
-    <img
-        id="logo-don-elio"
-        src="https://raw.githubusercontent.com/doneliopizza/CartaDigital/main/fotos/logo.png"
-        alt="Don Elio Pizzas & Pastas"
-        class="logo-don-elio"
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
     >
-    </header>
 
-    <link rel="stylesheet" href="style.css">
+    <title>Don Elio - Carta Digital</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
+
+    <!-- =====================================================
+         ENCABEZADO
+         ===================================================== -->
+
     <header class="encabezado">
 
-        <h1>DON ELIO</h1>
-        <p>Pizzas & Empanadas</p>
+        <img
+            id="logo-don-elio"
+            src="https://raw.githubusercontent.com/doneliopizza/CartaDigital/main/fotos/logo.png?v=1"
+            alt="Don Elio Pizzas & Pastas"
+            class="logo-don-elio"
+        >
 
     </header>
 
+
+    <!-- =====================================================
+         CARTA
+         ===================================================== -->
 
     <main>
 
@@ -39,7 +54,9 @@
     </main>
 
 
-    <!-- Carrito -->
+    <!-- =====================================================
+         BARRA DEL CARRITO
+         ===================================================== -->
 
     <div id="carrito-barra">
 
@@ -53,32 +70,48 @@
 
         </div>
 
+
         <strong id="total-carrito">
             $0
         </strong>
 
-        <button onclick="mostrarCarrito()">
+
+        <button
+            onclick="mostrarCarrito()"
+        >
             Ver pedido
         </button>
 
     </div>
 
 
-    <!-- Modal carrito -->
+    <!-- =====================================================
+         MODAL DEL CARRITO
+         ===================================================== -->
 
-    <div id="modal-carrito" class="modal">
+    <div
+        id="modal-carrito"
+        class="modal"
+    >
 
         <div class="modal-contenido">
 
+
             <button
                 class="cerrar"
-                onclick="cerrarCarrito()">
+                onclick="cerrarCarrito()"
+            >
                 ✕
             </button>
 
-            <h2>Mi pedido</h2>
+
+            <h2>
+                Mi pedido
+            </h2>
+
 
             <div id="lista-carrito"></div>
+
 
             <div class="total-final">
 
@@ -90,20 +123,26 @@
 
             </div>
 
+
             <button
                 class="btn-whatsapp"
-                onclick="enviarWhatsApp()">
-
+                onclick="enviarWhatsApp()"
+            >
                 🟢 Enviar pedido por WhatsApp
-
             </button>
+
 
         </div>
 
     </div>
 
 
-    <script src="app.js?v=3"></script>
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script src="app.js?v=4"></script>
+
 
 </body>
 
