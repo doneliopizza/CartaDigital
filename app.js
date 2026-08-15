@@ -17,7 +17,7 @@ const URL_FOTOS =
     URL_GITHUB + "/fotos/";
 
 const URL_LOGO =
-    URL_FOTOS + "logo.png";
+    "https://raw.githubusercontent.com/doneliopizza/CartaDigital/refs/heads/main/fotos/logo.png";
 
 const TELEFONO_WHATSAPP =
     "5491170667389";
