@@ -20,7 +20,7 @@ async function cargarProductos() {
     try {
 
         const respuesta = await fetch(
-            "https://raw.githubusercontent.com/doneliopizza/CartaDigital/main/productos.json")
+            "https://raw.githubusercontent.com/doneliopizza/CartaDigital/main/productos.json"
         );
 
         if (!respuesta.ok) {
