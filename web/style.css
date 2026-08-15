@@ -799,3 +799,82 @@ main {
     }
 
 }
+
+/* ============================================================
+   FORMULARIO - CAMPOS UNO DEBAJO DEL OTRO
+============================================================ */
+
+.datos-pedido {
+    width: 100%;
+    display: block;
+}
+
+
+/* Cada etiqueta ocupa su propia línea */
+
+.datos-pedido label {
+    display: block !important;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+
+/* Cada input ocupa una línea completa */
+
+.datos-pedido input[type="text"],
+.datos-pedido input[type="tel"],
+.datos-pedido input[type="number"] {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 0 12px 0 !important;
+}
+
+
+/* ============================================================
+   MEDIOS DE PAGO
+============================================================ */
+
+.datos-pedido .medios-pago {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100%;
+    gap: 8px;
+}
+
+
+.datos-pedido .medio-opcion {
+    display: flex !important;
+    width: 100%;
+    align-items: center;
+    gap: 8px;
+}
+
+
+/* El radio NO debe ocupar todo el ancho */
+
+.datos-pedido .medio-opcion input[type="radio"] {
+    display: inline-block !important;
+    width: auto !important;
+    margin: 0 !important;
+    flex-shrink: 0;
+}
+
+
+/* ============================================================
+   TÍTULOS DE SECCIÓN
+============================================================ */
+
+.datos-pedido h3 {
+    display: block;
+    width: 100%;
+    margin-top: 22px;
+    margin-bottom: 12px;
+}
+
+
+/* Primer título */
+
+.datos-pedido h3:first-child {
+    margin-top: 0;
+}
