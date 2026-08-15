@@ -375,3 +375,20 @@ main {
 
     color: #777;
 }
+.encabezado {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.logo-don-elio {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.encabezado h1 {
+    margin: 0;
+}
