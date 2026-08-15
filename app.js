@@ -7,6 +7,18 @@ let carrito = {};
 // CONFIGURACIÓN
 // ============================================================
 
+const URL_GITHUB =
+    "https://raw.githubusercontent.com/doneliopizza/CartaDigital/main";
+
+const URL_PRODUCTOS =
+    URL_GITHUB + "/productos.json";
+
+const URL_FOTOS =
+    URL_GITHUB + "/fotos/";
+
+const URL_LOGO =
+    URL_FOTOS + "logo.png";
+
 const IMAGEN_PLACEHOLDER =
     "https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=500&q=80";
 
@@ -26,11 +38,12 @@ async function cargarProductos() {
     try {
 
         const respuesta = await fetch(
-            "https://raw.githubusercontent.com/doneliopizza/CartaDigital/main/productos.json?v=" + Date.now(),
+            URL_PRODUCTOS + "?v=" + Date.now(),
             {
                 cache: "no-store"
             }
         );
+
 
         if (!respuesta.ok) {
 
@@ -40,9 +53,12 @@ async function cargarProductos() {
 
         }
 
+
         productos = await respuesta.json();
 
+
         mostrarCarta();
+
 
         document.getElementById(
             "cargando"
@@ -52,6 +68,7 @@ async function cargarProductos() {
     } catch (error) {
 
         console.error(error);
+
 
         document.getElementById(
             "cargando"
@@ -64,10 +81,122 @@ async function cargarProductos() {
 
 
 // ============================================================
+// CARGAR LOGO
+// ============================================================
+
+function cargarLogo() {
+
+    const encabezado =
+        document.querySelector(".encabezado");
+
+
+    if (!encabezado) {
+
+        return;
+
+    }
+
+
+    // Evitar duplicarlo
+
+    if (
+        document.getElementById(
+            "logo-don-elio"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const logo =
+        document.createElement("img");
+
+
+    logo.id =
+        "logo-don-elio";
+
+
+    logo.src =
+        URL_LOGO + "?v=" + Date.now();
+
+
+    logo.alt =
+        "Don Elio Pizzas & Pastas";
+
+
+    logo.className =
+        "logo-don-elio";
+
+
+    // Si el logo no existe,
+    // simplemente lo ocultamos
+
+    logo.onerror = function () {
+
+        this.style.display = "none";
+
+    };
+
+
+    // Insertar antes del título
+
+    const titulo =
+        encabezado.querySelector("h1");
+
+
+    if (titulo) {
+
+        encabezado.insertBefore(
+            logo,
+            titulo
+        );
+
+    } else {
+
+        encabezado.prepend(
+            logo
+        );
+
+    }
+
+}
+
+
+// ============================================================
 // OBTENER IMAGEN DEL PRODUCTO
 // ============================================================
 
 function obtenerImagen(producto) {
+
+    /*
+        El JSON debe tener:
+
+        "url": "producto.jpg"
+
+        Entonces se genera:
+
+        /fotos/producto.jpg
+
+        automáticamente.
+    */
+
+
+    if (
+        producto.url &&
+        producto.url.trim() !== ""
+    ) {
+
+        return (
+            URL_FOTOS +
+            encodeURIComponent(
+                producto.url.trim()
+            )
+        );
+
+    }
+
 
     return IMAGEN_PLACEHOLDER;
 
@@ -81,9 +210,13 @@ function obtenerImagen(producto) {
 function mostrarCarta() {
 
     const carta =
-        document.getElementById("carta");
+        document.getElementById(
+            "carta"
+        );
+
 
     carta.innerHTML = "";
+
 
     const categorias = {};
 
@@ -92,26 +225,37 @@ function mostrarCarta() {
     // AGRUPAR PRODUCTOS POR RUBRO
     // ========================================================
 
-    productos.forEach(producto => {
+    productos.forEach(
+        producto => {
 
-        if (!categorias[producto.rubro]) {
+            if (
+                !categorias[
+                    producto.rubro
+                ]
+            ) {
 
-            categorias[producto.rubro] = [];
+                categorias[
+                    producto.rubro
+                ] = [];
+
+            }
+
+
+            categorias[
+                producto.rubro
+            ].push(producto);
 
         }
-
-        categorias[producto.rubro].push(
-            producto
-        );
-
-    });
+    );
 
 
     // ========================================================
     // CREAR CATEGORÍAS
     // ========================================================
 
-    Object.keys(categorias).forEach(
+    Object.keys(
+        categorias
+    ).forEach(
         rubro => {
 
             const seccion =
@@ -119,19 +263,24 @@ function mostrarCarta() {
                     "section"
                 );
 
+
             seccion.className =
                 "categoria";
 
 
-            // Título
+            // =================================================
+            // TÍTULO
+            // =================================================
 
             const titulo =
                 document.createElement(
                     "h2"
                 );
 
+
             titulo.innerText =
                 rubro;
+
 
             seccion.appendChild(
                 titulo
@@ -142,13 +291,16 @@ function mostrarCarta() {
             // PRODUCTOS
             // =================================================
 
-            categorias[rubro].forEach(
+            categorias[
+                rubro
+            ].forEach(
                 producto => {
 
                     const div =
                         document.createElement(
                             "div"
                         );
+
 
                     div.className =
                         "producto";
@@ -167,6 +319,8 @@ function mostrarCarta() {
                             <img
                                 src="${imagen}"
                                 alt="${producto.nombre}"
+                                loading="lazy"
+                                onerror="this.onerror=null;this.src='${IMAGEN_PLACEHOLDER}'"
                             >
 
                         </div>
@@ -233,7 +387,9 @@ function agregarProducto(id) {
 
     }
 
+
     carrito[id]++;
+
 
     actualizarCarrito();
 
@@ -252,6 +408,7 @@ function quitarProducto(id) {
 
     }
 
+
     carrito[id]--;
 
 
@@ -261,20 +418,24 @@ function quitarProducto(id) {
 
     }
 
+
     actualizarCarrito();
 
 }
 
 
 // ============================================================
-// CALCULAR TOTAL
+// OBTENER TOTAL
 // ============================================================
 
 function obtenerTotalCarrito() {
 
     let total = 0;
 
-    Object.keys(carrito).forEach(
+
+    Object.keys(
+        carrito
+    ).forEach(
         id => {
 
             const producto =
@@ -282,18 +443,23 @@ function obtenerTotalCarrito() {
                     p => p.id == id
                 );
 
+
             if (!producto) {
 
                 return;
 
             }
 
+
             total +=
-                producto.precio *
+                Number(
+                    producto.precio
+                ) *
                 carrito[id];
 
         }
     );
+
 
     return total;
 
@@ -301,20 +467,25 @@ function obtenerTotalCarrito() {
 
 
 // ============================================================
-// CANTIDAD TOTAL
+// OBTENER CANTIDAD
 // ============================================================
 
 function obtenerCantidadCarrito() {
 
     let cantidad = 0;
 
-    Object.keys(carrito).forEach(
+
+    Object.keys(
+        carrito
+    ).forEach(
         id => {
 
-            cantidad += carrito[id];
+            cantidad +=
+                carrito[id];
 
         }
     );
+
 
     return cantidad;
 
@@ -330,11 +501,10 @@ function actualizarCarrito() {
     const cantidad =
         obtenerCantidadCarrito();
 
+
     const total =
         obtenerTotalCarrito();
 
-
-    // Cantidad
 
     document.getElementById(
         "cantidad-carrito"
@@ -347,16 +517,12 @@ function actualizarCarrito() {
             : `${cantidad} productos`;
 
 
-    // Total
-
     document.getElementById(
         "total-carrito"
     ).innerText =
 
         `$${formatearPrecio(total)}`;
 
-
-    // Modal
 
     mostrarListaCarrito();
 
@@ -375,10 +541,19 @@ function mostrarListaCarrito() {
         );
 
 
+    if (!lista) {
+
+        return;
+
+    }
+
+
     lista.innerHTML = "";
 
 
-    Object.keys(carrito).forEach(
+    Object.keys(
+        carrito
+    ).forEach(
         id => {
 
             const producto =
@@ -399,7 +574,9 @@ function mostrarListaCarrito() {
 
 
             const subtotal =
-                producto.precio *
+                Number(
+                    producto.precio
+                ) *
                 cantidad;
 
 
@@ -465,24 +642,23 @@ function mostrarListaCarrito() {
     );
 
 
-    // ========================================================
-    // TOTAL
-    // ========================================================
-
     const total =
         obtenerTotalCarrito();
 
 
-    document.getElementById(
-        "total-modal"
-    ).innerText =
+    const totalModal =
+        document.getElementById(
+            "total-modal"
+        );
 
-        `$${formatearPrecio(total)}`;
 
+    if (totalModal) {
 
-    // ========================================================
-    // FORMULARIO DEL CLIENTE
-    // ========================================================
+        totalModal.innerText =
+            `$${formatearPrecio(total)}`;
+
+    }
+
 
     crearFormularioPedido();
 
@@ -490,7 +666,7 @@ function mostrarListaCarrito() {
 
 
 // ============================================================
-// CREAR FORMULARIO DEL PEDIDO
+// CREAR FORMULARIO
 // ============================================================
 
 function crearFormularioPedido() {
@@ -501,14 +677,13 @@ function crearFormularioPedido() {
         );
 
 
-    // Si todavía no existe, lo creamos
-
     if (!formulario) {
 
         formulario =
             document.createElement(
                 "div"
             );
+
 
         formulario.id =
             "formulario-pedido";
@@ -536,7 +711,7 @@ function crearFormularioPedido() {
         <div class="datos-pedido">
 
             <h3>
-                Datos del pedido
+                👤 Datos del cliente
             </h3>
 
 
@@ -553,7 +728,7 @@ function crearFormularioPedido() {
 
 
             <label>
-                Teléfono
+                Teléfono de contacto
             </label>
 
             <input
@@ -565,7 +740,7 @@ function crearFormularioPedido() {
 
 
             <h3>
-                Dirección de entrega
+                📍 Dirección de entrega
             </h3>
 
 
@@ -606,7 +781,7 @@ function crearFormularioPedido() {
 
 
             <h3>
-                Forma de pago
+                💳 Medio de pago
             </h3>
 
 
@@ -621,7 +796,7 @@ function crearFormularioPedido() {
                         onchange="cambiarMedioPago()"
                     >
 
-                    Efectivo
+                    💵 Efectivo
 
                 </label>
 
@@ -635,7 +810,7 @@ function crearFormularioPedido() {
                         onchange="cambiarMedioPago()"
                     >
 
-                    Transferencia
+                    🏦 Transferencia
 
                 </label>
 
@@ -662,13 +837,6 @@ function crearFormularioPedido() {
 
     `;
 
-
-    // ========================================================
-    // SI YA HABÍA DATOS, RECUPERARLOS
-    // ========================================================
-
-    configurarCalculoEfectivo();
-
 }
 
 
@@ -690,6 +858,13 @@ function cambiarMedioPago() {
         );
 
 
+    if (!detalle) {
+
+        return;
+
+    }
+
+
     if (!medio) {
 
         detalle.innerHTML = "";
@@ -703,14 +878,16 @@ function cambiarMedioPago() {
     // EFECTIVO
     // ========================================================
 
-    if (medio.value === "efectivo") {
+    if (
+        medio.value === "efectivo"
+    ) {
 
         detalle.innerHTML = `
 
             <div class="detalle-efectivo">
 
                 <label>
-                    ¿Con cuánto vas a pagar?
+                    💵 ¿Con cuánto vas a pagar?
                 </label>
 
                 <input
@@ -737,25 +914,29 @@ function cambiarMedioPago() {
     // TRANSFERENCIA
     // ========================================================
 
-    if (medio.value === "transferencia") {
+    if (
+        medio.value === "transferencia"
+    ) {
 
         detalle.innerHTML = `
 
             <div class="detalle-transferencia">
 
                 <strong>
-                    Transferencia bancaria
+                    🏦 Transferencia bancaria
                 </strong>
 
                 <p>
-                    Alias:
+                    Realizá la transferencia al siguiente alias:
                 </p>
+
 
                 <div class="alias-transferencia">
 
-                    <span id="alias-transferencia">
+                    <span>
                         ${ALIAS_TRANSFERENCIA}
                     </span>
+
 
                     <button
                         type="button"
@@ -767,9 +948,10 @@ function cambiarMedioPago() {
 
                 </div>
 
+
                 <p>
-                    Realizá la transferencia y luego
-                    enviá el comprobante por WhatsApp.
+                    Después enviá el comprobante
+                    junto con el pedido por WhatsApp.
                 </p>
 
             </div>
@@ -785,7 +967,9 @@ function cambiarMedioPago() {
     // MERCADO PAGO
     // ========================================================
 
-    if (medio.value === "mercadopago") {
+    if (
+        medio.value === "mercadopago"
+    ) {
 
         detalle.innerHTML = `
 
@@ -796,42 +980,18 @@ function cambiarMedioPago() {
                 </strong>
 
                 <p>
-                    Podés realizar el pago mediante
-                    Mercado Pago.
+                    Seleccioná esta opción y enviá
+                    el pedido por WhatsApp.
                 </p>
 
                 <p>
-                    Al enviar el pedido por WhatsApp
-                    te indicaremos cómo realizar el pago.
+                    Te indicaremos cómo realizar
+                    el pago.
                 </p>
 
             </div>
 
         `;
-
-    }
-
-}
-
-
-// ============================================================
-// CONFIGURAR CÁLCULO DE EFECTIVO
-// ============================================================
-
-function configurarCalculoEfectivo() {
-
-    const medio =
-        document.querySelector(
-            'input[name="medio-pago"]:checked'
-        );
-
-
-    if (
-        medio &&
-        medio.value === "efectivo"
-    ) {
-
-        cambiarMedioPago();
 
     }
 
@@ -856,7 +1016,10 @@ function calcularVuelto() {
         );
 
 
-    if (!input || !resultado) {
+    if (
+        !input ||
+        !resultado
+    ) {
 
         return;
 
@@ -890,9 +1053,13 @@ function calcularVuelto() {
 
         resultado.innerHTML = `
 
-            <div style="color:#c0392b; margin-top:8px;">
+            <div style="
+                color:#c0392b;
+                margin-top:8px;
+            ">
 
                 Faltan
+
                 <strong>
                     $${formatearPrecio(
                         Math.abs(vuelto)
@@ -910,7 +1077,10 @@ function calcularVuelto() {
 
     resultado.innerHTML = `
 
-        <div style="margin-top:8px;">
+        <div style="
+            color:#27ae60;
+            margin-top:8px;
+        ">
 
             Vuelto:
 
@@ -938,13 +1108,17 @@ async function copiarAlias() {
         );
 
 
-        const boton =
-            document.querySelector(
+        const botones =
+            document.querySelectorAll(
                 ".alias-transferencia button"
             );
 
 
-        if (boton) {
+        if (botones.length > 0) {
+
+            const boton =
+                botones[0];
+
 
             const textoOriginal =
                 boton.innerText;
@@ -954,12 +1128,15 @@ async function copiarAlias() {
                 "¡Copiado!";
 
 
-            setTimeout(() => {
+            setTimeout(
+                () => {
 
-                boton.innerText =
-                    textoOriginal;
+                    boton.innerText =
+                        textoOriginal;
 
-            }, 2000);
+                },
+                2000
+            );
 
         }
 
@@ -967,7 +1144,8 @@ async function copiarAlias() {
     } catch (error) {
 
         alert(
-            "No se pudo copiar automáticamente. Alias: " +
+            "No se pudo copiar automáticamente.\n\n" +
+            "Alias: " +
             ALIAS_TRANSFERENCIA
         );
 
@@ -1034,7 +1212,7 @@ function formatearPrecio(numero) {
 
 
 // ============================================================
-// OBTENER DATOS DEL CLIENTE
+// OBTENER DATOS CLIENTE
 // ============================================================
 
 function obtenerDatosCliente() {
@@ -1078,10 +1256,15 @@ function obtenerDatosCliente() {
     return {
 
         nombre,
+
         telefono,
+
         calle,
+
         altura,
+
         localidad,
+
         medioPago:
             medioPago
                 ? medioPago.value
@@ -1169,7 +1352,7 @@ function validarPedido() {
 
 
     // ========================================================
-    // VALIDAR EFECTIVO
+    // EFECTIVO
     // ========================================================
 
     if (
@@ -1218,7 +1401,7 @@ function validarPedido() {
 
 
 // ============================================================
-// GENERAR PEDIDO PARA WHATSAPP
+// GENERAR MENSAJE WHATSAPP
 // ============================================================
 
 function generarMensajeWhatsApp() {
@@ -1240,25 +1423,23 @@ function generarMensajeWhatsApp() {
 
 
     // ========================================================
-    // DATOS DEL CLIENTE
+    // CLIENTE
     // ========================================================
 
     mensaje +=
         "👤 *CLIENTE*\n";
+
 
     mensaje +=
         "Nombre: " +
         datos.nombre +
         "\n";
 
+
     mensaje +=
         "Teléfono: " +
         datos.telefono +
-        "\n";
-
-
-    mensaje +=
-        "\n";
+        "\n\n";
 
 
     // ========================================================
@@ -1266,21 +1447,25 @@ function generarMensajeWhatsApp() {
     // ========================================================
 
     mensaje +=
-        "📍 *DIRECCIÓN*\n";
+        "📍 *DIRECCIÓN DE ENTREGA*\n";
+
 
     mensaje +=
+        "Calle: " +
         datos.calle +
-        " " +
+        "\n";
+
+
+    mensaje +=
+        "Altura: " +
         datos.altura +
         "\n";
 
+
     mensaje +=
+        "Localidad: " +
         datos.localidad +
-        "\n";
-
-
-    mensaje +=
-        "\n";
+        "\n\n";
 
 
     // ========================================================
@@ -1291,7 +1476,9 @@ function generarMensajeWhatsApp() {
         "🛒 *PEDIDO*\n";
 
 
-    Object.keys(carrito).forEach(
+    Object.keys(
+        carrito
+    ).forEach(
         id => {
 
             const producto =
@@ -1312,14 +1499,18 @@ function generarMensajeWhatsApp() {
 
 
             const subtotal =
-                producto.precio *
+                Number(
+                    producto.precio
+                ) *
                 cantidad;
 
 
             mensaje +=
                 `${cantidad} x ` +
                 `${producto.nombre} - ` +
-                `$${formatearPrecio(subtotal)}\n`;
+                `$${formatearPrecio(
+                    subtotal
+                )}\n`;
 
         }
     );
@@ -1391,9 +1582,11 @@ function generarMensajeWhatsApp() {
         mensaje +=
             "Transferencia\n";
 
+
         mensaje +=
             "Alias: " +
             ALIAS_TRANSFERENCIA;
+
 
     }
 
@@ -1404,6 +1597,7 @@ function generarMensajeWhatsApp() {
 
         mensaje +=
             "Mercado Pago\n";
+
 
         mensaje +=
             "Coordinar pago por WhatsApp.";
@@ -1431,7 +1625,7 @@ function generarMensajeWhatsApp() {
 function enviarWhatsApp() {
 
     // ========================================================
-    // VALIDAR CARRITO
+    // CARRITO
     // ========================================================
 
     if (
@@ -1448,7 +1642,7 @@ function enviarWhatsApp() {
 
 
     // ========================================================
-    // VALIDAR DATOS
+    // DATOS
     // ========================================================
 
     if (!validarPedido()) {
@@ -1459,7 +1653,7 @@ function enviarWhatsApp() {
 
 
     // ========================================================
-    // GENERAR MENSAJE
+    // MENSAJE
     // ========================================================
 
     const mensaje =
@@ -1467,7 +1661,7 @@ function enviarWhatsApp() {
 
 
     // ========================================================
-    // CREAR URL
+    // URL
     // ========================================================
 
     const url =
@@ -1492,7 +1686,9 @@ function enviarWhatsApp() {
 
 
 // ============================================================
-// INICIAR CARTA
+// INICIAR
 // ============================================================
+
+cargarLogo();
 
 cargarProductos();
