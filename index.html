@@ -12,9 +12,15 @@
 
     <title>Don Elio - Carta Digital</title>
 
+
+    <!-- =====================================================
+         CSS
+         Cambiar ?v=5 cuando se modifique el CSS
+    ====================================================== -->
+
     <link
         rel="stylesheet"
-        href="style.css"
+        href="style.css?v=5"
     >
 
 </head>
@@ -24,14 +30,14 @@
 
 
     <!-- =====================================================
-         LOGO
+         ENCABEZADO / LOGO
     ====================================================== -->
 
     <header class="encabezado">
 
         <img
             id="logo-don-elio"
-            src="https://raw.githubusercontent.com/doneliopizza/CartaDigital/main/fotos/logo.png?v=1"
+            src="https://raw.githubusercontent.com/doneliopizza/CartaDigital/main/fotos/logo.png?v=5"
             alt="Don Elio Pizzas & Pastas"
             class="logo-don-elio"
         >
@@ -41,7 +47,7 @@
 
 
     <!-- =====================================================
-         CARTA
+         CARTA DIGITAL
     ====================================================== -->
 
     <main>
@@ -57,7 +63,7 @@
 
 
     <!-- =====================================================
-         BARRA DEL CARRITO
+         BARRA FIJA DEL CARRITO
     ====================================================== -->
 
     <div id="carrito-barra">
@@ -78,7 +84,10 @@
         </strong>
 
 
-        <button onclick="mostrarCarrito()">
+        <button
+            type="button"
+            onclick="mostrarCarrito()"
+        >
             Ver pedido
         </button>
 
@@ -87,7 +96,7 @@
 
 
     <!-- =====================================================
-         MODAL CARRITO
+         MODAL DEL CARRITO
     ====================================================== -->
 
     <div
@@ -98,21 +107,31 @@
         <div class="modal-contenido">
 
 
+            <!-- BOTÓN CERRAR -->
+
             <button
+                type="button"
                 class="cerrar"
                 onclick="cerrarCarrito()"
+                aria-label="Cerrar"
             >
                 ✕
             </button>
 
+
+            <!-- TÍTULO -->
 
             <h2>
                 Mi pedido
             </h2>
 
 
+            <!-- PRODUCTOS DEL CARRITO -->
+
             <div id="lista-carrito"></div>
 
+
+            <!-- TOTAL -->
 
             <div class="total-final">
 
@@ -125,7 +144,10 @@
             </div>
 
 
+            <!-- WHATSAPP -->
+
             <button
+                type="button"
                 class="btn-whatsapp"
                 onclick="enviarWhatsApp()"
             >
@@ -143,9 +165,13 @@
 
     <!-- =====================================================
          JAVASCRIPT
+         Cambiar ?v=5 cuando se modifique app.js
     ====================================================== -->
 
-    <script src="app.js?v=4"></script>
+    <script
+        src="app.js?v=5"
+        defer
+    ></script>
 
 
 </body>
