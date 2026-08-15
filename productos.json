@@ -10,7 +10,7 @@
     {
         "id": 23,
         "nombre": "4 quesos",
-        "precio": 26000.0,
+        "precio": 25000.0,
         "rubro_id": 1,
         "rubro": "Pizza",
         "orden": 0
