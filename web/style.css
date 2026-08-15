@@ -1,7 +1,3 @@
-/* ============================================================
-   RESET
-============================================================ */
-
 * {
     box-sizing: border-box;
     margin: 0;
@@ -9,57 +5,56 @@
 }
 
 
-/* ============================================================
-   BODY
-============================================================ */
-
 body {
+
     font-family: Arial, Helvetica, sans-serif;
+
     background: #f5f5f5;
+
     color: #222;
+
     padding-bottom: 90px;
 }
 
 
-/* ============================================================
-   ENCABEZADO
-============================================================ */
+/* ENCABEZADO */
 
 .encabezado {
-    width: 100%;
+
     background: #111;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    color: white;
 
-    padding: 10px;
+    text-align: center;
+
+    padding: 25px 15px;
+
     margin-bottom: 20px;
 }
 
 
-/* ============================================================
-   LOGO
-============================================================ */
+.encabezado h1 {
 
-.logo-don-elio {
-    width: 300px;
-    height: 300px;
+    font-size: 32px;
 
-    max-width: 80vw;
-    max-height: 30vh;
-
-    object-fit: contain;
-    display: block;
+    letter-spacing: 2px;
 }
 
 
-/* ============================================================
-   CARTA
-============================================================ */
+.encabezado p {
+
+    margin-top: 5px;
+
+    font-size: 16px;
+
+    opacity: 0.8;
+}
+
+
+/* CARTA */
 
 main {
-    width: 100%;
+
     max-width: 900px;
 
     margin: auto;
@@ -68,16 +63,16 @@ main {
 }
 
 
-/* ============================================================
-   CATEGORÍA
-============================================================ */
+/* CATEGORIA */
 
 .categoria {
+
     margin-bottom: 30px;
 }
 
 
 .categoria h2 {
+
     font-size: 24px;
 
     margin-bottom: 15px;
@@ -88,11 +83,10 @@ main {
 }
 
 
-/* ============================================================
-   PRODUCTO
-============================================================ */
+/* PRODUCTO */
 
 .producto {
+
     background: white;
 
     border-radius: 12px;
@@ -107,62 +101,28 @@ main {
 
     align-items: center;
 
-    gap: 10px;
-
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
-
-/* ============================================================
-   IMAGEN PRODUCTO
-============================================================ */
-
-.producto-imagen {
-    width: 90px;
-    height: 90px;
-
-    flex-shrink: 0;
-
-    margin-right: 5px;
-
-    overflow: hidden;
-
-    border-radius: 10px;
-}
-
-
-.producto-imagen img {
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-
-    display: block;
-}
-
-
-/* ============================================================
-   INFORMACIÓN PRODUCTO
-============================================================ */
 
 .producto-info {
+
     flex: 1;
-    min-width: 0;
 }
 
 
 .producto-nombre {
+
     font-size: 18px;
 
     font-weight: bold;
 
     margin-bottom: 6px;
-
-    overflow-wrap: break-word;
 }
 
 
 .producto-precio {
+
     font-size: 18px;
 
     font-weight: bold;
@@ -170,12 +130,37 @@ main {
     color: #d35400;
 }
 
+.producto-imagen {
 
-/* ============================================================
-   BOTÓN +
-============================================================ */
+    width: 90px;
+    height: 90px;
+
+    flex-shrink: 0;
+
+    margin-right: 15px;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+}
+
+
+.producto-imagen img {
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+}
+
+/* BOTON + */
 
 .btn-agregar {
+
     background: #25d366;
 
     color: white;
@@ -185,32 +170,31 @@ main {
     border-radius: 50%;
 
     width: 45px;
-    height: 45px;
 
-    min-width: 45px;
+    height: 45px;
 
     font-size: 25px;
 
     cursor: pointer;
-
-    flex-shrink: 0;
 }
 
 
 .btn-agregar:active {
+
     transform: scale(0.9);
 }
 
 
-/* ============================================================
-   CARRITO FIJO
-============================================================ */
+/* CARRITO FIJO */
 
 #carrito-barra {
+
     position: fixed;
 
     bottom: 0;
+
     left: 0;
+
     right: 0;
 
     background: #111;
@@ -232,6 +216,7 @@ main {
 
 
 #carrito-barra button {
+
     background: #25d366;
 
     border: none;
@@ -248,39 +233,37 @@ main {
 }
 
 
-/* ============================================================
-   MODAL
-============================================================ */
+/* MODAL */
 
 .modal {
+
     display: none;
 
     position: fixed;
 
     inset: 0;
 
-    background: rgba(0, 0, 0, 0.65);
+    background: rgba(0,0,0,0.65);
 
     z-index: 2000;
 
-    padding: 15px;
+    padding: 20px;
 }
 
 
 .modal-contenido {
-    background: white;
 
-    width: 100%;
+    background: white;
 
     max-width: 500px;
 
-    margin: 20px auto;
+    margin: 30px auto;
 
     padding: 20px;
 
     border-radius: 15px;
 
-    max-height: 92vh;
+    max-height: 90vh;
 
     overflow-y: auto;
 
@@ -288,14 +271,12 @@ main {
 }
 
 
-/* ============================================================
-   CERRAR MODAL
-============================================================ */
-
 .cerrar {
+
     position: absolute;
 
     right: 15px;
+
     top: 15px;
 
     border: none;
@@ -308,18 +289,15 @@ main {
 }
 
 
-/* ============================================================
-   ITEM CARRITO
-============================================================ */
+/* ITEM CARRITO */
 
 .item-carrito {
+
     display: flex;
 
     justify-content: space-between;
 
     align-items: center;
-
-    gap: 10px;
 
     padding: 12px 0;
 
@@ -328,18 +306,19 @@ main {
 
 
 .controles {
+
     display: flex;
 
     align-items: center;
 
     gap: 8px;
-
-    flex-shrink: 0;
 }
 
 
 .controles button {
+
     width: 30px;
+
     height: 30px;
 
     border: none;
@@ -352,11 +331,10 @@ main {
 }
 
 
-/* ============================================================
-   TOTAL
-============================================================ */
+/* TOTAL */
 
 .total-final {
+
     font-size: 22px;
 
     padding: 20px 0;
@@ -365,11 +343,10 @@ main {
 }
 
 
-/* ============================================================
-   WHATSAPP
-============================================================ */
+/* WHATSAPP */
 
 .btn-whatsapp {
+
     width: 100%;
 
     background: #25d366;
@@ -390,384 +367,28 @@ main {
 }
 
 
-/* ============================================================
-   CARGANDO
-============================================================ */
-
 #cargando {
+
     text-align: center;
 
     padding: 40px;
 
     color: #777;
 }
-
-
-/* ============================================================
-   FORMULARIO PEDIDO
-============================================================ */
-
-#formulario-pedido {
-    width: 100%;
-
-    margin-top: 20px;
-}
-
-
-.datos-pedido {
-    border-top: 1px solid #ddd;
-
-    padding-top: 20px;
-
-    width: 100%;
-}
-
-
-/* ============================================================
-   TÍTULOS DEL FORMULARIO
-============================================================ */
-
-.datos-pedido h3 {
-    display: block;
-
-    width: 100%;
-
-    font-size: 18px;
-
-    margin: 20px 0 12px;
-}
-
-
-.datos-pedido h3:first-child {
-    margin-top: 0;
-}
-
-
-/* ============================================================
-   LABEL + INPUT
-   CADA UNO EN SU PROPIO RENGLÓN
-============================================================ */
-
-.datos-pedido label {
-    display: block;
-
-    width: 100%;
-
-    font-size: 14px;
-
-    font-weight: bold;
-
-    margin-bottom: 5px;
-}
-
-
-.datos-pedido input[type="text"],
-.datos-pedido input[type="tel"],
-.datos-pedido input[type="number"] {
-    display: block;
-
-    width: 100%;
-
-    height: 44px;
-
-    padding: 10px 12px;
-
-    margin: 0 0 14px 0;
-
-    border: 1px solid #ccc;
-
-    border-radius: 8px;
-
-    font-size: 16px;
-
-    background: white;
-}
-
-
-/* ============================================================
-   MEDIOS DE PAGO
-============================================================ */
-
-.medios-pago {
-    width: 100%;
-
+.encabezado {
     display: flex;
-
-    flex-direction: column;
-
-    gap: 10px;
-}
-
-
-.medio-opcion {
-    display: flex !important;
-
-    flex-direction: row !important;
-
     align-items: center;
-
-    gap: 8px;
-
-    width: 100%;
-
-    padding: 11px;
-
-    background: #f5f5f5;
-
-    border-radius: 8px;
-
-    font-weight: normal !important;
-
-    margin: 0 !important;
+    justify-content: center;
+    gap: 12px;
 }
 
-
-.medio-opcion input {
-    width: auto !important;
-
-    height: auto !important;
-
-    margin: 0 !important;
-
+.logo-don-elio {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
     flex-shrink: 0;
 }
 
-
-/* ============================================================
-   DETALLES DE PAGO
-============================================================ */
-
-.detalle-efectivo,
-.detalle-transferencia,
-.detalle-mercadopago {
-    width: 100%;
-
-    margin-top: 12px;
-
-    padding: 12px;
-
-    background: #f7f7f7;
-
-    border-radius: 8px;
-}
-
-
-/* ============================================================
-   ALIAS
-============================================================ */
-
-.alias-transferencia {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 10px;
-
-    margin: 10px 0;
-
-    padding: 10px;
-
-    background: white;
-
-    border-radius: 8px;
-
-    overflow: hidden;
-}
-
-
-.alias-transferencia span {
-    font-weight: bold;
-
-    overflow-wrap: anywhere;
-}
-
-
-.alias-transferencia button {
-    border: none;
-
-    background: #111;
-
-    color: white;
-
-    padding: 8px 12px;
-
-    border-radius: 6px;
-
-    cursor: pointer;
-
-    flex-shrink: 0;
-}
-
-
-/* ============================================================
-   CELULAR
-============================================================ */
-
-@media (max-width: 600px) {
-
-    /* LOGO */
-
-    .encabezado {
-        padding: 8px 10px;
-
-        margin-bottom: 15px;
-    }
-
-
-    .logo-don-elio {
-        width: 300px;
-        height: 300px;
-
-        max-width: 78vw;
-        max-height: 30vh;
-    }
-
-
-    /* CARTA */
-
-    main {
-        padding: 0 10px;
-    }
-
-
-    .categoria h2 {
-        font-size: 22px;
-    }
-
-
-    /* PRODUCTOS */
-
-    .producto {
-        padding: 12px;
-
-        gap: 8px;
-    }
-
-
-    .producto-imagen {
-        width: 75px;
-        height: 75px;
-
-        margin-right: 4px;
-    }
-
-
-    .producto-nombre {
-        font-size: 16px;
-    }
-
-
-    .producto-precio {
-        font-size: 17px;
-    }
-
-
-    .btn-agregar {
-        width: 42px;
-        height: 42px;
-
-        min-width: 42px;
-
-        font-size: 23px;
-    }
-
-
-    /* CARRITO */
-
-    #carrito-barra {
-        padding: 10px;
-    }
-
-
-    #carrito-barra button {
-        padding: 9px 12px;
-    }
-
-
-    /* MODAL */
-
-    .modal {
-        padding: 10px;
-    }
-
-
-    .modal-contenido {
-        margin: 10px auto;
-
-        padding: 18px;
-
-        max-height: 94vh;
-    }
-
-
-    /* FORMULARIO */
-
-    .datos-pedido {
-        width: 100%;
-    }
-
-
-    .datos-pedido label {
-        width: 100%;
-    }
-
-
-    .datos-pedido input[type="text"],
-    .datos-pedido input[type="tel"],
-    .datos-pedido input[type="number"] {
-        width: 100%;
-
-        height: 44px;
-
-        font-size: 16px;
-    }
-
-}
-
-
-/* ============================================================
-   CELULARES MUY PEQUEÑOS
-============================================================ */
-
-@media (max-width: 380px) {
-
-    .logo-don-elio {
-        width: 260px;
-        height: 260px;
-
-        max-width: 75vw;
-        max-height: 27vh;
-    }
-
-
-    .producto-imagen {
-        width: 65px;
-        height: 65px;
-    }
-
-
-    .producto-nombre {
-        font-size: 15px;
-    }
-
-
-    .producto-precio {
-        font-size: 16px;
-    }
-
-
-    .btn-agregar {
-        width: 40px;
-        height: 40px;
-
-        min-width: 40px;
-    }
-
-
-    .modal-contenido {
-        padding: 15px;
-    }
-
+.encabezado h1 {
+    margin: 0;
 }
