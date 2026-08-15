@@ -9,14 +9,17 @@ from decimal import Decimal
 # RUTAS
 # ============================================================
 
-POS_DIR = Path(r"C:\Users\Don Elio\Downloads\CartaDigital")
-CARTA_DIR = Path(r"C:\Users\Don Elio\Downloads\POS")
+POS_DIR = Path(r"C:\Users\Don Elio\Downloads\POS")
+
+CARTA_DIR = Path(
+    r"C:\Users\Don Elio\Downloads\CartaDigital"
+)
 
 JSON_FILE = CARTA_DIR / "productos.json"
 
 
 # ============================================================
-# IMPORTAR BASE DE DATOS DEL POS
+# IMPORTAR BASE DE DATOS
 # ============================================================
 
 sys.path.insert(0, str(POS_DIR))
@@ -64,7 +67,7 @@ def ejecutar_git(comando):
 
 
 # ============================================================
-# EXPORTAR PRODUCTOS
+# GENERAR PRODUCTOS.JSON
 # ============================================================
 
 def exportar_productos():
@@ -102,23 +105,37 @@ def exportar_productos():
     for fila in filas:
 
         producto = {
+
             "id": fila[0],
+
             "nombre": fila[1],
-            "precio": convertir_valor(fila[2]),
+
+            "precio": convertir_valor(
+                fila[2]
+            ),
+
             "rubro_id": fila[3],
+
             "rubro": fila[4],
+
             "orden": fila[5],
 
-            # ==================================================
-            # IMAGEN
-            # ==================================================
-
+            # FOTO
             "url": f"{fila[0]}.jpg"
+
         }
 
         productos.append(producto)
 
-    print(f"Productos encontrados: {len(productos)}")
+
+    print(
+        f"Productos encontrados: {len(productos)}"
+    )
+
+
+    # ========================================================
+    # CREAR JSON
+    # ========================================================
 
     nuevo_json = json.dumps(
         productos,
@@ -126,15 +143,24 @@ def exportar_productos():
         indent=4
     )
 
+
+    # ========================================================
+    # GUARDAR JSON
+    # ========================================================
+
     JSON_FILE.write_text(
         nuevo_json,
         encoding="utf-8"
     )
 
-    print("productos.json actualizado.")
-    print(JSON_FILE)
 
-    return True
+    print(
+        "productos.json actualizado."
+    )
+
+    print(
+        JSON_FILE
+    )
 
 
 # ============================================================
@@ -149,11 +175,8 @@ def publicar_github():
 
 
     # ========================================================
-    # 1. CANCELAR CUALQUIER REBASE PENDIENTE
+    # CANCELAR REBASE ANTERIOR
     # ========================================================
-
-    print()
-    print("Verificando estado de Git...")
 
     subprocess.run(
         [
@@ -168,29 +191,10 @@ def publicar_github():
 
 
     # ========================================================
-    # 2. TRAER INFORMACIÓN DE GITHUB
+    # GIT ADD
     # ========================================================
 
     print()
-    print("Sincronizando referencias...")
-
-    if not ejecutar_git([
-        "git",
-        "fetch",
-        "origin"
-    ]):
-
-        print("ERROR en git fetch.")
-
-        return False
-
-
-    # ========================================================
-    # 3. HACER QUE LOCAL SEA LA VERSIÓN DEFINITIVA
-    # ========================================================
-
-    print()
-    print("Preparando publicación local...")
 
     if not ejecutar_git([
         "git",
@@ -198,17 +202,18 @@ def publicar_github():
         "."
     ]):
 
-        print("ERROR en git add.")
+        print(
+            "ERROR en git add."
+        )
 
         return False
 
 
     # ========================================================
-    # 4. CREAR COMMIT
+    # GIT COMMIT
     # ========================================================
 
     print()
-    print("Creando commit...")
 
     resultado = subprocess.run(
         [
@@ -224,19 +229,28 @@ def publicar_github():
         errors="replace"
     )
 
+
     if resultado.stdout:
-        print(resultado.stdout)
+        print(
+            resultado.stdout
+        )
 
     if resultado.stderr:
-        print(resultado.stderr)
+        print(
+            resultado.stderr
+        )
 
 
     # ========================================================
-    # 5. FORZAR PUSH
+    # PUSH FORZADO
     # ========================================================
 
     print()
-    print("Publicando en GitHub...")
+
+    print(
+        "Subiendo CartaDigital a GitHub..."
+    )
+
 
     if not ejecutar_git([
         "git",
@@ -246,20 +260,23 @@ def publicar_github():
         "main"
     ]):
 
-        print()
-        print("ERROR en git push.")
+        print(
+            "ERROR en git push."
+        )
 
         return False
 
 
     # ========================================================
-    # ÉXITO
+    # OK
     # ========================================================
 
     print()
+
     print("======================================")
     print(" CARTA PUBLICADA CORRECTAMENTE")
     print("======================================")
+
 
     return True
 
@@ -277,13 +294,24 @@ if __name__ == "__main__":
         publicar_github()
 
         print()
-        print("Proceso terminado.")
+
+        print(
+            "Proceso terminado."
+        )
+
 
     except Exception as e:
 
         print()
-        print("ERROR actualizando carta:")
+
+        print(
+            "ERROR actualizando carta:"
+        )
+
         print(e)
 
         print()
-        print("El POS puede continuar normalmente.")
+
+        print(
+            "El POS puede continuar normalmente."
+        )
