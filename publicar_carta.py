@@ -9,8 +9,8 @@ from decimal import Decimal
 # RUTAS
 # ============================================================
 
-POS_DIR = Path(r"C:\Users\Don Elio\Downloads\POS")
-CARTA_DIR = Path(r"C:\Users\Don Elio\Downloads\CartaDigital")
+POS_DIR = Path(r"C:\Users\Don Elio\Downloads\CartaDigital")
+CARTA_DIR = Path(r"C:\Users\Don Elio\Downloads\POS")
 
 JSON_FILE = CARTA_DIR / "productos.json"
 
