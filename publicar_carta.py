@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 from decimal import Decimal
 
+
 # ============================================================
 # RUTAS
 # ============================================================
@@ -34,6 +35,32 @@ def convertir_valor(valor):
         return float(valor)
 
     return valor
+
+
+# ============================================================
+# EJECUTAR COMANDO GIT
+# ============================================================
+
+def ejecutar_git(comando):
+
+    print(">", " ".join(comando))
+
+    resultado = subprocess.run(
+        comando,
+        cwd=CARTA_DIR,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace"
+    )
+
+    if resultado.stdout:
+        print(resultado.stdout)
+
+    if resultado.stderr:
+        print(resultado.stderr)
+
+    return resultado.returncode == 0
 
 
 # ============================================================
@@ -80,47 +107,28 @@ def exportar_productos():
             "precio": convertir_valor(fila[2]),
             "rubro_id": fila[3],
             "rubro": fila[4],
-            "orden": fila[5]
+            "orden": fila[5],
+
+            # ==================================================
+            # IMAGEN
+            # ==================================================
+
+            "url": f"{fila[0]}.jpg"
         }
 
         productos.append(producto)
 
     print(f"Productos encontrados: {len(productos)}")
 
-    # JSON nuevo en memoria
+    # ========================================================
+    # CREAR JSON
+    # ========================================================
+
     nuevo_json = json.dumps(
         productos,
         ensure_ascii=False,
         indent=4
     )
-
-    # ========================================================
-    # COMPARAR CON EL JSON ANTERIOR
-    # ========================================================
-
-    json_anterior = ""
-
-    if JSON_FILE.exists():
-
-        try:
-
-            json_anterior = JSON_FILE.read_text(
-                encoding="utf-8"
-            )
-
-        except Exception:
-            pass
-
-    # ========================================================
-    # SI NO CAMBIO, NO HACEMOS PUSH
-    # ========================================================
-
-    if json_anterior == nuevo_json:
-
-        print("La carta no cambió.")
-        print("No se realizará ningún push.")
-
-        return False
 
     # ========================================================
     # GUARDAR JSON
@@ -138,30 +146,8 @@ def exportar_productos():
 
 
 # ============================================================
-# GIT
+# PUBLICAR EN GITHUB
 # ============================================================
-
-def ejecutar_git(comando):
-
-    print(">", " ".join(comando))
-
-    resultado = subprocess.run(
-        comando,
-        cwd=CARTA_DIR,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-        errors="replace"
-    )
-
-    if resultado.stdout:
-        print(resultado.stdout)
-
-    if resultado.stderr:
-        print(resultado.stderr)
-
-    return resultado.returncode == 0
-
 
 def publicar_github():
 
@@ -169,28 +155,152 @@ def publicar_github():
     print(" PUBLICANDO EN GITHUB")
     print("======================================")
 
-    # Agregar JSON
+
+    # ========================================================
+    # 1. TRAER INFORMACIÓN DE GITHUB
+    # ========================================================
+
+    print()
+    print("Sincronizando con GitHub...")
+
+    if not ejecutar_git([
+        "git",
+        "fetch",
+        "origin"
+    ]):
+
+        print("ERROR haciendo git fetch.")
+
+        return False
+
+
+    # ========================================================
+    # 2. HACER ADD
+    # ========================================================
+
     if not ejecutar_git([
         "git",
         "add",
-        "productos.json"
+        "."
     ]):
-        return
 
-    # Commit
+        print("ERROR en git add.")
+
+        return False
+
+
+    # ========================================================
+    # 3. COMMIT
+    # ========================================================
+
+    resultado_commit = subprocess.run(
+        [
+            "git",
+            "commit",
+            "-m",
+            "Actualizar productos de la carta"
+        ],
+        cwd=CARTA_DIR,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace"
+    )
+
+
+    if resultado_commit.stdout:
+        print(resultado_commit.stdout)
+
+    if resultado_commit.stderr:
+        print(resultado_commit.stderr)
+
+
+    # ========================================================
+    # 4. SINCRONIZAR CAMBIOS REMOTOS
+    # ========================================================
+
+    print()
+    print("Integrando cambios de GitHub...")
+
+    resultado_pull = subprocess.run(
+        [
+            "git",
+            "pull",
+            "--rebase",
+            "origin",
+            "main"
+        ],
+        cwd=CARTA_DIR,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace"
+    )
+
+
+    if resultado_pull.stdout:
+        print(resultado_pull.stdout)
+
+    if resultado_pull.stderr:
+        print(resultado_pull.stderr)
+
+
+    # ========================================================
+    # SI EL REBASE FALLÓ
+    # ========================================================
+
+    if resultado_pull.returncode != 0:
+
+        print()
+        print("ERROR sincronizando con GitHub.")
+
+        print()
+        print("Abortando rebase...")
+
+        subprocess.run(
+            [
+                "git",
+                "rebase",
+                "--abort"
+            ],
+            cwd=CARTA_DIR,
+            capture_output=True,
+            text=True
+        )
+
+        return False
+
+
+    # ========================================================
+    # 5. PUSH
+    # ========================================================
+
+    print()
+    print("Enviando cambios a GitHub...")
+
     if not ejecutar_git([
         "git",
-        "commit",
-        "-m",
-        "Actualizar productos de la carta"
+        "push",
+        "origin",
+        "main"
     ]):
-        return
 
-    # Push
-    ejecutar_git([
-        "git",
-        "push"
-    ])
+        print()
+        print("ERROR en git push.")
+
+        return False
+
+
+    # ========================================================
+    # ÉXITO
+    # ========================================================
+
+    print()
+    print("======================================")
+    print(" CARTA PUBLICADA CORRECTAMENTE")
+    print("======================================")
+
+    return True
 
 
 # ============================================================
@@ -201,10 +311,9 @@ if __name__ == "__main__":
 
     try:
 
-        cambio = exportar_productos()
+        exportar_productos()
 
-        if cambio:
-            publicar_github()
+        publicar_github()
 
         print()
         print("Proceso terminado.")
@@ -215,5 +324,5 @@ if __name__ == "__main__":
         print("ERROR actualizando carta:")
         print(e)
 
-        # IMPORTANTE:
-        # Este script nunca debe impedir que el POS continúe.
+        print()
+        print("El POS puede continuar normalmente.")
