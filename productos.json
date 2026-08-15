@@ -128,7 +128,7 @@
     {
         "id": 1,
         "nombre": "Muzzarella",
-        "precio": 17000.0,
+        "precio": 17001.0,
         "rubro_id": 1,
         "rubro": "Pizza",
         "orden": 0,
