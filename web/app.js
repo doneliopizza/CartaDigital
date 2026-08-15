@@ -19,9 +19,15 @@ async function cargarProductos() {
 
     try {
 
+#        const respuesta = await fetch(
+ #           "https://raw.githubusercontent.com/doneliopizza/CartaDigital/main/productos.json"
+ #       );
         const respuesta = await fetch(
-            "https://raw.githubusercontent.com/doneliopizza/CartaDigital/main/productos.json"
-        );
+    "https://raw.githubusercontent.com/doneliopizza/CartaDigital/main/productos.json?v=" + Date.now(),
+    {
+        cache: "no-store"
+    }
+);
 
         if (!respuesta.ok) {
 
