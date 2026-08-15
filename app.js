@@ -5,39 +5,6 @@ let carrito = {};
    ENCABEZADO / LOGO
 ============================================================ */
 
-.encabezado {
-
-    width: 100%;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    padding: 15px 10px 10px;
-
-    box-sizing: border-box;
-
-}
-
-
-/* ============================================================
-   LOGO
-============================================================ */
-
-.logo-don-elio {
-
-    width: 165px;
-
-    height: 165px;
-
-    object-fit: contain;
-
-    display: block;
-
-}
-
 // ============================================================
 // CONFIGURACIÓN
 // ============================================================
