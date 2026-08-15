@@ -3,17 +3,9 @@ let productos = [];
 let carrito = {};
 
 
-/* ============================================================
-   VERSION DE LA CARTA
-   CAMBIAR ESTE NUMERO CUANDO HAGAS CAMBIOS IMPORTANTES
-============================================================ */
-
-const VERSION_CARTA = "2.0.1";
-
-
-/* ============================================================
-   CONFIGURACIÓN
-============================================================ */
+// ============================================================
+// CONFIGURACIÓN
+// ============================================================
 
 const URL_GITHUB =
     "https://raw.githubusercontent.com/doneliopizza/CartaDigital/main";
@@ -37,44 +29,20 @@ const ALIAS_TRANSFERENCIA =
     "donelio.pizza";
 
 
-/* ============================================================
-   CACHE BUSTING
-============================================================ */
-
-function agregarVersion(url) {
-
-    const separador =
-        url.includes("?")
-            ? "&"
-            : "?";
-
-    return (
-        url +
-        separador +
-        "v=" +
-        VERSION_CARTA
-    );
-
-}
-
-
-/* ============================================================
-   CARGAR PRODUCTOS
-============================================================ */
+// ============================================================
+// CARGAR PRODUCTOS
+// ============================================================
 
 async function cargarProductos() {
 
     try {
 
-        const respuesta =
-            await fetch(
-                agregarVersion(
-                    URL_PRODUCTOS
-                ),
-                {
-                    cache: "no-store"
-                }
-            );
+        const respuesta = await fetch(
+            URL_PRODUCTOS + "?v=" + Date.now(),
+            {
+                cache: "no-store"
+            }
+        );
 
 
         if (!respuesta.ok) {
@@ -86,25 +54,15 @@ async function cargarProductos() {
         }
 
 
-        productos =
-            await respuesta.json();
+        productos = await respuesta.json();
 
 
         mostrarCarta();
 
 
-        const cargando =
-            document.getElementById(
-                "cargando"
-            );
-
-
-        if (cargando) {
-
-            cargando.style.display =
-                "none";
-
-        }
+        document.getElementById(
+            "cargando"
+        ).style.display = "none";
 
 
     } catch (error) {
@@ -112,34 +70,24 @@ async function cargarProductos() {
         console.error(error);
 
 
-        const cargando =
-            document.getElementById(
-                "cargando"
-            );
-
-
-        if (cargando) {
-
-            cargando.innerText =
-                "No se pudo cargar la carta.";
-
-        }
+        document.getElementById(
+            "cargando"
+        ).innerText =
+            "No se pudo cargar la carta.";
 
     }
 
 }
 
 
-/* ============================================================
-   CARGAR LOGO
-============================================================ */
+// ============================================================
+// CARGAR LOGO
+// ============================================================
 
 function cargarLogo() {
 
     const encabezado =
-        document.querySelector(
-            ".encabezado"
-        );
+        document.querySelector(".encabezado");
 
 
     if (!encabezado) {
@@ -148,6 +96,8 @@ function cargarLogo() {
 
     }
 
+
+    // Evitar duplicarlo
 
     if (
         document.getElementById(
@@ -161,9 +111,7 @@ function cargarLogo() {
 
 
     const logo =
-        document.createElement(
-            "img"
-        );
+        document.createElement("img");
 
 
     logo.id =
@@ -171,9 +119,7 @@ function cargarLogo() {
 
 
     logo.src =
-        agregarVersion(
-            URL_LOGO
-        );
+        URL_LOGO + "?v=" + Date.now();
 
 
     logo.alt =
@@ -184,19 +130,20 @@ function cargarLogo() {
         "logo-don-elio";
 
 
-    logo.onerror =
-        function () {
+    // Si el logo no existe,
+    // simplemente lo ocultamos
 
-            this.style.display =
-                "none";
+    logo.onerror = function () {
 
-        };
+        this.style.display = "none";
 
+    };
+
+
+    // Insertar antes del título
 
     const titulo =
-        encabezado.querySelector(
-            "h1"
-        );
+        encabezado.querySelector("h1");
 
 
     if (titulo) {
@@ -217,19 +164,31 @@ function cargarLogo() {
 }
 
 
-/* ============================================================
-   OBTENER IMAGEN DEL PRODUCTO
-============================================================ */
+// ============================================================
+// OBTENER IMAGEN DEL PRODUCTO
+// ============================================================
 
 function obtenerImagen(producto) {
 
+    /*
+        El JSON debe tener:
+
+        "url": "producto.jpg"
+
+        Entonces se genera:
+
+        /fotos/producto.jpg
+
+        automáticamente.
+    */
+
+
     if (
         producto.url &&
-        typeof producto.url === "string" &&
         producto.url.trim() !== ""
     ) {
 
-        return agregarVersion(
+        return (
             URL_FOTOS +
             encodeURIComponent(
                 producto.url.trim()
@@ -244,9 +203,9 @@ function obtenerImagen(producto) {
 }
 
 
-/* ============================================================
-   MOSTRAR CARTA
-============================================================ */
+// ============================================================
+// MOSTRAR CARTA
+// ============================================================
 
 function mostrarCarta() {
 
@@ -256,22 +215,15 @@ function mostrarCarta() {
         );
 
 
-    if (!carta) {
-
-        return;
-
-    }
-
-
     carta.innerHTML = "";
 
 
     const categorias = {};
 
 
-    /* ========================================================
-       AGRUPAR PRODUCTOS
-    ======================================================== */
+    // ========================================================
+    // AGRUPAR PRODUCTOS POR RUBRO
+    // ========================================================
 
     productos.forEach(
         producto => {
@@ -291,17 +243,15 @@ function mostrarCarta() {
 
             categorias[
                 producto.rubro
-            ].push(
-                producto
-            );
+            ].push(producto);
 
         }
     );
 
 
-    /* ========================================================
-       CREAR CATEGORÍAS
-    ======================================================== */
+    // ========================================================
+    // CREAR CATEGORÍAS
+    // ========================================================
 
     Object.keys(
         categorias
@@ -318,9 +268,9 @@ function mostrarCarta() {
                 "categoria";
 
 
-            /* =================================================
-               TÍTULO
-            ================================================= */
+            // =================================================
+            // TÍTULO
+            // =================================================
 
             const titulo =
                 document.createElement(
@@ -337,9 +287,9 @@ function mostrarCarta() {
             );
 
 
-            /* =================================================
-               PRODUCTOS
-            ================================================= */
+            // =================================================
+            // PRODUCTOS
+            // =================================================
 
             categorias[
                 rubro
@@ -370,10 +320,7 @@ function mostrarCarta() {
                                 src="${imagen}"
                                 alt="${producto.nombre}"
                                 loading="lazy"
-                                onerror="
-                                    this.onerror=null;
-                                    this.src='${IMAGEN_PLACEHOLDER}'
-                                "
+                                onerror="this.onerror=null;this.src='${IMAGEN_PLACEHOLDER}'"
                             >
 
                         </div>
@@ -382,14 +329,18 @@ function mostrarCarta() {
                         <div class="producto-info">
 
                             <div class="producto-nombre">
+
                                 ${producto.nombre}
+
                             </div>
 
 
                             <div class="producto-precio">
+
                                 $${formatearPrecio(
                                     producto.precio
                                 )}
+
                             </div>
 
                         </div>
@@ -397,9 +348,10 @@ function mostrarCarta() {
 
                         <button
                             class="btn-agregar"
-                            onclick="agregarProducto(${producto.id})"
-                        >
+                            onclick="agregarProducto(${producto.id})">
+
                             +
+
                         </button>
 
                     `;
@@ -423,9 +375,9 @@ function mostrarCarta() {
 }
 
 
-/* ============================================================
-   AGREGAR PRODUCTO
-============================================================ */
+// ============================================================
+// AGREGAR PRODUCTO
+// ============================================================
 
 function agregarProducto(id) {
 
@@ -444,9 +396,9 @@ function agregarProducto(id) {
 }
 
 
-/* ============================================================
-   RESTAR PRODUCTO
-============================================================ */
+// ============================================================
+// RESTAR PRODUCTO
+// ============================================================
 
 function quitarProducto(id) {
 
@@ -472,9 +424,9 @@ function quitarProducto(id) {
 }
 
 
-/* ============================================================
-   OBTENER TOTAL
-============================================================ */
+// ============================================================
+// OBTENER TOTAL
+// ============================================================
 
 function obtenerTotalCarrito() {
 
@@ -514,9 +466,9 @@ function obtenerTotalCarrito() {
 }
 
 
-/* ============================================================
-   OBTENER CANTIDAD
-============================================================ */
+// ============================================================
+// OBTENER CANTIDAD
+// ============================================================
 
 function obtenerCantidadCarrito() {
 
@@ -540,9 +492,9 @@ function obtenerCantidadCarrito() {
 }
 
 
-/* ============================================================
-   ACTUALIZAR CARRITO
-============================================================ */
+// ============================================================
+// ACTUALIZAR CARRITO
+// ============================================================
 
 function actualizarCarrito() {
 
@@ -554,34 +506,22 @@ function actualizarCarrito() {
         obtenerTotalCarrito();
 
 
-    const cantidadCarrito =
-        document.getElementById(
-            "cantidad-carrito"
-        );
+    document.getElementById(
+        "cantidad-carrito"
+    ).innerText =
+
+        cantidad === 1
+
+            ? "1 producto"
+
+            : `${cantidad} productos`;
 
 
-    if (cantidadCarrito) {
+    document.getElementById(
+        "total-carrito"
+    ).innerText =
 
-        cantidadCarrito.innerText =
-            cantidad === 1
-                ? "1 producto"
-                : `${cantidad} productos`;
-
-    }
-
-
-    const totalCarrito =
-        document.getElementById(
-            "total-carrito"
-        );
-
-
-    if (totalCarrito) {
-
-        totalCarrito.innerText =
-            `$${formatearPrecio(total)}`;
-
-    }
+        `$${formatearPrecio(total)}`;
 
 
     mostrarListaCarrito();
@@ -589,9 +529,9 @@ function actualizarCarrito() {
 }
 
 
-/* ============================================================
-   MOSTRAR LISTA DEL CARRITO
-============================================================ */
+// ============================================================
+// MOSTRAR LISTA DEL CARRITO
+// ============================================================
 
 function mostrarListaCarrito() {
 
@@ -670,9 +610,10 @@ function mostrarListaCarrito() {
                 <div class="controles">
 
                     <button
-                        onclick="quitarProducto(${id})"
-                    >
+                        onclick="quitarProducto(${id})">
+
                         −
+
                     </button>
 
 
@@ -682,9 +623,10 @@ function mostrarListaCarrito() {
 
 
                     <button
-                        onclick="agregarProducto(${id})"
-                    >
+                        onclick="agregarProducto(${id})">
+
                         +
+
                     </button>
 
                 </div>
@@ -723,9 +665,9 @@ function mostrarListaCarrito() {
 }
 
 
-/* ============================================================
-   CREAR FORMULARIO
-============================================================ */
+// ============================================================
+// CREAR FORMULARIO
+// ============================================================
 
 function crearFormularioPedido() {
 
@@ -773,36 +715,28 @@ function crearFormularioPedido() {
             </h3>
 
 
-            <div class="campo-formulario">
+            <label>
+                Nombre
+            </label>
 
-                <label for="cliente-nombre">
-                    Nombre
-                </label>
-
-                <input
-                    type="text"
-                    id="cliente-nombre"
-                    placeholder="Tu nombre"
-                    autocomplete="name"
-                >
-
-            </div>
+            <input
+                type="text"
+                id="cliente-nombre"
+                placeholder="Tu nombre"
+                autocomplete="name"
+            >
 
 
-            <div class="campo-formulario">
+            <label>
+                Teléfono de contacto
+            </label>
 
-                <label for="cliente-telefono">
-                    Teléfono de contacto
-                </label>
-
-                <input
-                    type="tel"
-                    id="cliente-telefono"
-                    placeholder="Ej: 11 7066 7389"
-                    autocomplete="tel"
-                >
-
-            </div>
+            <input
+                type="tel"
+                id="cliente-telefono"
+                placeholder="Ej: 11 7066 7389"
+                autocomplete="tel"
+            >
 
 
             <h3>
@@ -810,52 +744,40 @@ function crearFormularioPedido() {
             </h3>
 
 
-            <div class="campo-formulario">
+            <label>
+                Calle
+            </label>
 
-                <label for="cliente-calle">
-                    Calle
-                </label>
-
-                <input
-                    type="text"
-                    id="cliente-calle"
-                    placeholder="Ej: Av. San Martín"
-                    autocomplete="street-address"
-                >
-
-            </div>
+            <input
+                type="text"
+                id="cliente-calle"
+                placeholder="Ej: Av. San Martín"
+                autocomplete="street-address"
+            >
 
 
-            <div class="campo-formulario">
+            <label>
+                Altura
+            </label>
 
-                <label for="cliente-altura">
-                    Altura
-                </label>
-
-                <input
-                    type="number"
-                    id="cliente-altura"
-                    placeholder="Ej: 1234"
-                    inputmode="numeric"
-                >
-
-            </div>
+            <input
+                type="number"
+                id="cliente-altura"
+                placeholder="Ej: 1234"
+                inputmode="numeric"
+            >
 
 
-            <div class="campo-formulario">
+            <label>
+                Localidad
+            </label>
 
-                <label for="cliente-localidad">
-                    Localidad
-                </label>
-
-                <input
-                    type="text"
-                    id="cliente-localidad"
-                    placeholder="Ej: Villa Ballester"
-                    autocomplete="address-level2"
-                >
-
-            </div>
+            <input
+                type="text"
+                id="cliente-localidad"
+                placeholder="Ej: Villa Ballester"
+                autocomplete="address-level2"
+            >
 
 
             <h3>
@@ -874,9 +796,7 @@ function crearFormularioPedido() {
                         onchange="cambiarMedioPago()"
                     >
 
-                    <span>
-                        💵 Efectivo
-                    </span>
+                    💵 Efectivo
 
                 </label>
 
@@ -890,9 +810,7 @@ function crearFormularioPedido() {
                         onchange="cambiarMedioPago()"
                     >
 
-                    <span>
-                        🏦 Transferencia
-                    </span>
+                    🏦 Transferencia
 
                 </label>
 
@@ -906,9 +824,7 @@ function crearFormularioPedido() {
                         onchange="cambiarMedioPago()"
                     >
 
-                    <span>
-                        Mercado Pago
-                    </span>
+                    Mercado Pago
 
                 </label>
 
@@ -924,9 +840,9 @@ function crearFormularioPedido() {
 }
 
 
-/* ============================================================
-   CAMBIAR MEDIO DE PAGO
-============================================================ */
+// ============================================================
+// CAMBIAR MEDIO DE PAGO
+// ============================================================
 
 function cambiarMedioPago() {
 
@@ -958,9 +874,9 @@ function cambiarMedioPago() {
     }
 
 
-    /* ========================================================
-       EFECTIVO
-    ======================================================== */
+    // ========================================================
+    // EFECTIVO
+    // ========================================================
 
     if (
         medio.value === "efectivo"
@@ -970,12 +886,9 @@ function cambiarMedioPago() {
 
             <div class="detalle-efectivo">
 
-                <label for="monto-efectivo">
-
+                <label>
                     💵 ¿Con cuánto vas a pagar?
-
                 </label>
-
 
                 <input
                     type="number"
@@ -985,7 +898,6 @@ function cambiarMedioPago() {
                     inputmode="numeric"
                     oninput="calcularVuelto()"
                 >
-
 
                 <div id="resultado-vuelto"></div>
 
@@ -998,9 +910,9 @@ function cambiarMedioPago() {
     }
 
 
-    /* ========================================================
-       TRANSFERENCIA
-    ======================================================== */
+    // ========================================================
+    // TRANSFERENCIA
+    // ========================================================
 
     if (
         medio.value === "transferencia"
@@ -1013,7 +925,6 @@ function cambiarMedioPago() {
                 <strong>
                     🏦 Transferencia bancaria
                 </strong>
-
 
                 <p>
                     Realizá la transferencia al siguiente alias:
@@ -1029,9 +940,10 @@ function cambiarMedioPago() {
 
                     <button
                         type="button"
-                        onclick="copiarAlias()"
-                    >
+                        onclick="copiarAlias()">
+
                         Copiar
+
                     </button>
 
                 </div>
@@ -1051,9 +963,9 @@ function cambiarMedioPago() {
     }
 
 
-    /* ========================================================
-       MERCADO PAGO
-    ======================================================== */
+    // ========================================================
+    // MERCADO PAGO
+    // ========================================================
 
     if (
         medio.value === "mercadopago"
@@ -1067,12 +979,10 @@ function cambiarMedioPago() {
                     Mercado Pago
                 </strong>
 
-
                 <p>
                     Seleccioná esta opción y enviá
                     el pedido por WhatsApp.
                 </p>
-
 
                 <p>
                     Te indicaremos cómo realizar
@@ -1088,9 +998,9 @@ function cambiarMedioPago() {
 }
 
 
-/* ============================================================
-   CALCULAR VUELTO
-============================================================ */
+// ============================================================
+// CALCULAR VUELTO
+// ============================================================
 
 function calcularVuelto() {
 
@@ -1175,9 +1085,7 @@ function calcularVuelto() {
             Vuelto:
 
             <strong>
-                $${formatearPrecio(
-                    vuelto
-                )}
+                $${formatearPrecio(vuelto)}
             </strong>
 
         </div>
@@ -1187,9 +1095,9 @@ function calcularVuelto() {
 }
 
 
-/* ============================================================
-   COPIAR ALIAS
-============================================================ */
+// ============================================================
+// COPIAR ALIAS
+// ============================================================
 
 async function copiarAlias() {
 
@@ -1200,13 +1108,17 @@ async function copiarAlias() {
         );
 
 
-        const boton =
-            document.querySelector(
+        const botones =
+            document.querySelectorAll(
                 ".alias-transferencia button"
             );
 
 
-        if (boton) {
+        if (botones.length > 0) {
+
+            const boton =
+                botones[0];
+
 
             const textoOriginal =
                 boton.innerText;
@@ -1242,9 +1154,9 @@ async function copiarAlias() {
 }
 
 
-/* ============================================================
-   MOSTRAR CARRITO
-============================================================ */
+// ============================================================
+// MOSTRAR CARRITO
+// ============================================================
 
 function mostrarCarrito() {
 
@@ -1261,18 +1173,10 @@ function mostrarCarrito() {
     }
 
 
-    const modal =
-        document.getElementById(
-            "modal-carrito"
-        );
-
-
-    if (modal) {
-
-        modal.style.display =
-            "block";
-
-    }
+    document.getElementById(
+        "modal-carrito"
+    ).style.display =
+        "block";
 
 
     mostrarListaCarrito();
@@ -1280,31 +1184,23 @@ function mostrarCarrito() {
 }
 
 
-/* ============================================================
-   CERRAR CARRITO
-============================================================ */
+// ============================================================
+// CERRAR CARRITO
+// ============================================================
 
 function cerrarCarrito() {
 
-    const modal =
-        document.getElementById(
-            "modal-carrito"
-        );
-
-
-    if (modal) {
-
-        modal.style.display =
-            "none";
-
-    }
+    document.getElementById(
+        "modal-carrito"
+    ).style.display =
+        "none";
 
 }
 
 
-/* ============================================================
-   FORMATEAR PRECIO
-============================================================ */
+// ============================================================
+// FORMATEAR PRECIO
+// ============================================================
 
 function formatearPrecio(numero) {
 
@@ -1315,9 +1211,9 @@ function formatearPrecio(numero) {
 }
 
 
-/* ============================================================
-   OBTENER DATOS CLIENTE
-============================================================ */
+// ============================================================
+// OBTENER DATOS CLIENTE
+// ============================================================
 
 function obtenerDatosCliente() {
 
@@ -1379,9 +1275,9 @@ function obtenerDatosCliente() {
 }
 
 
-/* ============================================================
-   VALIDAR PEDIDO
-============================================================ */
+// ============================================================
+// VALIDAR PEDIDO
+// ============================================================
 
 function validarPedido() {
 
@@ -1455,23 +1351,19 @@ function validarPedido() {
     }
 
 
-    /* ========================================================
-       VALIDAR EFECTIVO
-    ======================================================== */
+    // ========================================================
+    // EFECTIVO
+    // ========================================================
 
     if (
         datos.medioPago === "efectivo"
     ) {
 
-        const input =
-            document.getElementById(
-                "monto-efectivo"
-            );
-
-
         const monto =
             Number(
-                input?.value
+                document.getElementById(
+                    "monto-efectivo"
+                )?.value
             );
 
 
@@ -1508,9 +1400,9 @@ function validarPedido() {
 }
 
 
-/* ============================================================
-   GENERAR MENSAJE WHATSAPP
-============================================================ */
+// ============================================================
+// GENERAR MENSAJE WHATSAPP
+// ============================================================
 
 function generarMensajeWhatsApp() {
 
@@ -1530,9 +1422,9 @@ function generarMensajeWhatsApp() {
         "\n\n";
 
 
-    /* ========================================================
-       CLIENTE
-    ======================================================== */
+    // ========================================================
+    // CLIENTE
+    // ========================================================
 
     mensaje +=
         "👤 *CLIENTE*\n";
@@ -1550,9 +1442,9 @@ function generarMensajeWhatsApp() {
         "\n\n";
 
 
-    /* ========================================================
-       DIRECCIÓN
-    ======================================================== */
+    // ========================================================
+    // DIRECCIÓN
+    // ========================================================
 
     mensaje +=
         "📍 *DIRECCIÓN DE ENTREGA*\n";
@@ -1576,9 +1468,9 @@ function generarMensajeWhatsApp() {
         "\n\n";
 
 
-    /* ========================================================
-       PEDIDO
-    ======================================================== */
+    // ========================================================
+    // PEDIDO
+    // ========================================================
 
     mensaje +=
         "🛒 *PEDIDO*\n";
@@ -1628,15 +1520,13 @@ function generarMensajeWhatsApp() {
         "\n";
 
 
-    /* ========================================================
-       TOTAL
-    ======================================================== */
+    // ========================================================
+    // TOTAL
+    // ========================================================
 
     mensaje +=
         "💰 *TOTAL: $" +
-        formatearPrecio(
-            total
-        ) +
+        formatearPrecio(total) +
         "*";
 
 
@@ -1644,9 +1534,9 @@ function generarMensajeWhatsApp() {
         "\n\n";
 
 
-    /* ========================================================
-       MEDIO DE PAGO
-    ======================================================== */
+    // ========================================================
+    // MEDIO DE PAGO
+    // ========================================================
 
     mensaje +=
         "💳 *MEDIO DE PAGO*\n";
@@ -1674,17 +1564,13 @@ function generarMensajeWhatsApp() {
 
         mensaje +=
             "Paga con: $" +
-            formatearPrecio(
-                monto
-            ) +
+            formatearPrecio(monto) +
             "\n";
 
 
         mensaje +=
             "Vuelto: $" +
-            formatearPrecio(
-                vuelto
-            );
+            formatearPrecio(vuelto);
 
     }
 
@@ -1700,6 +1586,7 @@ function generarMensajeWhatsApp() {
         mensaje +=
             "Alias: " +
             ALIAS_TRANSFERENCIA;
+
 
     }
 
@@ -1731,15 +1618,15 @@ function generarMensajeWhatsApp() {
 }
 
 
-/* ============================================================
-   ENVIAR PEDIDO A WHATSAPP
-============================================================ */
+// ============================================================
+// ENVIAR PEDIDO A WHATSAPP
+// ============================================================
 
 function enviarWhatsApp() {
 
-    /* ========================================================
-       VALIDAR CARRITO
-    ======================================================== */
+    // ========================================================
+    // CARRITO
+    // ========================================================
 
     if (
         Object.keys(carrito).length === 0
@@ -1754,9 +1641,9 @@ function enviarWhatsApp() {
     }
 
 
-    /* ========================================================
-       VALIDAR DATOS
-    ======================================================== */
+    // ========================================================
+    // DATOS
+    // ========================================================
 
     if (!validarPedido()) {
 
@@ -1765,17 +1652,17 @@ function enviarWhatsApp() {
     }
 
 
-    /* ========================================================
-       GENERAR MENSAJE
-    ======================================================== */
+    // ========================================================
+    // MENSAJE
+    // ========================================================
 
     const mensaje =
         generarMensajeWhatsApp();
 
 
-    /* ========================================================
-       CREAR URL
-    ======================================================== */
+    // ========================================================
+    // URL
+    // ========================================================
 
     const url =
         "https://wa.me/" +
@@ -1786,9 +1673,9 @@ function enviarWhatsApp() {
         );
 
 
-    /* ========================================================
-       ABRIR WHATSAPP
-    ======================================================== */
+    // ========================================================
+    // ABRIR WHATSAPP
+    // ========================================================
 
     window.open(
         url,
@@ -1798,9 +1685,9 @@ function enviarWhatsApp() {
 }
 
 
-/* ============================================================
-   INICIAR CARTA
-============================================================ */
+// ============================================================
+// INICIAR
+// ============================================================
 
 cargarLogo();
 
