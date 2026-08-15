@@ -1,7 +1,7 @@
 [
     {
         "id": 23,
-        "nombre": "4 quesos",
+        "nombre": "Pizza 4 Quesos",
         "precio": 26000.0,
         "rubro_id": 1,
         "rubro": "Pizza",
@@ -10,7 +10,7 @@
     },
     {
         "id": 29,
-        "nombre": "Alemana",
+        "nombre": "Pizza Alemana",
         "precio": 26000.0,
         "rubro_id": 1,
         "rubro": "Pizza",
@@ -19,7 +19,7 @@
     },
     {
         "id": 14,
-        "nombre": "Calabresa",
+        "nombre": "Pizza Calabresa",
         "precio": 22000.0,
         "rubro_id": 1,
         "rubro": "Pizza",
@@ -28,7 +28,7 @@
     },
     {
         "id": 233,
-        "nombre": "Caprese",
+        "nombre": "Pizza Caprese",
         "precio": 24000.0,
         "rubro_id": 1,
         "rubro": "Pizza",
@@ -37,7 +37,7 @@
     },
     {
         "id": 24,
-        "nombre": "Choclo",
+        "nombre": "Pizza Choclo",
         "precio": 21000.0,
         "rubro_id": 1,
         "rubro": "Pizza",
@@ -45,125 +45,17 @@
         "url": "24.jpg"
     },
     {
-        "id": 9,
-        "nombre": "Doble Muzzarella",
+        "id": 263,
+        "nombre": "Pizza de Muzza y Provolone",
         "precio": 23000.0,
         "rubro_id": 1,
         "rubro": "Pizza",
         "orden": 0,
-        "url": "9.jpg"
-    },
-    {
-        "id": 30,
-        "nombre": "Don Elio Burger Especial",
-        "precio": 29000.0,
-        "rubro_id": 1,
-        "rubro": "Pizza",
-        "orden": 0,
-        "url": "30.jpg"
-    },
-    {
-        "id": 234,
-        "nombre": "Espinaca y Salsa Blanca",
-        "precio": 24000.0,
-        "rubro_id": 1,
-        "rubro": "Pizza",
-        "orden": 0,
-        "url": "234.jpg"
-    },
-    {
-        "id": 15,
-        "nombre": "Fugazzeta",
-        "precio": 20000.0,
-        "rubro_id": 1,
-        "rubro": "Pizza",
-        "orden": 0,
-        "url": "15.jpg"
-    },
-    {
-        "id": 10,
-        "nombre": "Jamon",
-        "precio": 20000.0,
-        "rubro_id": 1,
-        "rubro": "Pizza",
-        "orden": 0,
-        "url": "10.jpg"
-    },
-    {
-        "id": 235,
-        "nombre": "Jamón y Ananá",
-        "precio": 28000.0,
-        "rubro_id": 1,
-        "rubro": "Pizza",
-        "orden": 0,
-        "url": "235.jpg"
-    },
-    {
-        "id": 11,
-        "nombre": "Jamon y Morrón",
-        "precio": 24000.0,
-        "rubro_id": 1,
-        "rubro": "Pizza",
-        "orden": 0,
-        "url": "11.jpg"
-    },
-    {
-        "id": 28,
-        "nombre": "Jamon Y Palmitos",
-        "precio": 27000.0,
-        "rubro_id": 1,
-        "rubro": "Pizza",
-        "orden": 0,
-        "url": "28.jpg"
-    },
-    {
-        "id": 1,
-        "nombre": "Muzzarella",
-        "precio": 17000.0,
-        "rubro_id": 1,
-        "rubro": "Pizza",
-        "orden": 0,
-        "url": "1.jpg"
-    },
-    {
-        "id": 19,
-        "nombre": "Muzzarella con Salsa Parissiens",
-        "precio": 28000.0,
-        "rubro_id": 1,
-        "rubro": "Pizza",
-        "orden": 0,
-        "url": "19.jpg"
-    },
-    {
-        "id": 18,
-        "nombre": "Muzzarella y Huevo Fritos",
-        "precio": 23000.0,
-        "rubro_id": 1,
-        "rubro": "Pizza",
-        "orden": 0,
-        "url": "18.jpg"
-    },
-    {
-        "id": 12,
-        "nombre": "Napolitana",
-        "precio": 20000.0,
-        "rubro_id": 1,
-        "rubro": "Pizza",
-        "orden": 0,
-        "url": "12.jpg"
-    },
-    {
-        "id": 13,
-        "nombre": "Napolitana con Jamón",
-        "precio": 24000.0,
-        "rubro_id": 1,
-        "rubro": "Pizza",
-        "orden": 0,
-        "url": "13.jpg"
+        "url": "263.jpg"
     },
     {
         "id": 22,
-        "nombre": "Palmitos",
+        "nombre": "Pizza de Palmitos",
         "precio": 24000.0,
         "rubro_id": 1,
         "rubro": "Pizza",
@@ -172,7 +64,7 @@
     },
     {
         "id": 27,
-        "nombre": "Panceta Y cheddar",
+        "nombre": "Pizza de Panceta Y cheddar",
         "precio": 25000.0,
         "rubro_id": 1,
         "rubro": "Pizza",
@@ -180,8 +72,125 @@
         "url": "27.jpg"
     },
     {
+        "id": 21,
+        "nombre": "Pizza de Roquefort",
+        "precio": 23000.0,
+        "rubro_id": 1,
+        "rubro": "Pizza",
+        "orden": 0,
+        "url": "21.jpg"
+    },
+    {
+        "id": 9,
+        "nombre": "Pizza Doble Muzzarella",
+        "precio": 23000.0,
+        "rubro_id": 1,
+        "rubro": "Pizza",
+        "orden": 0,
+        "url": "9.jpg"
+    },
+    {
+        "id": 234,
+        "nombre": "Pizza Espinaca y Salsa Blanca",
+        "precio": 24000.0,
+        "rubro_id": 1,
+        "rubro": "Pizza",
+        "orden": 0,
+        "url": "234.jpg"
+    },
+    {
+        "id": 15,
+        "nombre": "Pizza Fugazzeta",
+        "precio": 20000.0,
+        "rubro_id": 1,
+        "rubro": "Pizza",
+        "orden": 0,
+        "url": "15.jpg"
+    },
+    {
+        "id": 10,
+        "nombre": "Pizza Jamon",
+        "precio": 20000.0,
+        "rubro_id": 1,
+        "rubro": "Pizza",
+        "orden": 0,
+        "url": "10.jpg"
+    },
+    {
+        "id": 235,
+        "nombre": "Pizza Jamón y Ananá",
+        "precio": 28000.0,
+        "rubro_id": 1,
+        "rubro": "Pizza",
+        "orden": 0,
+        "url": "235.jpg"
+    },
+    {
+        "id": 11,
+        "nombre": "Pizza Jamon y Morrón",
+        "precio": 24000.0,
+        "rubro_id": 1,
+        "rubro": "Pizza",
+        "orden": 0,
+        "url": "11.jpg"
+    },
+    {
+        "id": 28,
+        "nombre": "Pizza Jamon Y Palmitos",
+        "precio": 27000.0,
+        "rubro_id": 1,
+        "rubro": "Pizza",
+        "orden": 0,
+        "url": "28.jpg"
+    },
+    {
+        "id": 1,
+        "nombre": "Pizza Muzzarella",
+        "precio": 17000.0,
+        "rubro_id": 1,
+        "rubro": "Pizza",
+        "orden": 0,
+        "url": "1.jpg"
+    },
+    {
+        "id": 18,
+        "nombre": "Pizza Muzzarella y Huevo Fritos",
+        "precio": 23000.0,
+        "rubro_id": 1,
+        "rubro": "Pizza",
+        "orden": 0,
+        "url": "18.jpg"
+    },
+    {
+        "id": 12,
+        "nombre": "Pizza Napolitana",
+        "precio": 20000.0,
+        "rubro_id": 1,
+        "rubro": "Pizza",
+        "orden": 0,
+        "url": "12.jpg"
+    },
+    {
+        "id": 13,
+        "nombre": "Pizza Napolitana con Jamón",
+        "precio": 24000.0,
+        "rubro_id": 1,
+        "rubro": "Pizza",
+        "orden": 0,
+        "url": "13.jpg"
+    },
+    {
+        "id": 19,
+        "nombre": "Pizza Parissiens",
+        "precio": 28000.0,
+        "rubro_id": 1,
+        "rubro": "Pizza",
+        "orden": 0,
+        "url": "19.jpg"
+    },
+    {
         "id": 17,
-        "nombre": "Pollo Al Verdeo",
+        "nombre": "Pizza Pollo Al Verdeo",
         "precio": 28000.0,
         "rubro_id": 1,
         "rubro": "Pizza",
@@ -189,17 +198,8 @@
         "url": "17.jpg"
     },
     {
-        "id": 259,
-        "nombre": "porcion fugazeta rellena",
-        "precio": 4000.0,
-        "rubro_id": 1,
-        "rubro": "Pizza",
-        "orden": 0,
-        "url": "259.jpg"
-    },
-    {
         "id": 16,
-        "nombre": "Primavera ",
+        "nombre": "Pizza Primavera (tomate y huevo duro)",
         "precio": 24000.0,
         "rubro_id": 1,
         "rubro": "Pizza",
@@ -207,31 +207,13 @@
         "url": "16.jpg"
     },
     {
-        "id": 263,
-        "nombre": "Provolone",
-        "precio": 23000.0,
-        "rubro_id": 1,
-        "rubro": "Pizza",
-        "orden": 0,
-        "url": "263.jpg"
-    },
-    {
         "id": 232,
-        "nombre": "Provolone Con Jamón",
+        "nombre": "Pizza Provolone Con Jamón",
         "precio": 25000.0,
         "rubro_id": 1,
         "rubro": "Pizza",
         "orden": 0,
         "url": "232.jpg"
-    },
-    {
-        "id": 21,
-        "nombre": "Roquefort",
-        "precio": 23000.0,
-        "rubro_id": 1,
-        "rubro": "Pizza",
-        "orden": 0,
-        "url": "21.jpg"
     },
     {
         "id": 4,
@@ -290,7 +272,7 @@
     {
         "id": 38,
         "nombre": "Empanada De Caprese",
-        "precio": 3301.0,
+        "precio": 3300.0,
         "rubro_id": 3,
         "rubro": "Empanadas",
         "orden": 0,
