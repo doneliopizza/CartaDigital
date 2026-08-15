@@ -1,14 +1,5 @@
 [
     {
-        "id": 50,
-        "nombre": "1/2 PIZZAS MITAD MITAD",
-        "precio": 1124.0,
-        "rubro_id": 1,
-        "rubro": "Pizza",
-        "orden": 0,
-        "url": "50.jpg"
-    },
-    {
         "id": 23,
         "nombre": "4 quesos",
         "precio": 26000.0,

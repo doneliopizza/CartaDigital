@@ -92,6 +92,7 @@ def exportar_productos():
         WHERE p.estado = 1
           AND r.estado = 1
           AND p.rubro_id IN (1, 2, 3)
+AND P.ID <> 50
         ORDER BY
             r.id,
             p.orden,
