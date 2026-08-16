@@ -20,7 +20,7 @@ const URL_LOGO =
     URL_FOTOS + "logo.png";
 
 const IMAGEN_PLACEHOLDER =
-    "https://raw.githubusercontent.com/doneliopizza/CartaDigital/refs/heads/main/fotos/logo.png";
+    "https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=500&q=80";
 
 const TELEFONO_WHATSAPP =
     "5491170667389";
