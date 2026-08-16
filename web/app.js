@@ -19,132 +19,14 @@ const URL_FOTOS =
 const URL_LOGO =
     URL_FOTOS + "logo.png";
 
+const IMAGEN_PLACEHOLDER =
+    "https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=500&q=80";
+
 const TELEFONO_WHATSAPP =
     "5491170667389";
 
 const ALIAS_TRANSFERENCIA =
     "donelio.pizza";
-
-
-
-// ============================================================
-// CACHE BUSTING
-// ============================================================
-//
-// Generamos un valor nuevo cada vez que se carga la página.
-//
-// Esto evita que el navegador reutilice imágenes antiguas
-// guardadas en caché.
-//
-
-function obtenerVersionCache() {
-
-    return Date.now();
-
-}
-
-
-
-// ============================================================
-// OBTENER URL DEL LOGO
-// ============================================================
-//
-// El logo siempre se obtiene directamente desde GitHub.
-//
-// Cada carga genera una URL diferente:
-//
-// logo.png?v=XXXXXXXXXXXX
-//
-// De esta manera, si reemplazamos logo.png en GitHub,
-// la carta toma automáticamente la nueva versión.
-//
-
-function obtenerUrlLogo() {
-
-    return (
-        URL_LOGO +
-        "?v=" +
-        obtenerVersionCache()
-    );
-
-}
-
-
-
-// ============================================================
-// CARGAR LOGO
-// ============================================================
-//
-// El HTML ya NO necesita contener el logo.
-//
-// JavaScript lo crea automáticamente.
-//
-
-function cargarLogo() {
-
-    const encabezado =
-        document.querySelector(".encabezado");
-
-
-    if (!encabezado) {
-
-        return;
-
-    }
-
-
-    // ========================================================
-    // CREAR LOGO
-    // ========================================================
-
-    const logo =
-        document.createElement("img");
-
-
-    logo.id =
-        "logo-don-elio";
-
-
-    logo.src =
-        obtenerUrlLogo();
-
-
-    logo.alt =
-        "Don Elio Pizzas & Pastas";
-
-
-    logo.className =
-        "logo-don-elio";
-
-
-    // ========================================================
-    // ERROR DEL LOGO
-    // ========================================================
-
-    logo.onerror = function () {
-
-        console.error(
-            "No se pudo cargar el logo desde GitHub:",
-            URL_LOGO
-        );
-
-
-        this.style.display =
-            "none";
-
-    };
-
-
-    // ========================================================
-    // INSERTAR LOGO
-    // ========================================================
-
-    encabezado.appendChild(
-        logo
-    );
-
-}
-
 
 
 // ============================================================
@@ -156,9 +38,7 @@ async function cargarProductos() {
     try {
 
         const respuesta = await fetch(
-            URL_PRODUCTOS +
-            "?v=" +
-            obtenerVersionCache(),
+            URL_PRODUCTOS + "?v=" + Date.now(),
             {
                 cache: "no-store"
             }
@@ -174,8 +54,7 @@ async function cargarProductos() {
         }
 
 
-        productos =
-            await respuesta.json();
+        productos = await respuesta.json();
 
 
         mostrarCarta();
@@ -183,8 +62,7 @@ async function cargarProductos() {
 
         document.getElementById(
             "cargando"
-        ).style.display =
-            "none";
+        ).style.display = "none";
 
 
     } catch (error) {
@@ -202,30 +80,115 @@ async function cargarProductos() {
 }
 
 
+// ============================================================
+// CARGAR LOGO
+// ============================================================
+
+function cargarLogo() {
+
+    const encabezado =
+        document.querySelector(".encabezado");
+
+
+    if (!encabezado) {
+
+        return;
+
+    }
+
+
+    // Evitar duplicar el logo
+
+    if (
+        document.getElementById(
+            "logo-don-elio"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const logo =
+        document.createElement("img");
+
+
+    logo.id =
+        "logo-don-elio";
+
+
+    // Cache busting
+
+    logo.src =
+        URL_LOGO +
+        "?v=" +
+        Date.now();
+
+
+    logo.alt =
+        "Don Elio Pizzas & Pastas";
+
+
+    logo.className =
+        "logo-don-elio";
+
+
+    // Si no existe la imagen,
+    // ocultar el logo
+
+    logo.onerror = function () {
+
+        this.style.display =
+            "none";
+
+    };
+
+
+    // Insertar antes del H1
+
+    const titulo =
+        encabezado.querySelector("h1");
+
+
+    if (titulo) {
+
+        encabezado.insertBefore(
+            logo,
+            titulo
+        );
+
+    } else {
+
+        encabezado.prepend(
+            logo
+        );
+
+    }
+
+}
+
 
 // ============================================================
 // OBTENER IMAGEN DEL PRODUCTO
 // ============================================================
-//
-// Casos:
-//
-// 1. El producto tiene "url" en productos.json
-//    → busca esa imagen en GitHub.
-//
-// 2. El producto NO tiene "url"
-//    → utiliza el logo de GitHub.
-//
-// 3. El producto tiene "url", pero la imagen NO existe
-//    → el <img> utiliza el logo mediante onerror.
-//
-// Todas las imágenes llevan cache-busting.
-//
 
 function obtenerImagen(producto) {
 
-    // ========================================================
-    // PRODUCTO CON IMAGEN
-    // ========================================================
+    /*
+        El JSON debe contener:
+
+        "url": "producto.jpg"
+
+        Entonces se buscará:
+
+        https://raw.githubusercontent.com/
+        doneliopizza/CartaDigital/main/fotos/producto.jpg
+
+        Si "url" está vacío o no existe,
+        se utiliza el placeholder.
+    */
+
 
     if (
         producto.url &&
@@ -237,22 +200,15 @@ function obtenerImagen(producto) {
             URL_FOTOS +
             encodeURIComponent(
                 producto.url.trim()
-            ) +
-            "?v=" +
-            obtenerVersionCache()
+            )
         );
 
     }
 
 
-    // ========================================================
-    // PRODUCTO SIN IMAGEN
-    // ========================================================
-
-    return obtenerUrlLogo();
+    return IMAGEN_PLACEHOLDER;
 
 }
-
 
 
 // ============================================================
@@ -374,6 +330,10 @@ function mostrarCarta() {
                                 src="${imagen}"
                                 alt="${producto.nombre}"
                                 loading="lazy"
+                                onerror="
+                                    this.onerror=null;
+                                    this.src='${IMAGEN_PLACEHOLDER}'
+                                "
                             >
 
                         </div>
@@ -411,40 +371,6 @@ function mostrarCarta() {
                     `;
 
 
-                    // =================================================
-                    // MANEJO DE ERROR DE IMAGEN
-                    // =================================================
-                    //
-                    // Si la imagen indicada en el JSON no existe
-                    // en GitHub, automáticamente mostramos el logo.
-                    //
-                    // También agregamos cache-busting al fallback.
-                    //
-
-                    const imagenElemento =
-                        div.querySelector(
-                            ".producto-imagen img"
-                        );
-
-
-                    if (imagenElemento) {
-
-                        imagenElemento.onerror =
-                            function () {
-
-                                // Evitar bucle infinito
-                                this.onerror = null;
-
-
-                                // Mostrar logo actualizado
-                                this.src =
-                                    obtenerUrlLogo();
-
-                            };
-
-                    }
-
-
                     seccion.appendChild(
                         div
                     );
@@ -461,7 +387,6 @@ function mostrarCarta() {
     );
 
 }
-
 
 
 // ============================================================
@@ -483,7 +408,6 @@ function agregarProducto(id) {
     actualizarCarrito();
 
 }
-
 
 
 // ============================================================
@@ -512,7 +436,6 @@ function quitarProducto(id) {
     actualizarCarrito();
 
 }
-
 
 
 // ============================================================
@@ -557,7 +480,6 @@ function obtenerTotalCarrito() {
 }
 
 
-
 // ============================================================
 // OBTENER CANTIDAD
 // ============================================================
@@ -582,7 +504,6 @@ function obtenerCantidadCarrito() {
     return cantidad;
 
 }
-
 
 
 // ============================================================
@@ -620,7 +541,6 @@ function actualizarCarrito() {
     mostrarListaCarrito();
 
 }
-
 
 
 // ============================================================
@@ -759,7 +679,6 @@ function mostrarListaCarrito() {
     crearFormularioPedido();
 
 }
-
 
 
 // ============================================================
@@ -937,7 +856,6 @@ function crearFormularioPedido() {
 }
 
 
-
 // ============================================================
 // CAMBIAR MEDIO DE PAGO
 // ============================================================
@@ -1097,7 +1015,6 @@ function cambiarMedioPago() {
 }
 
 
-
 // ============================================================
 // CALCULAR VUELTO
 // ============================================================
@@ -1197,7 +1114,6 @@ function calcularVuelto() {
 }
 
 
-
 // ============================================================
 // COPIAR ALIAS
 // ============================================================
@@ -1253,7 +1169,6 @@ async function copiarAlias() {
 }
 
 
-
 // ============================================================
 // MOSTRAR CARRITO
 // ============================================================
@@ -1284,7 +1199,6 @@ function mostrarCarrito() {
 }
 
 
-
 // ============================================================
 // CERRAR CARRITO
 // ============================================================
@@ -1299,7 +1213,6 @@ function cerrarCarrito() {
 }
 
 
-
 // ============================================================
 // FORMATEAR PRECIO
 // ============================================================
@@ -1311,7 +1224,6 @@ function formatearPrecio(numero) {
     ).format(numero);
 
 }
-
 
 
 // ============================================================
@@ -1376,7 +1288,6 @@ function obtenerDatosCliente() {
     };
 
 }
-
 
 
 // ============================================================
@@ -1506,7 +1417,6 @@ function validarPedido() {
     return true;
 
 }
-
 
 
 // ============================================================
@@ -1732,7 +1642,6 @@ function generarMensajeWhatsApp() {
 }
 
 
-
 // ============================================================
 // ENVIAR PEDIDO A WHATSAPP
 // ============================================================
@@ -1798,7 +1707,6 @@ function enviarWhatsApp() {
     );
 
 }
-
 
 
 // ============================================================
