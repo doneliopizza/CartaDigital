@@ -750,5 +750,118 @@ main {
     .modal-contenido {
         padding: 15px;
     }
+    
+}
+/* ============================================================
+   IMAGEN AMPLIADA
+============================================================ */
+
+.producto-imagen img {
+    cursor: pointer;
+}
+
+
+/* CONTENEDOR PRINCIPAL */
+
+#visor-imagen {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    z-index: 9999;
+
+}
+
+
+/* CUANDO ESTÁ ABIERTO */
+
+#visor-imagen.activo {
+
+    display: flex;
+
+}
+
+
+/* FONDO OSCURO */
+
+.visor-fondo {
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background:
+        rgba(0, 0, 0, 0.85);
+
+}
+
+
+/* CONTENEDOR DE LA FOTO */
+
+.visor-contenido {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: 90%;
+    max-width: 700px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+/* FOTO */
+
+#imagen-ampliada {
+
+    width: 100%;
+
+    max-height: 85vh;
+
+    object-fit: contain;
+
+    border-radius: 12px;
+
+}
+
+
+/* BOTÓN CERRAR */
+
+.cerrar-imagen {
+
+    position: absolute;
+
+    top: -45px;
+    right: 0;
+
+    width: 40px;
+    height: 40px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    font-size: 24px;
+
+    cursor: pointer;
 
 }
