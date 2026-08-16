@@ -20,7 +20,7 @@ const URL_LOGO =
     URL_FOTOS + "logo.png";
 
 const IMAGEN_PLACEHOLDER =
-    "https://raw.githubusercontent.com/doneliopizza/CartaDigital/refs/heads/main/fotos/logo.png";
+    "https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=500&q=80";
 
 const TELEFONO_WHATSAPP =
     "5491170667389";
@@ -97,7 +97,7 @@ function cargarLogo() {
     }
 
 
-    // Evitar duplicar el logo
+    // Evitar duplicarlo
 
     if (
         document.getElementById(
@@ -118,12 +118,8 @@ function cargarLogo() {
         "logo-don-elio";
 
 
-    // Cache busting
-
     logo.src =
-        URL_LOGO +
-        "?v=" +
-        Date.now();
+        URL_LOGO + "?v=" + Date.now();
 
 
     logo.alt =
@@ -134,18 +130,17 @@ function cargarLogo() {
         "logo-don-elio";
 
 
-    // Si no existe la imagen,
-    // ocultar el logo
+    // Si el logo no existe,
+    // simplemente lo ocultamos
 
     logo.onerror = function () {
 
-        this.style.display =
-            "none";
+        this.style.display = "none";
 
     };
 
 
-    // Insertar antes del H1
+    // Insertar antes del título
 
     const titulo =
         encabezado.querySelector("h1");
@@ -176,23 +171,20 @@ function cargarLogo() {
 function obtenerImagen(producto) {
 
     /*
-        El JSON debe contener:
+        El JSON debe tener:
 
         "url": "producto.jpg"
 
-        Entonces se buscará:
+        Entonces se genera:
 
-        https://raw.githubusercontent.com/
-        doneliopizza/CartaDigital/main/fotos/producto.jpg
+        /fotos/producto.jpg
 
-        Si "url" está vacío o no existe,
-        se utiliza el placeholder.
+        automáticamente.
     */
 
 
     if (
         producto.url &&
-        typeof producto.url === "string" &&
         producto.url.trim() !== ""
     ) {
 
@@ -251,9 +243,7 @@ function mostrarCarta() {
 
             categorias[
                 producto.rubro
-            ].push(
-                producto
-            );
+            ].push(producto);
 
         }
     );
@@ -330,10 +320,7 @@ function mostrarCarta() {
                                 src="${imagen}"
                                 alt="${producto.nombre}"
                                 loading="lazy"
-                                onerror="
-                                    this.onerror=null;
-                                    this.src='${IMAGEN_PLACEHOLDER}'
-                                "
+                                onerror="this.onerror=null;this.src='${IMAGEN_PLACEHOLDER}'"
                             >
 
                         </div>
@@ -361,8 +348,7 @@ function mostrarCarta() {
 
                         <button
                             class="btn-agregar"
-                            onclick="agregarProducto(${producto.id})"
-                        >
+                            onclick="agregarProducto(${producto.id})">
 
                             +
 
@@ -624,8 +610,7 @@ function mostrarListaCarrito() {
                 <div class="controles">
 
                     <button
-                        onclick="quitarProducto(${id})"
-                    >
+                        onclick="quitarProducto(${id})">
 
                         −
 
@@ -638,8 +623,7 @@ function mostrarListaCarrito() {
 
 
                     <button
-                        onclick="agregarProducto(${id})"
-                    >
+                        onclick="agregarProducto(${id})">
 
                         +
 
@@ -956,8 +940,7 @@ function cambiarMedioPago() {
 
                     <button
                         type="button"
-                        onclick="copiarAlias()"
-                    >
+                        onclick="copiarAlias()">
 
                         Copiar
 
@@ -1102,9 +1085,7 @@ function calcularVuelto() {
             Vuelto:
 
             <strong>
-                $${formatearPrecio(
-                    vuelto
-                )}
+                $${formatearPrecio(vuelto)}
             </strong>
 
         </div>
@@ -1127,13 +1108,17 @@ async function copiarAlias() {
         );
 
 
-        const boton =
-            document.querySelector(
+        const botones =
+            document.querySelectorAll(
                 ".alias-transferencia button"
             );
 
 
-        if (boton) {
+        if (botones.length > 0) {
+
+            const boton =
+                botones[0];
+
 
             const textoOriginal =
                 boton.innerText;
@@ -1367,22 +1352,18 @@ function validarPedido() {
 
 
     // ========================================================
-    // VALIDAR EFECTIVO
+    // EFECTIVO
     // ========================================================
 
     if (
         datos.medioPago === "efectivo"
     ) {
 
-        const input =
-            document.getElementById(
-                "monto-efectivo"
-            );
-
-
         const monto =
             Number(
-                input?.value
+                document.getElementById(
+                    "monto-efectivo"
+                )?.value
             );
 
 
@@ -1545,9 +1526,7 @@ function generarMensajeWhatsApp() {
 
     mensaje +=
         "💰 *TOTAL: $" +
-        formatearPrecio(
-            total
-        ) +
+        formatearPrecio(total) +
         "*";
 
 
@@ -1585,17 +1564,13 @@ function generarMensajeWhatsApp() {
 
         mensaje +=
             "Paga con: $" +
-            formatearPrecio(
-                monto
-            ) +
+            formatearPrecio(monto) +
             "\n";
 
 
         mensaje +=
             "Vuelto: $" +
-            formatearPrecio(
-                vuelto
-            );
+            formatearPrecio(vuelto);
 
     }
 
@@ -1611,6 +1586,7 @@ function generarMensajeWhatsApp() {
         mensaje +=
             "Alias: " +
             ALIAS_TRANSFERENCIA;
+
 
     }
 
@@ -1649,7 +1625,7 @@ function generarMensajeWhatsApp() {
 function enviarWhatsApp() {
 
     // ========================================================
-    // VALIDAR CARRITO
+    // CARRITO
     // ========================================================
 
     if (
@@ -1666,7 +1642,7 @@ function enviarWhatsApp() {
 
 
     // ========================================================
-    // VALIDAR DATOS
+    // DATOS
     // ========================================================
 
     if (!validarPedido()) {
@@ -1677,7 +1653,7 @@ function enviarWhatsApp() {
 
 
     // ========================================================
-    // GENERAR MENSAJE
+    // MENSAJE
     // ========================================================
 
     const mensaje =
@@ -1685,7 +1661,7 @@ function enviarWhatsApp() {
 
 
     // ========================================================
-    // CREAR URL
+    // URL
     // ========================================================
 
     const url =
@@ -1710,7 +1686,7 @@ function enviarWhatsApp() {
 
 
 // ============================================================
-// INICIAR CARTA
+// INICIAR
 // ============================================================
 
 cargarLogo();
