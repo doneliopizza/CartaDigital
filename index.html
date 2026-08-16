@@ -15,12 +15,14 @@
 
     <!-- =====================================================
          CSS
-         Cambiar ?v=6 cuando se modifique el CSS
+         La versión se genera automáticamente.
+         Evita que el navegador use una versión vieja.
     ====================================================== -->
 
     <link
         rel="stylesheet"
-        href="style.css?v=5"
+        href="style.css"
+        id="css-principal"
     >
 
 </head>
@@ -158,13 +160,70 @@
 
     <!-- =====================================================
          JAVASCRIPT
-         Cambiar ?v=6 cuando se modifique app.js
+         La versión se genera automáticamente.
     ====================================================== -->
 
     <script
-        src="app.js?v=6"
+        src="app.js"
+        id="js-principal"
         defer
     ></script>
+
+
+
+    <!-- =====================================================
+         CONTROL AUTOMÁTICO DE CACHE
+    ====================================================== -->
+
+    <script>
+
+        /*
+         * Generamos una versión única cada vez
+         * que se carga la página.
+         *
+         * Date.now() devuelve la fecha/hora actual
+         * en milisegundos.
+         */
+
+        const VERSION_CACHE = Date.now();
+
+
+        /*
+         * Agregar versión al CSS
+         */
+
+        const css =
+            document.getElementById(
+                "css-principal"
+            );
+
+        if (css) {
+
+            css.href =
+                "style.css?v=" +
+                VERSION_CACHE;
+
+        }
+
+
+        /*
+         * Agregar versión al JavaScript
+         */
+
+        const js =
+            document.getElementById(
+                "js-principal"
+            );
+
+        if (js) {
+
+            js.src =
+                "app.js?v=" +
+                VERSION_CACHE;
+
+        }
+
+    </script>
 
 
 </body>
