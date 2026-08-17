@@ -14,25 +14,9 @@
 
 
     <!-- =====================================================
-         CONTROL DE CACHE
-    ====================================================== -->
-
-    <script>
-
-        /*
-         * Generamos una versión única por carga.
-         *
-         * Esto evita que el navegador reutilice
-         * style.css y app.js de una carga anterior.
-         */
-
-        const VERSION_CACHE = Date.now();
-
-    </script>
-
-
-    <!-- =====================================================
          CSS
+         La versión se genera automáticamente.
+         Evita que el navegador use una versión vieja.
     ====================================================== -->
 
     <link
@@ -40,7 +24,6 @@
         href="style.css"
         id="css-principal"
     >
-
 
 </head>
 
@@ -50,9 +33,12 @@
 
     <!-- =====================================================
          ENCABEZADO / LOGO
+
+         EL LOGO SE CARGA AUTOMÁTICAMENTE DESDE app.js
     ====================================================== -->
 
     <header class="encabezado"></header>
+
 
 
     <!-- =====================================================
@@ -68,6 +54,7 @@
         <div id="carta"></div>
 
     </main>
+
 
 
     <!-- =====================================================
@@ -102,6 +89,7 @@
     </div>
 
 
+
     <!-- =====================================================
          MODAL DEL CARRITO
     ====================================================== -->
@@ -114,6 +102,8 @@
         <div class="modal-contenido">
 
 
+            <!-- BOTÓN CERRAR -->
+
             <button
                 type="button"
                 class="cerrar"
@@ -124,13 +114,19 @@
             </button>
 
 
+            <!-- TÍTULO -->
+
             <h2>
                 Mi pedido
             </h2>
 
 
+            <!-- PRODUCTOS DEL CARRITO -->
+
             <div id="lista-carrito"></div>
 
+
+            <!-- TOTAL -->
 
             <div class="total-final">
 
@@ -142,6 +138,8 @@
 
             </div>
 
+
+            <!-- WHATSAPP -->
 
             <button
                 type="button"
@@ -159,26 +157,71 @@
     </div>
 
 
+
     <!-- =====================================================
          JAVASCRIPT
+         La versión se genera automáticamente.
+    ====================================================== -->
+
+    <script
+        src="app.js"
+        id="js-principal"
+        defer
+    ></script>
+
+
+
+    <!-- =====================================================
+         CONTROL AUTOMÁTICO DE CACHE
     ====================================================== -->
 
     <script>
 
         /*
-         * Cargamos app.js DESPUÉS de generar
-         * la versión de cache.
+         * Generamos una versión única cada vez
+         * que se carga la página.
+         *
+         * Date.now() devuelve la fecha/hora actual
+         * en milisegundos.
          */
 
-        const script = document.createElement("script");
+        const VERSION_CACHE = Date.now();
 
-        script.src =
-            "app.js?v=" +
-            VERSION_CACHE;
 
-        script.defer = true;
+        /*
+         * Agregar versión al CSS
+         */
 
-        document.body.appendChild(script);
+        const css =
+            document.getElementById(
+                "css-principal"
+            );
+
+        if (css) {
+
+            css.href =
+                "style.css?v=" +
+                VERSION_CACHE;
+
+        }
+
+
+        /*
+         * Agregar versión al JavaScript
+         */
+
+        const js =
+            document.getElementById(
+                "js-principal"
+            );
+
+        if (js) {
+
+            js.src =
+                "app.js?v=" +
+                VERSION_CACHE;
+
+        }
 
     </script>
 
