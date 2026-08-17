@@ -7,8 +7,6 @@ let carrito = {};
 // CONFIGURACIÓN
 // ============================================================
 
-const VERSION_CACHE = Date.now();
-
 const URL_GITHUB =
     "https://raw.githubusercontent.com/doneliopizza/CartaDigital/main";
 
@@ -39,66 +37,50 @@ async function cargarProductos() {
 
     try {
 
-        const respuesta =
-            await fetch(
-                URL_PRODUCTOS +
-                "?v=" +
-                VERSION_CACHE,
-                {
-                    cache: "no-store"
-                }
-            );
-
+        const respuesta = await fetch(
+            URL_PRODUCTOS + "?v=" + Date.now(),
+            {
+                cache: "no-store"
+            }
+        );
 
         if (!respuesta.ok) {
 
             throw new Error(
-                "Error al consultar la API"
+                "Error HTTP " + respuesta.status
             );
 
         }
 
-
-        productos =
-            await respuesta.json();
-
+        productos = await respuesta.json();
 
         console.log(
-            "✅ Productos cargados desde API:",
+            "✅ Productos cargados:",
             productos
         );
 
-
         mostrarCarta();
 
-
         const cargando =
-            document.getElementById(
-                "cargando"
-            );
-
+            document.getElementById("cargando");
 
         if (cargando) {
 
-            cargando.style.display =
-                "none";
+            cargando.style.display = "none";
 
         }
 
+    }
 
-    } catch (error) {
+    catch (error) {
 
         console.error(
             "❌ Error cargando productos:",
             error
         );
 
-
         const cargando =
-            document.getElementById(
-                "cargando"
-            );
-
+            document.getElementById("cargando");
 
         if (cargando) {
 
@@ -119,10 +101,7 @@ async function cargarProductos() {
 function cargarLogo() {
 
     const encabezado =
-        document.querySelector(
-            ".encabezado"
-        );
-
+        document.querySelector(".encabezado");
 
     if (!encabezado) {
 
@@ -130,48 +109,40 @@ function cargarLogo() {
 
     }
 
-
     const logo =
-        document.createElement(
-            "img"
-        );
-
+        document.createElement("img");
 
     logo.id =
         "logo-don-elio";
 
-
     logo.className =
         "logo-don-elio";
-
 
     logo.alt =
         "Don Elio Pizzas & Pastas";
 
-
     logo.src =
-        URL_LOGO +
-        "?v=" +
-        VERSION_CACHE;
-
+        URL_LOGO + "?v=" + Date.now();
 
     logo.onerror = function () {
+
+        console.error(
+            "❌ No se pudo cargar el logo:",
+            this.src
+        );
 
         this.style.display =
             "none";
 
     };
 
-
-    encabezado.appendChild(
-        logo
-    );
+    encabezado.appendChild(logo);
 
 }
 
 
 // ============================================================
-// OBTENER IMAGEN DEL PRODUCTO
+// OBTENER IMAGEN
 // ============================================================
 
 function obtenerImagen(producto) {
@@ -188,17 +159,14 @@ function obtenerImagen(producto) {
                 producto.url.trim()
             ) +
             "?v=" +
-            VERSION_CACHE
+            Date.now()
         );
 
     }
 
-
-    return (
-        IMAGEN_PLACEHOLDER +
+    return IMAGEN_PLACEHOLDER +
         "?v=" +
-        VERSION_CACHE
-    );
+        Date.now();
 
 }
 
@@ -210,10 +178,7 @@ function obtenerImagen(producto) {
 function mostrarCarta() {
 
     const carta =
-        document.getElementById(
-            "carta"
-        );
-
+        document.getElementById("carta");
 
     if (!carta) {
 
@@ -221,162 +186,116 @@ function mostrarCarta() {
 
     }
 
-
     carta.innerHTML = "";
-
 
     const categorias = {};
 
 
-    productos.forEach(
-        producto => {
+    productos.forEach(producto => {
 
-            const rubro =
-                producto.rubro ||
-                "Otros";
+        const rubro =
+            producto.rubro ||
+            "Otros";
 
+        if (!categorias[rubro]) {
 
-            if (!categorias[rubro]) {
-
-                categorias[rubro] = [];
-
-            }
-
-
-            categorias[rubro].push(
-                producto
-            );
+            categorias[rubro] = [];
 
         }
-    );
+
+        categorias[rubro].push(producto);
+
+    });
 
 
-    Object.keys(
-        categorias
-    ).forEach(
-        rubro => {
+    Object.keys(categorias).forEach(rubro => {
 
-            const seccion =
-                document.createElement(
-                    "section"
-                );
+        const seccion =
+            document.createElement("section");
+
+        seccion.className =
+            "categoria";
 
 
-            seccion.className =
-                "categoria";
+        const titulo =
+            document.createElement("h2");
+
+        titulo.innerText =
+            rubro;
+
+        seccion.appendChild(titulo);
 
 
-            const titulo =
-                document.createElement(
-                    "h2"
-                );
+        categorias[rubro].forEach(producto => {
+
+            const div =
+                document.createElement("div");
+
+            div.className =
+                "producto";
 
 
-            titulo.innerText =
-                rubro;
+            const imagen =
+                obtenerImagen(producto);
 
 
-            seccion.appendChild(
-                titulo
-            );
+            div.innerHTML = `
+
+                <div class="producto-imagen">
+
+                    <img
+                        src="${imagen}"
+                        alt="${producto.nombre || ""}"
+                        loading="lazy"
+                        onclick="verImagenGrande(this)"
+                        onerror="
+                            this.onerror=null;
+                            this.src='${IMAGEN_PLACEHOLDER}?v=${Date.now()}'
+                        "
+                    >
+
+                </div>
 
 
-            categorias[rubro].forEach(
-                producto => {
+                <div class="producto-info">
 
-                    const div =
-                        document.createElement(
-                            "div"
-                        );
+                    <div class="producto-nombre">
 
+                        ${producto.nombre || ""}
 
-                    div.className =
-                        "producto";
+                    </div>
 
 
-                    const imagen =
-                        obtenerImagen(
-                            producto
-                        );
+                    <div class="producto-precio">
+
+                        $${formatearPrecio(
+                            Number(producto.precio) || 0
+                        )}
+
+                    </div>
+
+                </div>
 
 
-                    const nombre =
-                        producto.nombre || "";
+                <button
+                    type="button"
+                    class="btn-agregar"
+                    onclick="agregarProducto(${producto.id})"
+                >
+                    +
+                </button>
+
+            `;
 
 
-                    const precio =
-                        Number(
-                            producto.precio
-                        ) || 0;
+            seccion.appendChild(div);
+
+        });
 
 
-                    const id =
-                        producto.id;
+        carta.appendChild(seccion);
 
-
-                    div.innerHTML = `
-
-                        <div class="producto-imagen">
-
-                            <img
-                                src="${imagen}"
-                                alt="${nombre}"
-                                loading="lazy"
-                                onclick="verImagenGrande(this)"
-                                onerror="
-                                    this.onerror=null;
-                                    this.src='${IMAGEN_PLACEHOLDER}?v=${VERSION_CACHE}'
-                                "
-                            >
-
-                        </div>
-
-
-                        <div class="producto-info">
-
-                            <div class="producto-nombre">
-
-                                ${nombre}
-
-                            </div>
-
-
-                            <div class="producto-precio">
-
-                                $${formatearPrecio(precio)}
-
-                            </div>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            class="btn-agregar"
-                            onclick="agregarProducto(${id})"
-                        >
-
-                            +
-
-                        </button>
-
-                    `;
-
-
-                    seccion.appendChild(
-                        div
-                    );
-
-                }
-            );
-
-
-            carta.appendChild(
-                seccion
-            );
-
-        }
-    );
+    });
 
 }
 
@@ -391,10 +310,7 @@ function verImagenGrande(imagen) {
 
 
     const visor =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     visor.id =
         "visor-imagen";
@@ -406,14 +322,13 @@ function verImagenGrande(imagen) {
 
             <img
                 src="${imagen.src}"
-                alt="${imagen.alt || "Imagen"}"
+                alt="${imagen.alt || ""}"
             >
 
-
             <button
-                class="visor-imagen-cerrar"
                 type="button"
-                aria-label="Cerrar imagen"
+                class="visor-imagen-cerrar"
+                aria-label="Cerrar"
             >
                 ×
             </button>
@@ -423,9 +338,7 @@ function verImagenGrande(imagen) {
     `;
 
 
-    document.body.appendChild(
-        visor
-    );
+    document.body.appendChild(visor);
 
 
     const fondo =
@@ -434,40 +347,32 @@ function verImagenGrande(imagen) {
         );
 
 
-    if (fondo) {
-
-        fondo.addEventListener(
-            "click",
-            function(evento) {
-
-                if (
-                    evento.target === fondo
-                ) {
-
-                    cerrarImagenGrande();
-
-                }
-
-            }
-        );
-
-    }
-
-
-    const botonCerrar =
+    const boton =
         visor.querySelector(
             ".visor-imagen-cerrar"
         );
 
 
-    if (botonCerrar) {
+    fondo.addEventListener(
+        "click",
+        function(evento) {
 
-        botonCerrar.addEventListener(
-            "click",
-            cerrarImagenGrande
-        );
+            if (
+                evento.target === fondo
+            ) {
 
-    }
+                cerrarImagenGrande();
+
+            }
+
+        }
+    );
+
+
+    boton.addEventListener(
+        "click",
+        cerrarImagenGrande
+    );
 
 
     document.addEventListener(
@@ -483,7 +388,7 @@ function verImagenGrande(imagen) {
 
 
 // ============================================================
-// CERRAR IMAGEN GRANDE
+// CERRAR VISOR
 // ============================================================
 
 function cerrarImagenGrande() {
@@ -493,17 +398,14 @@ function cerrarImagenGrande() {
             "visor-imagen"
         );
 
-
     if (visor) {
 
         visor.remove();
 
     }
 
-
     document.body.style.overflow =
         "";
-
 
     document.removeEventListener(
         "keydown",
@@ -514,7 +416,7 @@ function cerrarImagenGrande() {
 
 
 // ============================================================
-// CERRAR CON ESCAPE
+// ESC
 // ============================================================
 
 function cerrarImagenConEscape(evento) {
@@ -542,9 +444,7 @@ function agregarProducto(id) {
 
     }
 
-
     carrito[id]++;
-
 
     actualizarCarrito();
 
@@ -552,7 +452,7 @@ function agregarProducto(id) {
 
 
 // ============================================================
-// RESTAR PRODUCTO
+// QUITAR PRODUCTO
 // ============================================================
 
 function quitarProducto(id) {
@@ -563,18 +463,13 @@ function quitarProducto(id) {
 
     }
 
-
     carrito[id]--;
 
-
-    if (
-        carrito[id] <= 0
-    ) {
+    if (carrito[id] <= 0) {
 
         delete carrito[id];
 
     }
-
 
     actualizarCarrito();
 
@@ -582,7 +477,7 @@ function quitarProducto(id) {
 
 
 // ============================================================
-// TOTAL CARRITO
+// TOTAL
 // ============================================================
 
 function obtenerTotalCarrito() {
@@ -590,32 +485,24 @@ function obtenerTotalCarrito() {
     let total = 0;
 
 
-    Object.keys(
-        carrito
-    ).forEach(
-        id => {
+    Object.keys(carrito).forEach(id => {
 
-            const producto =
-                productos.find(
-                    p => p.id == id
-                );
+        const producto =
+            productos.find(
+                p => p.id == id
+            );
 
+        if (!producto) {
 
-            if (!producto) {
-
-                return;
-
-            }
-
-
-            total +=
-                Number(
-                    producto.precio
-                ) *
-                carrito[id];
+            return;
 
         }
-    );
+
+        total +=
+            Number(producto.precio) *
+            carrito[id];
+
+    });
 
 
     return total;
@@ -624,7 +511,7 @@ function obtenerTotalCarrito() {
 
 
 // ============================================================
-// CANTIDAD CARRITO
+// CANTIDAD
 // ============================================================
 
 function obtenerCantidadCarrito() {
@@ -632,16 +519,12 @@ function obtenerCantidadCarrito() {
     let cantidad = 0;
 
 
-    Object.keys(
-        carrito
-    ).forEach(
-        id => {
+    Object.keys(carrito).forEach(id => {
 
-            cantidad +=
-                carrito[id];
+        cantidad +=
+            carrito[id];
 
-        }
-    );
+    });
 
 
     return cantidad;
@@ -658,26 +541,25 @@ function actualizarCarrito() {
     const cantidad =
         obtenerCantidadCarrito();
 
-
     const total =
         obtenerTotalCarrito();
 
 
-    const elementoCantidad =
+    const cantidadElemento =
         document.getElementById(
             "cantidad-carrito"
         );
 
 
-    const elementoTotal =
+    const totalElemento =
         document.getElementById(
             "total-carrito"
         );
 
 
-    if (elementoCantidad) {
+    if (cantidadElemento) {
 
-        elementoCantidad.innerText =
+        cantidadElemento.innerText =
             cantidad === 1
                 ? "1 producto"
                 : `${cantidad} productos`;
@@ -685,9 +567,9 @@ function actualizarCarrito() {
     }
 
 
-    if (elementoTotal) {
+    if (totalElemento) {
 
-        elementoTotal.innerText =
+        totalElemento.innerText =
             `$${formatearPrecio(total)}`;
 
     }
@@ -709,7 +591,6 @@ function mostrarListaCarrito() {
             "lista-carrito"
         );
 
-
     if (!lista) {
 
         return;
@@ -720,109 +601,95 @@ function mostrarListaCarrito() {
     lista.innerHTML = "";
 
 
-    Object.keys(
-        carrito
-    ).forEach(
-        id => {
+    Object.keys(carrito).forEach(id => {
 
-            const producto =
-                productos.find(
-                    p => p.id == id
-                );
-
-
-            if (!producto) {
-
-                return;
-
-            }
-
-
-            const cantidad =
-                carrito[id];
-
-
-            const subtotal =
-                Number(
-                    producto.precio
-                ) *
-                cantidad;
-
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-
-            div.className =
-                "item-carrito";
-
-
-            div.innerHTML = `
-
-                <div>
-
-                    <strong>
-                        ${producto.nombre}
-                    </strong>
-
-                    <br>
-
-                    $${formatearPrecio(subtotal)}
-
-                </div>
-
-
-                <div class="controles">
-
-                    <button
-                        type="button"
-                        onclick="quitarProducto(${id})"
-                    >
-                        −
-                    </button>
-
-
-                    <strong>
-                        ${cantidad}
-                    </strong>
-
-
-                    <button
-                        type="button"
-                        onclick="agregarProducto(${id})"
-                    >
-                        +
-                    </button>
-
-                </div>
-
-            `;
-
-
-            lista.appendChild(
-                div
+        const producto =
+            productos.find(
+                p => p.id == id
             );
 
+        if (!producto) {
+
+            return;
+
         }
-    );
+
+
+        const cantidad =
+            carrito[id];
+
+
+        const subtotal =
+            Number(producto.precio) *
+            cantidad;
+
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "item-carrito";
+
+
+        div.innerHTML = `
+
+            <div>
+
+                <strong>
+                    ${producto.nombre}
+                </strong>
+
+                <br>
+
+                $${formatearPrecio(subtotal)}
+
+            </div>
+
+
+            <div class="controles">
+
+                <button
+                    type="button"
+                    onclick="quitarProducto(${id})"
+                >
+                    −
+                </button>
+
+
+                <strong>
+                    ${cantidad}
+                </strong>
+
+
+                <button
+                    type="button"
+                    onclick="agregarProducto(${id})"
+                >
+                    +
+                </button>
+
+            </div>
+
+        `;
+
+
+        lista.appendChild(div);
+
+    });
 
 
     const total =
-        obtenerTotalCarrito();
-
-
-    const totalModal =
         document.getElementById(
             "total-modal"
         );
 
 
-    if (totalModal) {
+    if (total) {
 
-        totalModal.innerText =
-            `$${formatearPrecio(total)}`;
+        total.innerText =
+            `$${formatearPrecio(
+                obtenerTotalCarrito()
+            )}`;
 
     }
 
@@ -847,26 +714,21 @@ function crearFormularioPedido() {
     if (!formulario) {
 
         formulario =
-            document.createElement(
-                "div"
-            );
-
+            document.createElement("div");
 
         formulario.id =
             "formulario-pedido";
 
 
-        const botonWhatsApp =
+        const boton =
             document.querySelector(
                 ".btn-whatsapp"
             );
 
 
-        if (botonWhatsApp) {
+        if (boton) {
 
-            botonWhatsApp.before(
-                formulario
-            );
+            boton.before(formulario);
 
         }
 
@@ -1018,12 +880,10 @@ function cambiarMedioPago() {
             'input[name="medio-pago"]:checked'
         );
 
-
     const detalle =
         document.getElementById(
             "detalle-pago"
         );
-
 
     if (!detalle) {
 
@@ -1041,9 +901,7 @@ function cambiarMedioPago() {
     }
 
 
-    if (
-        medio.value === "efectivo"
-    ) {
+    if (medio.value === "efectivo") {
 
         detalle.innerHTML = `
 
@@ -1073,9 +931,7 @@ function cambiarMedioPago() {
     }
 
 
-    if (
-        medio.value === "transferencia"
-    ) {
+    if (medio.value === "transferencia") {
 
         detalle.innerHTML = `
 
@@ -1108,8 +964,7 @@ function cambiarMedioPago() {
 
 
                 <p>
-                    Después enviá el comprobante
-                    junto con el pedido por WhatsApp.
+                    Después enviá el comprobante junto con el pedido por WhatsApp.
                 </p>
 
             </div>
@@ -1121,9 +976,7 @@ function cambiarMedioPago() {
     }
 
 
-    if (
-        medio.value === "mercadopago"
-    ) {
+    if (medio.value === "mercadopago") {
 
         detalle.innerHTML = `
 
@@ -1134,13 +987,11 @@ function cambiarMedioPago() {
                 </strong>
 
                 <p>
-                    Seleccioná esta opción y enviá
-                    el pedido por WhatsApp.
+                    Seleccioná esta opción y enviá el pedido por WhatsApp.
                 </p>
 
                 <p>
-                    Te indicaremos cómo realizar
-                    el pago.
+                    Te indicaremos cómo realizar el pago.
                 </p>
 
             </div>
@@ -1153,7 +1004,7 @@ function cambiarMedioPago() {
 
 
 // ============================================================
-// CALCULAR VUELTO
+// VUELTO
 // ============================================================
 
 function calcularVuelto() {
@@ -1163,17 +1014,12 @@ function calcularVuelto() {
             "monto-efectivo"
         );
 
-
     const resultado =
         document.getElementById(
             "resultado-vuelto"
         );
 
-
-    if (
-        !input ||
-        !resultado
-    ) {
+    if (!input || !resultado) {
 
         return;
 
@@ -1181,10 +1027,7 @@ function calcularVuelto() {
 
 
     const monto =
-        Number(
-            input.value
-        );
-
+        Number(input.value);
 
     const total =
         obtenerTotalCarrito();
@@ -1207,7 +1050,10 @@ function calcularVuelto() {
 
         resultado.innerHTML = `
 
-            <div class="mensaje-faltante">
+            <div style="
+                color:#c0392b;
+                margin-top:8px;
+            ">
 
                 Faltan
 
@@ -1228,7 +1074,10 @@ function calcularVuelto() {
 
     resultado.innerHTML = `
 
-        <div class="mensaje-vuelto">
+        <div style="
+            color:#27ae60;
+            margin-top:8px;
+        ">
 
             Vuelto:
 
@@ -1264,28 +1113,25 @@ async function copiarAlias() {
 
         if (boton) {
 
-            const textoOriginal =
+            const texto =
                 boton.innerText;
-
 
             boton.innerText =
                 "¡Copiado!";
 
 
-            setTimeout(
-                () => {
+            setTimeout(() => {
 
-                    boton.innerText =
-                        textoOriginal;
+                boton.innerText =
+                    texto;
 
-                },
-                2000
-            );
+            }, 2000);
 
         }
 
+    }
 
-    } catch (error) {
+    catch (error) {
 
         alert(
             "No se pudo copiar automáticamente.\n\n" +
@@ -1366,15 +1212,13 @@ function formatearPrecio(numero) {
 
     return new Intl.NumberFormat(
         "es-AR"
-    ).format(
-        Number(numero) || 0
-    );
+    ).format(numero);
 
 }
 
 
 // ============================================================
-// OBTENER DATOS CLIENTE
+// DATOS CLIENTE
 // ============================================================
 
 function obtenerDatosCliente() {
@@ -1418,13 +1262,9 @@ function obtenerDatosCliente() {
     return {
 
         nombre,
-
         telefono,
-
         calle,
-
         altura,
-
         localidad,
 
         medioPago:
@@ -1511,15 +1351,11 @@ function validarPedido() {
         datos.medioPago === "efectivo"
     ) {
 
-        const input =
-            document.getElementById(
-                "monto-efectivo"
-            );
-
-
         const monto =
             Number(
-                input?.value
+                document.getElementById(
+                    "monto-efectivo"
+                )?.value
             );
 
 
@@ -1571,21 +1407,16 @@ function generarMensajeWhatsApp() {
 
 
     let mensaje =
-        "🍕 *NUEVO PEDIDO - DON ELIO*";
-
-
-    mensaje += "\n\n";
+        "🍕 *NUEVO PEDIDO - DON ELIO*\n\n";
 
 
     mensaje +=
         "👤 *CLIENTE*\n";
 
-
     mensaje +=
         "Nombre: " +
         datos.nombre +
         "\n";
-
 
     mensaje +=
         "Teléfono: " +
@@ -1596,18 +1427,15 @@ function generarMensajeWhatsApp() {
     mensaje +=
         "📍 *DIRECCIÓN DE ENTREGA*\n";
 
-
     mensaje +=
         "Calle: " +
         datos.calle +
         "\n";
 
-
     mensaje +=
         "Altura: " +
         datos.altura +
         "\n";
-
 
     mensaje +=
         "Localidad: " +
@@ -1619,54 +1447,39 @@ function generarMensajeWhatsApp() {
         "🛒 *PEDIDO*\n";
 
 
-    Object.keys(
-        carrito
-    ).forEach(
-        id => {
+    Object.keys(carrito).forEach(id => {
 
-            const producto =
-                productos.find(
-                    p => p.id == id
-                );
+        const producto =
+            productos.find(
+                p => p.id == id
+            );
 
+        if (!producto) {
 
-            if (!producto) {
-
-                return;
-
-            }
-
-
-            const cantidad =
-                carrito[id];
-
-
-            const subtotal =
-                Number(
-                    producto.precio
-                ) *
-                cantidad;
-
-
-            mensaje +=
-                `${cantidad} x ` +
-                `${producto.nombre} - ` +
-                `$${formatearPrecio(subtotal)}\n`;
+            return;
 
         }
-    );
 
 
-    mensaje += "\n";
+        const cantidad =
+            carrito[id];
+
+
+        const subtotal =
+            Number(producto.precio) *
+            cantidad;
+
+
+        mensaje +=
+            `${cantidad} x ${producto.nombre} - $${formatearPrecio(subtotal)}\n`;
+
+    });
 
 
     mensaje +=
-        "💰 *TOTAL: $" +
+        "\n💰 *TOTAL: $" +
         formatearPrecio(total) +
-        "*";
-
-
-    mensaje += "\n\n";
+        "*\n\n";
 
 
     mensaje +=
@@ -1692,12 +1505,10 @@ function generarMensajeWhatsApp() {
         mensaje +=
             "Efectivo\n";
 
-
         mensaje +=
             "Paga con: $" +
             formatearPrecio(monto) +
             "\n";
-
 
         mensaje +=
             "Vuelto: $" +
@@ -1713,7 +1524,6 @@ function generarMensajeWhatsApp() {
         mensaje +=
             "Transferencia\n";
 
-
         mensaje +=
             "Alias: " +
             ALIAS_TRANSFERENCIA;
@@ -1728,18 +1538,14 @@ function generarMensajeWhatsApp() {
         mensaje +=
             "Mercado Pago\n";
 
-
         mensaje +=
             "Coordinar pago por WhatsApp.";
 
     }
 
 
-    mensaje += "\n\n";
-
-
     mensaje +=
-        "📲 Pedido realizado desde la carta digital.";
+        "\n\n📲 Pedido realizado desde la carta digital.";
 
 
     return mensaje;
@@ -1781,9 +1587,7 @@ function enviarWhatsApp() {
         "https://wa.me/" +
         TELEFONO_WHATSAPP +
         "?text=" +
-        encodeURIComponent(
-            mensaje
-        );
+        encodeURIComponent(mensaje);
 
 
     window.open(
@@ -1795,7 +1599,7 @@ function enviarWhatsApp() {
 
 
 // ============================================================
-// INICIAR CARTA
+// INICIAR
 // ============================================================
 
 document.addEventListener(
