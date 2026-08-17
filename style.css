@@ -1715,7 +1715,30 @@ function enviarWhatsApp() {
 // ============================================================
 // INICIAR CARTA
 // ============================================================
+// ============================================================
+// AMPLIAR IMAGEN DEL PRODUCTO
+// ============================================================
 
+function ampliarImagen(imagen) {
+
+    const visor = document.createElement("div");
+
+    visor.className = "visor-imagen";
+
+    visor.innerHTML = `
+        <img
+            src="${imagen.src}"
+            alt="${imagen.alt}"
+        >
+    `;
+
+    visor.onclick = function () {
+        visor.remove();
+    };
+
+    document.body.appendChild(visor);
+
+}
 cargarLogo();
 
 cargarProductos();
