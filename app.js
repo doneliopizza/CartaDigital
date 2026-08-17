@@ -20,7 +20,7 @@ const URL_LOGO =
     URL_FOTOS + "logo.png";
 
 const IMAGEN_PLACEHOLDER =
-    "https://raw.githubusercontent.com/doneliopizza/CartaDigital/refs/heads/main/fotos/logo.png";
+    "https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=500&q=80";
 
 const TELEFONO_WHATSAPP =
     "5491170667389";
@@ -326,17 +326,16 @@ function mostrarCarta() {
 
                         <div class="producto-imagen">
 
-
                             <img
                                 src="${imagen}"
                                 alt="${producto.nombre}"
                                 loading="lazy"
-                                onclick="ampliarImagen('${imagen}')"
                                 onerror="
                                     this.onerror=null;
                                     this.src='${IMAGEN_PLACEHOLDER}'
                                 "
                             >
+
                         </div>
 
 
@@ -389,126 +388,7 @@ function mostrarCarta() {
 
 }
 
-// ============================================================
-// AMPLIAR IMAGEN DEL PRODUCTO
-// ============================================================
 
-function ampliarImagen(imagen) {
-
-    let visor =
-        document.getElementById(
-            "visor-imagen"
-        );
-
-
-    // Si todavía no existe, lo creamos
-
-    if (!visor) {
-
-        visor =
-            document.createElement(
-                "div"
-            );
-
-
-        visor.id =
-            "visor-imagen";
-
-
-        visor.innerHTML = `
-
-            <div
-                class="visor-fondo"
-                onclick="cerrarImagen()"
-            ></div>
-
-
-            <div class="visor-contenido">
-
-
-                <button
-                    type="button"
-                    class="cerrar-imagen"
-                    onclick="cerrarImagen()"
-                    aria-label="Cerrar imagen"
-                >
-                    ✕
-                </button>
-
-
-                <img
-                    id="imagen-ampliada"
-                    src=""
-                    alt="Imagen ampliada"
-                >
-
-
-            </div>
-
-        `;
-
-
-        document.body.appendChild(
-            visor
-        );
-
-    }
-
-
-    const imagenAmpliada =
-        document.getElementById(
-            "imagen-ampliada"
-        );
-
-
-    imagenAmpliada.src =
-        imagen;
-
-
-    visor.classList.add(
-        "activo"
-    );
-
-
-    // Evitar que el fondo se pueda mover
-
-    document.body.style.overflow =
-        "hidden";
-
-}
-
-
-
-// ============================================================
-// CERRAR IMAGEN AMPLIADA
-// ============================================================
-
-function cerrarImagen() {
-
-    const visor =
-        document.getElementById(
-            "visor-imagen"
-        );
-
-
-    if (!visor) {
-
-        return;
-
-    }
-
-
-    visor.classList.remove(
-        "activo"
-    );
-
-
-    // Volver a permitir scroll
-
-    document.body.style.overflow =
-        "";
-
-}
 // ============================================================
 // AGREGAR PRODUCTO
 // ============================================================

@@ -1,14 +1,5 @@
 [
     {
-        "id": 274,
-        "nombre": "01 Calzone de prueba",
-        "precio": 1234.0,
-        "rubro_id": 1,
-        "rubro": "Pizza",
-        "orden": 0,
-        "url": "274.jpg"
-    },
-    {
         "id": 23,
         "nombre": "Pizza 4 Quesos",
         "precio": 26000.0,
