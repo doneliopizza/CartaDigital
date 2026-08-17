@@ -10,29 +10,9 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <meta
-        http-equiv="Cache-Control"
-        content="no-cache, no-store, must-revalidate"
-    >
-
-    <meta
-        http-equiv="Pragma"
-        content="no-cache"
-    >
-
-    <meta
-        http-equiv="Expires"
-        content="0"
-    >
-
     <title>Don Elio - Carta Digital</title>
 
-
-    <!-- =====================================================
-         CSS
-         Se carga con una versión nueva en cada visita.
-    ====================================================== -->
-
+    <!-- CSS -->
     <link
         rel="stylesheet"
         href="style.css?v=1"
@@ -68,7 +48,7 @@
 
 
     <!-- =====================================================
-         BARRA FIJA DEL CARRITO
+         CARRITO FIJO
     ====================================================== -->
 
     <div id="carrito-barra">
@@ -83,11 +63,9 @@
 
         </div>
 
-
         <strong id="total-carrito">
             $0
         </strong>
-
 
         <button
             type="button"
@@ -100,7 +78,7 @@
 
 
     <!-- =====================================================
-         MODAL DEL CARRITO
+         MODAL CARRITO
     ====================================================== -->
 
     <div
@@ -109,7 +87,6 @@
     >
 
         <div class="modal-contenido">
-
 
             <button
                 type="button"
@@ -120,14 +97,11 @@
                 ✕
             </button>
 
-
             <h2>
                 Mi pedido
             </h2>
 
-
             <div id="lista-carrito"></div>
-
 
             <div class="total-final">
 
@@ -139,7 +113,6 @@
 
             </div>
 
-
             <button
                 type="button"
                 class="btn-whatsapp"
@@ -148,52 +121,51 @@
                 🟢 Enviar pedido por WhatsApp
             </button>
 
-
         </div>
 
     </div>
 
 
     <!-- =====================================================
-         CARGA DINÁMICA DEL JAVASCRIPT
-         Cada visita obtiene una versión nueva.
+         JAVASCRIPT
+         El ?v= cambia automáticamente en cada carga.
     ====================================================== -->
 
     <script>
 
-        const VERSION_CACHE = Date.now();
+        const versionCache = Date.now();
 
-
-        /* =====================================================
-           CSS SIN CACHE
-        ===================================================== */
-
-        const css =
-            document.getElementById("css-principal");
+        const css = document.getElementById("css-principal");
 
         if (css) {
 
             css.href =
                 "style.css?v=" +
-                VERSION_CACHE;
+                versionCache;
 
         }
 
+    </script>
 
-        /* =====================================================
-           JAVASCRIPT SIN CACHE
-        ===================================================== */
 
-        const script =
-            document.createElement("script");
+    <script
+        src="app.js?v=1"
+        id="js-principal"
+        defer
+    ></script>
 
-        script.src =
-            "app.js?v=" +
-            VERSION_CACHE;
 
-        script.defer = true;
+    <script>
 
-        document.body.appendChild(script);
+        const js = document.getElementById("js-principal");
+
+        if (js) {
+
+            js.src =
+                "app.js?v=" +
+                Date.now();
+
+        }
 
     </script>
 
