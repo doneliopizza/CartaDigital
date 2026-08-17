@@ -1,73 +1,1901 @@
-/* ============================================================
-   VISOR DE IMAGEN GRANDE
-   ============================================================ */
+let productos = [];
 
-#visor-imagen {
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
+let carrito = {};
+
+
+// ============================================================
+// CONFIGURACIÓN
+// ============================================================
+
+const URL_GITHUB =
+    "https://raw.githubusercontent.com/doneliopizza/CartaDigital/main";
+
+const URL_PRODUCTOS =
+    "https://cartadigitalapi.onrender.com/productos";
+
+const URL_FOTOS =
+    URL_GITHUB + "/fotos/";
+
+const URL_LOGO =
+    URL_FOTOS + "logo.png";
+
+const IMAGEN_PLACEHOLDER =
+    "https://raw.githubusercontent.com/doneliopizza/CartaDigital/refs/heads/main/fotos/logo.png";
+
+const TELEFONO_WHATSAPP =
+    "5491170667389";
+
+const ALIAS_TRANSFERENCIA =
+    "donelio.pizza";
+
+
+// ============================================================
+// CARGAR PRODUCTOS
+// ============================================================
+
+async function cargarProductos() {
+
+    try {
+
+        const respuesta =
+            await fetch(
+                URL_PRODUCTOS + "?v=" + Date.now(),
+                {
+                    cache: "no-store"
+                }
+            );
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                "Error al consultar la API"
+            );
+
+        }
+
+
+        productos =
+            await respuesta.json();
+
+
+        console.log(
+            "✅ Productos cargados desde API:",
+            productos
+        );
+
+
+        mostrarCarta();
+
+
+        document.getElementById(
+            "cargando"
+        ).style.display = "none";
+
+
+    } catch (error) {
+
+        console.error(
+            "❌ Error cargando productos:",
+            error
+        );
+
+
+        document.getElementById(
+            "cargando"
+        ).innerText =
+            "No se pudo cargar la carta.";
+
+    }
+
 }
 
 
-.visor-imagen-fondo {
-    position: fixed;
-    inset: 0;
+// ============================================================
+// CARGAR LOGO
+// ============================================================
 
-    background: rgba(0, 0, 0, 0.90);
+function cargarLogo() {
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    const encabezado =
+        document.querySelector(
+            ".encabezado"
+        );
 
-    padding: 20px;
 
-    cursor: zoom-out;
+    if (!encabezado) {
+
+        return;
+
+    }
+
+
+    // Evitar duplicar el logo
+
+    if (
+        document.getElementById(
+            "logo-don-elio"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const logo =
+        document.createElement(
+            "img"
+        );
+
+
+    logo.id =
+        "logo-don-elio";
+
+
+    // Cache busting
+
+    logo.src =
+        URL_LOGO +
+        "?v=" +
+        Date.now();
+
+
+    logo.alt =
+        "Don Elio Pizzas & Pastas";
+
+
+    logo.className =
+        "logo-don-elio";
+
+
+    // Si no existe la imagen,
+    // ocultar el logo
+
+    logo.onerror = function () {
+
+        this.style.display =
+            "none";
+
+    };
+
+
+    // Insertar antes del H1
+
+    const titulo =
+        encabezado.querySelector(
+            "h1"
+        );
+
+
+    if (titulo) {
+
+        encabezado.insertBefore(
+            logo,
+            titulo
+        );
+
+    } else {
+
+        encabezado.prepend(
+            logo
+        );
+
+    }
+
 }
 
 
-.visor-imagen-fondo img {
-    max-width: 95vw;
-    max-height: 90vh;
+// ============================================================
+// OBTENER IMAGEN DEL PRODUCTO
+// ============================================================
 
-    width: auto;
-    height: auto;
+function obtenerImagen(producto) {
 
-    object-fit: contain;
+    /*
+        El JSON debe contener:
 
-    border-radius: 10px;
+        "url": "producto.jpg"
 
-    box-shadow:
-        0 10px 40px rgba(0, 0, 0, 0.5);
+        Entonces se buscará:
 
-    cursor: default;
+        https://raw.githubusercontent.com/
+        doneliopizza/CartaDigital/main/fotos/producto.jpg
+
+        Si "url" está vacío o no existe,
+        se utiliza el placeholder.
+    */
+
+
+    if (
+        producto.url &&
+        typeof producto.url === "string" &&
+        producto.url.trim() !== ""
+    ) {
+
+        return (
+            URL_FOTOS +
+            encodeURIComponent(
+                producto.url.trim()
+            )
+        );
+
+    }
+
+
+    return IMAGEN_PLACEHOLDER;
+
 }
 
 
-.visor-imagen-cerrar {
-    position: fixed;
+// ============================================================
+// MOSTRAR CARTA
+// ============================================================
 
-    top: 15px;
-    right: 15px;
+function mostrarCarta() {
 
-    width: 45px;
-    height: 45px;
+    const carta =
+        document.getElementById(
+            "carta"
+        );
 
-    border: none;
-    border-radius: 50%;
 
-    background: rgba(255, 255, 255, 0.9);
+    carta.innerHTML = "";
 
-    color: #222;
 
-    font-size: 32px;
-    line-height: 40px;
+    const categorias = {};
 
-    cursor: pointer;
 
-    z-index: 100000;
+    // ========================================================
+    // AGRUPAR PRODUCTOS POR RUBRO
+    // ========================================================
+
+    productos.forEach(
+        producto => {
+
+            if (
+                !categorias[
+                    producto.rubro
+                ]
+            ) {
+
+                categorias[
+                    producto.rubro
+                ] = [];
+
+            }
+
+
+            categorias[
+                producto.rubro
+            ].push(
+                producto
+            );
+
+        }
+    );
+
+
+    // ========================================================
+    // CREAR CATEGORÍAS
+    // ========================================================
+
+    Object.keys(
+        categorias
+    ).forEach(
+        rubro => {
+
+            const seccion =
+                document.createElement(
+                    "section"
+                );
+
+
+            seccion.className =
+                "categoria";
+
+
+            // =================================================
+            // TÍTULO
+            // =================================================
+
+            const titulo =
+                document.createElement(
+                    "h2"
+                );
+
+
+            titulo.innerText =
+                rubro;
+
+
+            seccion.appendChild(
+                titulo
+            );
+
+
+            // =================================================
+            // PRODUCTOS
+            // =================================================
+
+            categorias[
+                rubro
+            ].forEach(
+                producto => {
+
+                    const div =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    div.className =
+                        "producto";
+
+
+                    const imagen =
+                        obtenerImagen(
+                            producto
+                        );
+
+
+                    div.innerHTML = `
+
+                        <div class="producto-imagen">
+
+                            <img
+                                src="${imagen}"
+                                alt="${producto.nombre}"
+                                loading="lazy"
+                                onclick="verImagenGrande('${imagen}')"
+                                onerror="
+                                    this.onerror=null;
+                                    this.src='${IMAGEN_PLACEHOLDER}'
+                                "
+                            >
+
+                        </div>
+
+
+                        <div class="producto-info">
+
+                            <div class="producto-nombre">
+
+                                ${producto.nombre}
+
+                            </div>
+
+
+                            <div class="producto-precio">
+
+                                $${formatearPrecio(
+                                    producto.precio
+                                )}
+
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            class="btn-agregar"
+                            onclick="agregarProducto(${producto.id})"
+                        >
+
+                            +
+
+                        </button>
+
+                    `;
+
+
+                    seccion.appendChild(
+                        div
+                    );
+
+                }
+            );
+
+
+            carta.appendChild(
+                seccion
+            );
+
+        }
+    );
+
 }
 
 
-.visor-imagen-cerrar:hover {
-    background: white;
+// ============================================================
+// VISOR DE IMAGEN GRANDE
+// ============================================================
+
+function verImagenGrande(url) {
+
+    // Si ya existe un visor, eliminarlo
+
+    const visorAnterior =
+        document.getElementById(
+            "visor-imagen"
+        );
+
+
+    if (visorAnterior) {
+
+        visorAnterior.remove();
+
+    }
+
+
+    // Crear visor
+
+    const visor =
+        document.createElement(
+            "div"
+        );
+
+
+    visor.id =
+        "visor-imagen";
+
+
+    visor.innerHTML = `
+
+        <div class="visor-imagen-fondo">
+
+            <img
+                src="${url}"
+                alt="Imagen ampliada"
+            >
+
+            <button
+                class="visor-imagen-cerrar"
+                type="button"
+            >
+                ×
+            </button>
+
+        </div>
+
+    `;
+
+
+    // Agregar al documento
+
+    document.body.appendChild(
+        visor
+    );
+
+
+    // ========================================================
+    // CERRAR AL TOCAR EL FONDO
+    // ========================================================
+
+    visor
+        .querySelector(
+            ".visor-imagen-fondo"
+        )
+        .addEventListener(
+            "click",
+            function (evento) {
+
+                if (
+                    evento.target === this
+                ) {
+
+                    cerrarImagenGrande();
+
+                }
+
+            }
+        );
+
+
+    // ========================================================
+    // BOTÓN CERRAR
+    // ========================================================
+
+    visor
+        .querySelector(
+            ".visor-imagen-cerrar"
+        )
+        .addEventListener(
+            "click",
+            cerrarImagenGrande
+        );
+
+
+    // ========================================================
+    // CERRAR CON ESC
+    // ========================================================
+
+    document.addEventListener(
+        "keydown",
+        cerrarImagenConEscape
+    );
+
+
+    // Evitar scroll de la página
+
+    document.body.style.overflow =
+        "hidden";
+
 }
+
+
+// ============================================================
+// CERRAR IMAGEN GRANDE
+// ============================================================
+
+function cerrarImagenGrande() {
+
+    const visor =
+        document.getElementById(
+            "visor-imagen"
+        );
+
+
+    if (visor) {
+
+        visor.remove();
+
+    }
+
+
+    document.body.style.overflow =
+        "";
+
+
+    document.removeEventListener(
+        "keydown",
+        cerrarImagenConEscape
+    );
+
+}
+
+
+// ============================================================
+// CERRAR VISOR CON ESC
+// ============================================================
+
+function cerrarImagenConEscape(evento) {
+
+    if (
+        evento.key === "Escape"
+    ) {
+
+        cerrarImagenGrande();
+
+    }
+
+}
+
+
+// ============================================================
+// AGREGAR PRODUCTO
+// ============================================================
+
+function agregarProducto(id) {
+
+    if (!carrito[id]) {
+
+        carrito[id] = 0;
+
+    }
+
+
+    carrito[id]++;
+
+
+    actualizarCarrito();
+
+}
+
+
+// ============================================================
+// RESTAR PRODUCTO
+// ============================================================
+
+function quitarProducto(id) {
+
+    if (!carrito[id]) {
+
+        return;
+
+    }
+
+
+    carrito[id]--;
+
+
+    if (carrito[id] <= 0) {
+
+        delete carrito[id];
+
+    }
+
+
+    actualizarCarrito();
+
+}
+
+
+// ============================================================
+// OBTENER TOTAL
+// ============================================================
+
+function obtenerTotalCarrito() {
+
+    let total = 0;
+
+
+    Object.keys(
+        carrito
+    ).forEach(
+        id => {
+
+            const producto =
+                productos.find(
+                    p => p.id == id
+                );
+
+
+            if (!producto) {
+
+                return;
+
+            }
+
+
+            total +=
+                Number(
+                    producto.precio
+                ) *
+                carrito[id];
+
+        }
+    );
+
+
+    return total;
+
+}
+
+
+// ============================================================
+// OBTENER CANTIDAD
+// ============================================================
+
+function obtenerCantidadCarrito() {
+
+    let cantidad = 0;
+
+
+    Object.keys(
+        carrito
+    ).forEach(
+        id => {
+
+            cantidad +=
+                carrito[id];
+
+        }
+    );
+
+
+    return cantidad;
+
+}
+
+
+// ============================================================
+// ACTUALIZAR CARRITO
+// ============================================================
+
+function actualizarCarrito() {
+
+    const cantidad =
+        obtenerCantidadCarrito();
+
+
+    const total =
+        obtenerTotalCarrito();
+
+
+    document.getElementById(
+        "cantidad-carrito"
+    ).innerText =
+
+        cantidad === 1
+
+            ? "1 producto"
+
+            : `${cantidad} productos`;
+
+
+    document.getElementById(
+        "total-carrito"
+    ).innerText =
+
+        `$${formatearPrecio(total)}`;
+
+
+    mostrarListaCarrito();
+
+}
+
+
+// ============================================================
+// MOSTRAR LISTA DEL CARRITO
+// ============================================================
+
+function mostrarListaCarrito() {
+
+    const lista =
+        document.getElementById(
+            "lista-carrito"
+        );
+
+
+    if (!lista) {
+
+        return;
+
+    }
+
+
+    lista.innerHTML = "";
+
+
+    Object.keys(
+        carrito
+    ).forEach(
+        id => {
+
+            const producto =
+                productos.find(
+                    p => p.id == id
+                );
+
+
+            if (!producto) {
+
+                return;
+
+            }
+
+
+            const cantidad =
+                carrito[id];
+
+
+            const subtotal =
+                Number(
+                    producto.precio
+                ) *
+                cantidad;
+
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "item-carrito";
+
+
+            div.innerHTML = `
+
+                <div>
+
+                    <strong>
+                        ${producto.nombre}
+                    </strong>
+
+                    <br>
+
+                    $${formatearPrecio(
+                        subtotal
+                    )}
+
+                </div>
+
+
+                <div class="controles">
+
+                    <button
+                        onclick="quitarProducto(${id})"
+                    >
+
+                        −
+
+                    </button>
+
+
+                    <strong>
+                        ${cantidad}
+                    </strong>
+
+
+                    <button
+                        onclick="agregarProducto(${id})"
+                    >
+
+                        +
+
+                    </button>
+
+                </div>
+
+            `;
+
+
+            lista.appendChild(
+                div
+            );
+
+        }
+    );
+
+
+    const total =
+        obtenerTotalCarrito();
+
+
+    const totalModal =
+        document.getElementById(
+            "total-modal"
+        );
+
+
+    if (totalModal) {
+
+        totalModal.innerText =
+            `$${formatearPrecio(total)}`;
+
+    }
+
+
+    crearFormularioPedido();
+
+}
+
+
+// ============================================================
+// CREAR FORMULARIO
+// ============================================================
+
+function crearFormularioPedido() {
+
+    let formulario =
+        document.getElementById(
+            "formulario-pedido"
+        );
+
+
+    if (!formulario) {
+
+        formulario =
+            document.createElement(
+                "div"
+            );
+
+
+        formulario.id =
+            "formulario-pedido";
+
+
+        const botonWhatsApp =
+            document.querySelector(
+                ".btn-whatsapp"
+            );
+
+
+        if (botonWhatsApp) {
+
+            botonWhatsApp.before(
+                formulario
+            );
+
+        }
+
+    }
+
+
+    formulario.innerHTML = `
+
+        <div class="datos-pedido">
+
+            <h3>
+                👤 Datos del cliente
+            </h3>
+
+
+            <label>
+                Nombre
+            </label>
+
+            <input
+                type="text"
+                id="cliente-nombre"
+                placeholder="Tu nombre"
+                autocomplete="name"
+            >
+
+
+            <label>
+                Teléfono de contacto
+            </label>
+
+            <input
+                type="tel"
+                id="cliente-telefono"
+                placeholder="Ej: 11 7066 7389"
+                autocomplete="tel"
+            >
+
+
+            <h3>
+                📍 Dirección de entrega
+            </h3>
+
+
+            <label>
+                Calle
+            </label>
+
+            <input
+                type="text"
+                id="cliente-calle"
+                placeholder="Ej: Av. San Martín"
+                autocomplete="street-address"
+            >
+
+
+            <label>
+                Altura
+            </label>
+
+            <input
+                type="number"
+                id="cliente-altura"
+                placeholder="Ej: 1234"
+                inputmode="numeric"
+            >
+
+
+            <label>
+                Localidad
+            </label>
+
+            <input
+                type="text"
+                id="cliente-localidad"
+                placeholder="Ej: Villa Ballester"
+                autocomplete="address-level2"
+            >
+
+
+            <h3>
+                💳 Medio de pago
+            </h3>
+
+
+            <div class="medios-pago">
+
+                <label class="medio-opcion">
+
+                    <input
+                        type="radio"
+                        name="medio-pago"
+                        value="efectivo"
+                        onchange="cambiarMedioPago()"
+                    >
+
+                    💵 Efectivo
+
+                </label>
+
+
+                <label class="medio-opcion">
+
+                    <input
+                        type="radio"
+                        name="medio-pago"
+                        value="transferencia"
+                        onchange="cambiarMedioPago()"
+                    >
+
+                    🏦 Transferencia
+
+                </label>
+
+
+                <label class="medio-opcion">
+
+                    <input
+                        type="radio"
+                        name="medio-pago"
+                        value="mercadopago"
+                        onchange="cambiarMedioPago()"
+                    >
+
+                    Mercado Pago
+
+                </label>
+
+            </div>
+
+
+            <div id="detalle-pago"></div>
+
+        </div>
+
+    `;
+
+}
+
+
+// ============================================================
+// CAMBIAR MEDIO DE PAGO
+// ============================================================
+
+function cambiarMedioPago() {
+
+    const medio =
+        document.querySelector(
+            'input[name="medio-pago"]:checked'
+        );
+
+
+    const detalle =
+        document.getElementById(
+            "detalle-pago"
+        );
+
+
+    if (!detalle) {
+
+        return;
+
+    }
+
+
+    if (!medio) {
+
+        detalle.innerHTML = "";
+
+        return;
+
+    }
+
+
+    // ========================================================
+    // EFECTIVO
+    // ========================================================
+
+    if (
+        medio.value === "efectivo"
+    ) {
+
+        detalle.innerHTML = `
+
+            <div class="detalle-efectivo">
+
+                <label>
+                    💵 ¿Con cuánto vas a pagar?
+                </label>
+
+                <input
+                    type="number"
+                    id="monto-efectivo"
+                    placeholder="Ej: 20000"
+                    min="0"
+                    inputmode="numeric"
+                    oninput="calcularVuelto()"
+                >
+
+                <div id="resultado-vuelto"></div>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    // ========================================================
+    // TRANSFERENCIA
+    // ========================================================
+
+    if (
+        medio.value === "transferencia"
+    ) {
+
+        detalle.innerHTML = `
+
+            <div class="detalle-transferencia">
+
+                <strong>
+                    🏦 Transferencia bancaria
+                </strong>
+
+                <p>
+                    Realizá la transferencia al siguiente alias:
+                </p>
+
+
+                <div class="alias-transferencia">
+
+                    <span>
+                        ${ALIAS_TRANSFERENCIA}
+                    </span>
+
+
+                    <button
+                        type="button"
+                        onclick="copiarAlias()"
+                    >
+
+                        Copiar
+
+                    </button>
+
+                </div>
+
+
+                <p>
+                    Después enviá el comprobante
+                    junto con el pedido por WhatsApp.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    // ========================================================
+    // MERCADO PAGO
+    // ========================================================
+
+    if (
+        medio.value === "mercadopago"
+    ) {
+
+        detalle.innerHTML = `
+
+            <div class="detalle-mercadopago">
+
+                <strong>
+                    Mercado Pago
+                </strong>
+
+                <p>
+                    Seleccioná esta opción y enviá
+                    el pedido por WhatsApp.
+                </p>
+
+                <p>
+                    Te indicaremos cómo realizar
+                    el pago.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+// ============================================================
+// CALCULAR VUELTO
+// ============================================================
+
+function calcularVuelto() {
+
+    const input =
+        document.getElementById(
+            "monto-efectivo"
+        );
+
+
+    const resultado =
+        document.getElementById(
+            "resultado-vuelto"
+        );
+
+
+    if (
+        !input ||
+        !resultado
+    ) {
+
+        return;
+
+    }
+
+
+    const monto =
+        Number(
+            input.value
+        );
+
+
+    const total =
+        obtenerTotalCarrito();
+
+
+    if (!monto) {
+
+        resultado.innerHTML = "";
+
+        return;
+
+    }
+
+
+    const vuelto =
+        monto - total;
+
+
+    if (vuelto < 0) {
+
+        resultado.innerHTML = `
+
+            <div style="
+                color:#c0392b;
+                margin-top:8px;
+            ">
+
+                Faltan
+
+                <strong>
+                    $${formatearPrecio(
+                        Math.abs(vuelto)
+                    )}
+                </strong>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    resultado.innerHTML = `
+
+        <div style="
+            color:#27ae60;
+            margin-top:8px;
+        ">
+
+            Vuelto:
+
+            <strong>
+                $${formatearPrecio(
+                    vuelto
+                )}
+            </strong>
+
+        </div>
+
+    `;
+
+}
+
+
+// ============================================================
+// COPIAR ALIAS
+// ============================================================
+
+async function copiarAlias() {
+
+    try {
+
+        await navigator.clipboard.writeText(
+            ALIAS_TRANSFERENCIA
+        );
+
+
+        const boton =
+            document.querySelector(
+                ".alias-transferencia button"
+            );
+
+
+        if (boton) {
+
+            const textoOriginal =
+                boton.innerText;
+
+
+            boton.innerText =
+                "¡Copiado!";
+
+
+            setTimeout(
+                () => {
+
+                    boton.innerText =
+                        textoOriginal;
+
+                },
+                2000
+            );
+
+        }
+
+
+    } catch (error) {
+
+        alert(
+            "No se pudo copiar automáticamente.\n\n" +
+            "Alias: " +
+            ALIAS_TRANSFERENCIA
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// MOSTRAR CARRITO
+// ============================================================
+
+function mostrarCarrito() {
+
+    if (
+        Object.keys(carrito).length === 0
+    ) {
+
+        alert(
+            "Agregá al menos un producto al pedido."
+        );
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "modal-carrito"
+    ).style.display =
+        "block";
+
+
+    mostrarListaCarrito();
+
+}
+
+
+// ============================================================
+// CERRAR CARRITO
+// ============================================================
+
+function cerrarCarrito() {
+
+    document.getElementById(
+        "modal-carrito"
+    ).style.display =
+        "none";
+
+}
+
+
+// ============================================================
+// FORMATEAR PRECIO
+// ============================================================
+
+function formatearPrecio(numero) {
+
+    return new Intl.NumberFormat(
+        "es-AR"
+    ).format(numero);
+
+}
+
+
+// ============================================================
+// OBTENER DATOS CLIENTE
+// ============================================================
+
+function obtenerDatosCliente() {
+
+    const nombre =
+        document.getElementById(
+            "cliente-nombre"
+        )?.value.trim();
+
+
+    const telefono =
+        document.getElementById(
+            "cliente-telefono"
+        )?.value.trim();
+
+
+    const calle =
+        document.getElementById(
+            "cliente-calle"
+        )?.value.trim();
+
+
+    const altura =
+        document.getElementById(
+            "cliente-altura"
+        )?.value.trim();
+
+
+    const localidad =
+        document.getElementById(
+            "cliente-localidad"
+        )?.value.trim();
+
+
+    const medioPago =
+        document.querySelector(
+            'input[name="medio-pago"]:checked'
+        );
+
+
+    return {
+
+        nombre,
+
+        telefono,
+
+        calle,
+
+        altura,
+
+        localidad,
+
+        medioPago:
+            medioPago
+                ? medioPago.value
+                : null
+
+    };
+
+}
+
+
+// ============================================================
+// VALIDAR PEDIDO
+// ============================================================
+
+function validarPedido() {
+
+    const datos =
+        obtenerDatosCliente();
+
+
+    if (!datos.nombre) {
+
+        alert(
+            "Ingresá tu nombre."
+        );
+
+        return false;
+
+    }
+
+
+    if (!datos.telefono) {
+
+        alert(
+            "Ingresá un teléfono de contacto."
+        );
+
+        return false;
+
+    }
+
+
+    if (!datos.calle) {
+
+        alert(
+            "Ingresá la calle."
+        );
+
+        return false;
+
+    }
+
+
+    if (!datos.altura) {
+
+        alert(
+            "Ingresá la altura."
+        );
+
+        return false;
+
+    }
+
+
+    if (!datos.localidad) {
+
+        alert(
+            "Ingresá la localidad."
+        );
+
+        return false;
+
+    }
+
+
+    if (!datos.medioPago) {
+
+        alert(
+            "Seleccioná un medio de pago."
+        );
+
+        return false;
+
+    }
+
+
+    // ========================================================
+    // VALIDAR EFECTIVO
+    // ========================================================
+
+    if (
+        datos.medioPago === "efectivo"
+    ) {
+
+        const input =
+            document.getElementById(
+                "monto-efectivo"
+            );
+
+
+        const monto =
+            Number(
+                input?.value
+            );
+
+
+        const total =
+            obtenerTotalCarrito();
+
+
+        if (!monto) {
+
+            alert(
+                "Indicá con cuánto vas a pagar."
+            );
+
+            return false;
+
+        }
+
+
+        if (monto < total) {
+
+            alert(
+                "El monto ingresado es menor al total del pedido."
+            );
+
+            return false;
+
+        }
+
+    }
+
+
+    return true;
+
+}
+
+
+// ============================================================
+// GENERAR MENSAJE WHATSAPP
+// ============================================================
+
+function generarMensajeWhatsApp() {
+
+    const datos =
+        obtenerDatosCliente();
+
+
+    const total =
+        obtenerTotalCarrito();
+
+
+    let mensaje =
+        "🍕 *NUEVO PEDIDO - DON ELIO*";
+
+
+    mensaje +=
+        "\n\n";
+
+
+    // ========================================================
+    // CLIENTE
+    // ========================================================
+
+    mensaje +=
+        "👤 *CLIENTE*\n";
+
+
+    mensaje +=
+        "Nombre: " +
+        datos.nombre +
+        "\n";
+
+
+    mensaje +=
+        "Teléfono: " +
+        datos.telefono +
+        "\n\n";
+
+
+    // ========================================================
+    // DIRECCIÓN
+    // ========================================================
+
+    mensaje +=
+        "📍 *DIRECCIÓN DE ENTREGA*\n";
+
+
+    mensaje +=
+        "Calle: " +
+        datos.calle +
+        "\n";
+
+
+    mensaje +=
+        "Altura: " +
+        datos.altura +
+        "\n";
+
+
+    mensaje +=
+        "Localidad: " +
+        datos.localidad +
+        "\n\n";
+
+
+    // ========================================================
+    // PEDIDO
+    // ========================================================
+
+    mensaje +=
+        "🛒 *PEDIDO*\n";
+
+
+    Object.keys(
+        carrito
+    ).forEach(
+        id => {
+
+            const producto =
+                productos.find(
+                    p => p.id == id
+                );
+
+
+            if (!producto) {
+
+                return;
+
+            }
+
+
+            const cantidad =
+                carrito[id];
+
+
+            const subtotal =
+                Number(
+                    producto.precio
+                ) *
+                cantidad;
+
+
+            mensaje +=
+                `${cantidad} x ` +
+                `${producto.nombre} - ` +
+                `$${formatearPrecio(
+                    subtotal
+                )}\n`;
+
+        }
+    );
+
+
+    mensaje +=
+        "\n";
+
+
+    // ========================================================
+    // TOTAL
+    // ========================================================
+
+    mensaje +=
+        "💰 *TOTAL: $" +
+        formatearPrecio(
+            total
+        ) +
+        "*";
+
+
+    mensaje +=
+        "\n\n";
+
+
+    // ========================================================
+    // MEDIO DE PAGO
+    // ========================================================
+
+    mensaje +=
+        "💳 *MEDIO DE PAGO*\n";
+
+
+    if (
+        datos.medioPago === "efectivo"
+    ) {
+
+        const monto =
+            Number(
+                document.getElementById(
+                    "monto-efectivo"
+                ).value
+            );
+
+
+        const vuelto =
+            monto - total;
+
+
+        mensaje +=
+            "Efectivo\n";
+
+
+        mensaje +=
+            "Paga con: $" +
+            formatearPrecio(
+                monto
+            ) +
+            "\n";
+
+
+        mensaje +=
+            "Vuelto: $" +
+            formatearPrecio(
+                vuelto
+            );
+
+    }
+
+
+    if (
+        datos.medioPago === "transferencia"
+    ) {
+
+        mensaje +=
+            "Transferencia\n";
+
+
+        mensaje +=
+            "Alias: " +
+            ALIAS_TRANSFERENCIA;
+
+    }
+
+
+    if (
+        datos.medioPago === "mercadopago"
+    ) {
+
+        mensaje +=
+            "Mercado Pago\n";
+
+
+        mensaje +=
+            "Coordinar pago por WhatsApp.";
+
+    }
+
+
+    mensaje +=
+        "\n\n";
+
+
+    mensaje +=
+        "📲 Pedido realizado desde la carta digital.";
+
+
+    return mensaje;
+
+}
+
+
+// ============================================================
+// ENVIAR PEDIDO A WHATSAPP
+// ============================================================
+
+function enviarWhatsApp() {
+
+    // ========================================================
+    // VALIDAR CARRITO
+    // ========================================================
+
+    if (
+        Object.keys(carrito).length === 0
+    ) {
+
+        alert(
+            "El carrito está vacío."
+        );
+
+        return;
+
+    }
+
+
+    // ========================================================
+    // VALIDAR DATOS
+    // ========================================================
+
+    if (!validarPedido()) {
+
+        return;
+
+    }
+
+
+    // ========================================================
+    // GENERAR MENSAJE
+    // ========================================================
+
+    const mensaje =
+        generarMensajeWhatsApp();
+
+
+    // ========================================================
+    // CREAR URL
+    // ========================================================
+
+    const url =
+        "https://wa.me/" +
+        TELEFONO_WHATSAPP +
+        "?text=" +
+        encodeURIComponent(
+            mensaje
+        );
+
+
+    // ========================================================
+    // ABRIR WHATSAPP
+    // ========================================================
+
+    window.open(
+        url,
+        "_blank"
+    );
+
+}
+
+
+// ============================================================
+// INICIAR CARTA
+// ============================================================
+
+cargarLogo();
+
+cargarProductos();
