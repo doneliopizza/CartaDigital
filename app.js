@@ -347,7 +347,7 @@ function mostrarCarta() {
                                 src="${imagen}"
                                 alt="${producto.nombre}"
                                 loading="lazy"
-                                onclick="verImagenGrande('${imagen}')"
+                                onclick="verImagenGrande(this)"
                                 onerror="
                                     this.onerror=null;
                                     this.src='${IMAGEN_PLACEHOLDER}'
@@ -406,35 +406,24 @@ function mostrarCarta() {
 
 }
 
-
 // ============================================================
 // VISOR DE IMAGEN GRANDE
 // ============================================================
 
-function verImagenGrande(url) {
+function verImagenGrande(imagen) {
 
-    // Si ya existe un visor, eliminarlo
-
+    // Si ya existe un visor, lo eliminamos
     const visorAnterior =
-        document.getElementById(
-            "visor-imagen"
-        );
-
+        document.getElementById("visor-imagen");
 
     if (visorAnterior) {
-
         visorAnterior.remove();
-
     }
 
 
     // Crear visor
-
     const visor =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     visor.id =
         "visor-imagen";
@@ -445,8 +434,9 @@ function verImagenGrande(url) {
         <div class="visor-imagen-fondo">
 
             <img
-                src="${url}"
-                alt="Imagen ampliada"
+                src="${imagen.src}"
+                alt="${imagen.alt}"
+                class="imagen-ampliada"
             >
 
             <button
@@ -461,45 +451,32 @@ function verImagenGrande(url) {
     `;
 
 
-    // Agregar al documento
-
-    document.body.appendChild(
-        visor
-    );
+    document.body.appendChild(visor);
 
 
     // ========================================================
-    // CERRAR AL TOCAR EL FONDO
+    // CERRAR TOCANDO EL FONDO
     // ========================================================
 
     visor
-        .querySelector(
-            ".visor-imagen-fondo"
-        )
-        .addEventListener(
-            "click",
-            function (evento) {
+        .querySelector(".visor-imagen-fondo")
+        .addEventListener("click", function(evento) {
 
-                if (
-                    evento.target === this
-                ) {
+            if (evento.target === this) {
 
-                    cerrarImagenGrande();
-
-                }
+                cerrarImagenGrande();
 
             }
-        );
+
+        });
 
 
     // ========================================================
-    // BOTÓN CERRAR
+    // CERRAR BOTÓN X
     // ========================================================
 
     visor
-        .querySelector(
-            ".visor-imagen-cerrar"
-        )
+        .querySelector(".visor-imagen-cerrar")
         .addEventListener(
             "click",
             cerrarImagenGrande
@@ -516,10 +493,8 @@ function verImagenGrande(url) {
     );
 
 
-    // Evitar scroll de la página
-
-    document.body.style.overflow =
-        "hidden";
+    // Evitar que la página se desplace
+    document.body.style.overflow = "hidden";
 
 }
 
@@ -543,8 +518,7 @@ function cerrarImagenGrande() {
     }
 
 
-    document.body.style.overflow =
-        "";
+    document.body.style.overflow = "";
 
 
     document.removeEventListener(
@@ -556,10 +530,18 @@ function cerrarImagenGrande() {
 
 
 // ============================================================
-// CERRAR VISOR CON ESC
+// CERRAR CON ESC
 // ============================================================
 
 function cerrarImagenConEscape(evento) {
+
+    if (evento.key === "Escape") {
+
+        cerrarImagenGrande();
+
+    }
+
+}
 
     if (
         evento.key === "Escape"
