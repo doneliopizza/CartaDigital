@@ -7,6 +7,8 @@ let carrito = {};
 // CONFIGURACIÓN
 // ============================================================
 
+const VERSION_CACHE = Date.now();
+
 const URL_GITHUB =
     "https://raw.githubusercontent.com/doneliopizza/CartaDigital/main";
 
@@ -20,7 +22,7 @@ const URL_LOGO =
     URL_FOTOS + "logo.png";
 
 const IMAGEN_PLACEHOLDER =
-    "https://raw.githubusercontent.com/doneliopizza/CartaDigital/refs/heads/main/fotos/logo.png";
+    URL_FOTOS + "logo.png";
 
 const TELEFONO_WHATSAPP =
     "5491170667389";
@@ -39,7 +41,9 @@ async function cargarProductos() {
 
         const respuesta =
             await fetch(
-                URL_PRODUCTOS + "?v=" + Date.now(),
+                URL_PRODUCTOS +
+                "?v=" +
+                VERSION_CACHE,
                 {
                     cache: "no-store"
                 }
@@ -68,9 +72,18 @@ async function cargarProductos() {
         mostrarCarta();
 
 
-        document.getElementById(
-            "cargando"
-        ).style.display = "none";
+        const cargando =
+            document.getElementById(
+                "cargando"
+            );
+
+
+        if (cargando) {
+
+            cargando.style.display =
+                "none";
+
+        }
 
 
     } catch (error) {
@@ -81,10 +94,18 @@ async function cargarProductos() {
         );
 
 
-        document.getElementById(
-            "cargando"
-        ).innerText =
-            "No se pudo cargar la carta.";
+        const cargando =
+            document.getElementById(
+                "cargando"
+            );
+
+
+        if (cargando) {
+
+            cargando.innerText =
+                "No se pudo cargar la carta.";
+
+        }
 
     }
 
@@ -110,19 +131,6 @@ function cargarLogo() {
     }
 
 
-    // Evitar duplicar el logo
-
-    if (
-        document.getElementById(
-            "logo-don-elio"
-        )
-    ) {
-
-        return;
-
-    }
-
-
     const logo =
         document.createElement(
             "img"
@@ -133,24 +141,19 @@ function cargarLogo() {
         "logo-don-elio";
 
 
-    // Cache busting
-
-    logo.src =
-        URL_LOGO +
-        "?v=" +
-        Date.now();
+    logo.className =
+        "logo-don-elio";
 
 
     logo.alt =
         "Don Elio Pizzas & Pastas";
 
 
-    logo.className =
-        "logo-don-elio";
+    logo.src =
+        URL_LOGO +
+        "?v=" +
+        VERSION_CACHE;
 
-
-    // Si no existe la imagen,
-    // ocultar el logo
 
     logo.onerror = function () {
 
@@ -160,28 +163,9 @@ function cargarLogo() {
     };
 
 
-    // Insertar antes del H1
-
-    const titulo =
-        encabezado.querySelector(
-            "h1"
-        );
-
-
-    if (titulo) {
-
-        encabezado.insertBefore(
-            logo,
-            titulo
-        );
-
-    } else {
-
-        encabezado.prepend(
-            logo
-        );
-
-    }
+    encabezado.appendChild(
+        logo
+    );
 
 }
 
@@ -191,21 +175,6 @@ function cargarLogo() {
 // ============================================================
 
 function obtenerImagen(producto) {
-
-    /*
-        El JSON debe contener:
-
-        "url": "producto.jpg"
-
-        Entonces se buscará:
-
-        https://raw.githubusercontent.com/
-        doneliopizza/CartaDigital/main/fotos/producto.jpg
-
-        Si "url" está vacío o no existe,
-        se utiliza el placeholder.
-    */
-
 
     if (
         producto.url &&
@@ -217,13 +186,19 @@ function obtenerImagen(producto) {
             URL_FOTOS +
             encodeURIComponent(
                 producto.url.trim()
-            )
+            ) +
+            "?v=" +
+            VERSION_CACHE
         );
 
     }
 
 
-    return IMAGEN_PLACEHOLDER;
+    return (
+        IMAGEN_PLACEHOLDER +
+        "?v=" +
+        VERSION_CACHE
+    );
 
 }
 
@@ -240,45 +215,41 @@ function mostrarCarta() {
         );
 
 
+    if (!carta) {
+
+        return;
+
+    }
+
+
     carta.innerHTML = "";
 
 
     const categorias = {};
 
 
-    // ========================================================
-    // AGRUPAR PRODUCTOS POR RUBRO
-    // ========================================================
-
     productos.forEach(
         producto => {
 
-            if (
-                !categorias[
-                    producto.rubro
-                ]
-            ) {
+            const rubro =
+                producto.rubro ||
+                "Otros";
 
-                categorias[
-                    producto.rubro
-                ] = [];
+
+            if (!categorias[rubro]) {
+
+                categorias[rubro] = [];
 
             }
 
 
-            categorias[
-                producto.rubro
-            ].push(
+            categorias[rubro].push(
                 producto
             );
 
         }
     );
 
-
-    // ========================================================
-    // CREAR CATEGORÍAS
-    // ========================================================
 
     Object.keys(
         categorias
@@ -295,10 +266,6 @@ function mostrarCarta() {
                 "categoria";
 
 
-            // =================================================
-            // TÍTULO
-            // =================================================
-
             const titulo =
                 document.createElement(
                     "h2"
@@ -314,13 +281,7 @@ function mostrarCarta() {
             );
 
 
-            // =================================================
-            // PRODUCTOS
-            // =================================================
-
-            categorias[
-                rubro
-            ].forEach(
+            categorias[rubro].forEach(
                 producto => {
 
                     const div =
@@ -339,18 +300,32 @@ function mostrarCarta() {
                         );
 
 
+                    const nombre =
+                        producto.nombre || "";
+
+
+                    const precio =
+                        Number(
+                            producto.precio
+                        ) || 0;
+
+
+                    const id =
+                        producto.id;
+
+
                     div.innerHTML = `
 
                         <div class="producto-imagen">
 
                             <img
                                 src="${imagen}"
-                                alt="${producto.nombre}"
+                                alt="${nombre}"
                                 loading="lazy"
                                 onclick="verImagenGrande(this)"
                                 onerror="
                                     this.onerror=null;
-                                    this.src='${IMAGEN_PLACEHOLDER}'
+                                    this.src='${IMAGEN_PLACEHOLDER}?v=${VERSION_CACHE}'
                                 "
                             >
 
@@ -361,16 +336,14 @@ function mostrarCarta() {
 
                             <div class="producto-nombre">
 
-                                ${producto.nombre}
+                                ${nombre}
 
                             </div>
 
 
                             <div class="producto-precio">
 
-                                $${formatearPrecio(
-                                    producto.precio
-                                )}
+                                $${formatearPrecio(precio)}
 
                             </div>
 
@@ -378,8 +351,9 @@ function mostrarCarta() {
 
 
                         <button
+                            type="button"
                             class="btn-agregar"
-                            onclick="agregarProducto(${producto.id})"
+                            onclick="agregarProducto(${id})"
                         >
 
                             +
@@ -406,24 +380,21 @@ function mostrarCarta() {
 
 }
 
+
 // ============================================================
 // VISOR DE IMAGEN GRANDE
 // ============================================================
 
 function verImagenGrande(imagen) {
 
-    // Si ya existe un visor, lo eliminamos
-    const visorAnterior =
-        document.getElementById("visor-imagen");
-
-    if (visorAnterior) {
-        visorAnterior.remove();
-    }
+    cerrarImagenGrande();
 
 
-    // Crear visor
     const visor =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     visor.id =
         "visor-imagen";
@@ -435,13 +406,14 @@ function verImagenGrande(imagen) {
 
             <img
                 src="${imagen.src}"
-                alt="${imagen.alt}"
-                class="imagen-ampliada"
+                alt="${imagen.alt || "Imagen"}"
             >
+
 
             <button
                 class="visor-imagen-cerrar"
                 type="button"
+                aria-label="Cerrar imagen"
             >
                 ×
             </button>
@@ -451,41 +423,52 @@ function verImagenGrande(imagen) {
     `;
 
 
-    document.body.appendChild(visor);
+    document.body.appendChild(
+        visor
+    );
 
 
-    // ========================================================
-    // CERRAR TOCANDO EL FONDO
-    // ========================================================
+    const fondo =
+        visor.querySelector(
+            ".visor-imagen-fondo"
+        );
 
-    visor
-        .querySelector(".visor-imagen-fondo")
-        .addEventListener("click", function(evento) {
 
-            if (evento.target === this) {
+    if (fondo) {
 
-                cerrarImagenGrande();
+        fondo.addEventListener(
+            "click",
+            function(evento) {
+
+                if (
+                    evento.target === fondo
+                ) {
+
+                    cerrarImagenGrande();
+
+                }
 
             }
+        );
 
-        });
+    }
 
 
-    // ========================================================
-    // CERRAR BOTÓN X
-    // ========================================================
+    const botonCerrar =
+        visor.querySelector(
+            ".visor-imagen-cerrar"
+        );
 
-    visor
-        .querySelector(".visor-imagen-cerrar")
-        .addEventListener(
+
+    if (botonCerrar) {
+
+        botonCerrar.addEventListener(
             "click",
             cerrarImagenGrande
         );
 
+    }
 
-    // ========================================================
-    // CERRAR CON ESC
-    // ========================================================
 
     document.addEventListener(
         "keydown",
@@ -493,8 +476,8 @@ function verImagenGrande(imagen) {
     );
 
 
-    // Evitar que la página se desplace
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow =
+        "hidden";
 
 }
 
@@ -518,7 +501,8 @@ function cerrarImagenGrande() {
     }
 
 
-    document.body.style.overflow = "";
+    document.body.style.overflow =
+        "";
 
 
     document.removeEventListener(
@@ -530,18 +514,10 @@ function cerrarImagenGrande() {
 
 
 // ============================================================
-// CERRAR CON ESC
+// CERRAR CON ESCAPE
 // ============================================================
 
 function cerrarImagenConEscape(evento) {
-
-    if (evento.key === "Escape") {
-
-        cerrarImagenGrande();
-
-    }
-
-}
 
     if (
         evento.key === "Escape"
@@ -591,7 +567,9 @@ function quitarProducto(id) {
     carrito[id]--;
 
 
-    if (carrito[id] <= 0) {
+    if (
+        carrito[id] <= 0
+    ) {
 
         delete carrito[id];
 
@@ -604,7 +582,7 @@ function quitarProducto(id) {
 
 
 // ============================================================
-// OBTENER TOTAL
+// TOTAL CARRITO
 // ============================================================
 
 function obtenerTotalCarrito() {
@@ -646,7 +624,7 @@ function obtenerTotalCarrito() {
 
 
 // ============================================================
-// OBTENER CANTIDAD
+// CANTIDAD CARRITO
 // ============================================================
 
 function obtenerCantidadCarrito() {
@@ -685,22 +663,34 @@ function actualizarCarrito() {
         obtenerTotalCarrito();
 
 
-    document.getElementById(
-        "cantidad-carrito"
-    ).innerText =
-
-        cantidad === 1
-
-            ? "1 producto"
-
-            : `${cantidad} productos`;
+    const elementoCantidad =
+        document.getElementById(
+            "cantidad-carrito"
+        );
 
 
-    document.getElementById(
-        "total-carrito"
-    ).innerText =
+    const elementoTotal =
+        document.getElementById(
+            "total-carrito"
+        );
 
-        `$${formatearPrecio(total)}`;
+
+    if (elementoCantidad) {
+
+        elementoCantidad.innerText =
+            cantidad === 1
+                ? "1 producto"
+                : `${cantidad} productos`;
+
+    }
+
+
+    if (elementoTotal) {
+
+        elementoTotal.innerText =
+            `$${formatearPrecio(total)}`;
+
+    }
 
 
     mostrarListaCarrito();
@@ -709,7 +699,7 @@ function actualizarCarrito() {
 
 
 // ============================================================
-// MOSTRAR LISTA DEL CARRITO
+// MOSTRAR LISTA CARRITO
 // ============================================================
 
 function mostrarListaCarrito() {
@@ -779,9 +769,7 @@ function mostrarListaCarrito() {
 
                     <br>
 
-                    $${formatearPrecio(
-                        subtotal
-                    )}
+                    $${formatearPrecio(subtotal)}
 
                 </div>
 
@@ -789,11 +777,10 @@ function mostrarListaCarrito() {
                 <div class="controles">
 
                     <button
+                        type="button"
                         onclick="quitarProducto(${id})"
                     >
-
                         −
-
                     </button>
 
 
@@ -803,11 +790,10 @@ function mostrarListaCarrito() {
 
 
                     <button
+                        type="button"
                         onclick="agregarProducto(${id})"
                     >
-
                         +
-
                     </button>
 
                 </div>
@@ -1055,10 +1041,6 @@ function cambiarMedioPago() {
     }
 
 
-    // ========================================================
-    // EFECTIVO
-    // ========================================================
-
     if (
         medio.value === "efectivo"
     ) {
@@ -1091,10 +1073,6 @@ function cambiarMedioPago() {
     }
 
 
-    // ========================================================
-    // TRANSFERENCIA
-    // ========================================================
-
     if (
         medio.value === "transferencia"
     ) {
@@ -1123,9 +1101,7 @@ function cambiarMedioPago() {
                         type="button"
                         onclick="copiarAlias()"
                     >
-
                         Copiar
-
                     </button>
 
                 </div>
@@ -1144,10 +1120,6 @@ function cambiarMedioPago() {
 
     }
 
-
-    // ========================================================
-    // MERCADO PAGO
-    // ========================================================
 
     if (
         medio.value === "mercadopago"
@@ -1235,10 +1207,7 @@ function calcularVuelto() {
 
         resultado.innerHTML = `
 
-            <div style="
-                color:#c0392b;
-                margin-top:8px;
-            ">
+            <div class="mensaje-faltante">
 
                 Faltan
 
@@ -1259,17 +1228,12 @@ function calcularVuelto() {
 
     resultado.innerHTML = `
 
-        <div style="
-            color:#27ae60;
-            margin-top:8px;
-        ">
+        <div class="mensaje-vuelto">
 
             Vuelto:
 
             <strong>
-                $${formatearPrecio(
-                    vuelto
-                )}
+                $${formatearPrecio(vuelto)}
             </strong>
 
         </div>
@@ -1353,10 +1317,18 @@ function mostrarCarrito() {
     }
 
 
-    document.getElementById(
-        "modal-carrito"
-    ).style.display =
-        "block";
+    const modal =
+        document.getElementById(
+            "modal-carrito"
+        );
+
+
+    if (modal) {
+
+        modal.style.display =
+            "block";
+
+    }
 
 
     mostrarListaCarrito();
@@ -1370,10 +1342,18 @@ function mostrarCarrito() {
 
 function cerrarCarrito() {
 
-    document.getElementById(
-        "modal-carrito"
-    ).style.display =
-        "none";
+    const modal =
+        document.getElementById(
+            "modal-carrito"
+        );
+
+
+    if (modal) {
+
+        modal.style.display =
+            "none";
+
+    }
 
 }
 
@@ -1386,7 +1366,9 @@ function formatearPrecio(numero) {
 
     return new Intl.NumberFormat(
         "es-AR"
-    ).format(numero);
+    ).format(
+        Number(numero) || 0
+    );
 
 }
 
@@ -1467,9 +1449,7 @@ function validarPedido() {
 
     if (!datos.nombre) {
 
-        alert(
-            "Ingresá tu nombre."
-        );
+        alert("Ingresá tu nombre.");
 
         return false;
 
@@ -1489,9 +1469,7 @@ function validarPedido() {
 
     if (!datos.calle) {
 
-        alert(
-            "Ingresá la calle."
-        );
+        alert("Ingresá la calle.");
 
         return false;
 
@@ -1500,9 +1478,7 @@ function validarPedido() {
 
     if (!datos.altura) {
 
-        alert(
-            "Ingresá la altura."
-        );
+        alert("Ingresá la altura.");
 
         return false;
 
@@ -1530,10 +1506,6 @@ function validarPedido() {
 
     }
 
-
-    // ========================================================
-    // VALIDAR EFECTIVO
-    // ========================================================
 
     if (
         datos.medioPago === "efectivo"
@@ -1602,13 +1574,8 @@ function generarMensajeWhatsApp() {
         "🍕 *NUEVO PEDIDO - DON ELIO*";
 
 
-    mensaje +=
-        "\n\n";
+    mensaje += "\n\n";
 
-
-    // ========================================================
-    // CLIENTE
-    // ========================================================
 
     mensaje +=
         "👤 *CLIENTE*\n";
@@ -1625,10 +1592,6 @@ function generarMensajeWhatsApp() {
         datos.telefono +
         "\n\n";
 
-
-    // ========================================================
-    // DIRECCIÓN
-    // ========================================================
 
     mensaje +=
         "📍 *DIRECCIÓN DE ENTREGA*\n";
@@ -1651,10 +1614,6 @@ function generarMensajeWhatsApp() {
         datos.localidad +
         "\n\n";
 
-
-    // ========================================================
-    // PEDIDO
-    // ========================================================
 
     mensaje +=
         "🛒 *PEDIDO*\n";
@@ -1692,37 +1651,23 @@ function generarMensajeWhatsApp() {
             mensaje +=
                 `${cantidad} x ` +
                 `${producto.nombre} - ` +
-                `$${formatearPrecio(
-                    subtotal
-                )}\n`;
+                `$${formatearPrecio(subtotal)}\n`;
 
         }
     );
 
 
-    mensaje +=
-        "\n";
+    mensaje += "\n";
 
-
-    // ========================================================
-    // TOTAL
-    // ========================================================
 
     mensaje +=
         "💰 *TOTAL: $" +
-        formatearPrecio(
-            total
-        ) +
+        formatearPrecio(total) +
         "*";
 
 
-    mensaje +=
-        "\n\n";
+    mensaje += "\n\n";
 
-
-    // ========================================================
-    // MEDIO DE PAGO
-    // ========================================================
 
     mensaje +=
         "💳 *MEDIO DE PAGO*\n";
@@ -1750,17 +1695,13 @@ function generarMensajeWhatsApp() {
 
         mensaje +=
             "Paga con: $" +
-            formatearPrecio(
-                monto
-            ) +
+            formatearPrecio(monto) +
             "\n";
 
 
         mensaje +=
             "Vuelto: $" +
-            formatearPrecio(
-                vuelto
-            );
+            formatearPrecio(vuelto);
 
     }
 
@@ -1794,8 +1735,7 @@ function generarMensajeWhatsApp() {
     }
 
 
-    mensaje +=
-        "\n\n";
+    mensaje += "\n\n";
 
 
     mensaje +=
@@ -1808,14 +1748,10 @@ function generarMensajeWhatsApp() {
 
 
 // ============================================================
-// ENVIAR PEDIDO A WHATSAPP
+// ENVIAR WHATSAPP
 // ============================================================
 
 function enviarWhatsApp() {
-
-    // ========================================================
-    // VALIDAR CARRITO
-    // ========================================================
 
     if (
         Object.keys(carrito).length === 0
@@ -1830,10 +1766,6 @@ function enviarWhatsApp() {
     }
 
 
-    // ========================================================
-    // VALIDAR DATOS
-    // ========================================================
-
     if (!validarPedido()) {
 
         return;
@@ -1841,17 +1773,9 @@ function enviarWhatsApp() {
     }
 
 
-    // ========================================================
-    // GENERAR MENSAJE
-    // ========================================================
-
     const mensaje =
         generarMensajeWhatsApp();
 
-
-    // ========================================================
-    // CREAR URL
-    // ========================================================
 
     const url =
         "https://wa.me/" +
@@ -1861,10 +1785,6 @@ function enviarWhatsApp() {
             mensaje
         );
 
-
-    // ========================================================
-    // ABRIR WHATSAPP
-    // ========================================================
 
     window.open(
         url,
@@ -1878,6 +1798,13 @@ function enviarWhatsApp() {
 // INICIAR CARTA
 // ============================================================
 
-cargarLogo();
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
 
-cargarProductos();
+        cargarLogo();
+
+        cargarProductos();
+
+    }
+);
