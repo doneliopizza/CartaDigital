@@ -351,6 +351,15 @@
         "url": "36.jpg"
     },
     {
+        "id": 264,
+        "nombre": "Empanada test",
+        "precio": 3300.0,
+        "rubro_id": 3,
+        "rubro": "Empanadas",
+        "orden": 0,
+        "url": "264.jpg"
+    },
+    {
         "id": 219,
         "nombre": "Empanadas x12",
         "precio": 33000.0,
