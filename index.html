@@ -10,18 +10,32 @@
         content="width=device-width, initial-scale=1.0"
     >
 
+    <meta
+        http-equiv="Cache-Control"
+        content="no-cache, no-store, must-revalidate"
+    >
+
+    <meta
+        http-equiv="Pragma"
+        content="no-cache"
+    >
+
+    <meta
+        http-equiv="Expires"
+        content="0"
+    >
+
     <title>Don Elio - Carta Digital</title>
 
 
     <!-- =====================================================
          CSS
-         La versión se genera automáticamente.
-         Evita que el navegador use una versión vieja.
+         Se carga con una versión nueva en cada visita.
     ====================================================== -->
 
     <link
         rel="stylesheet"
-        href="style.css"
+        href="style.css?v=1"
         id="css-principal"
     >
 
@@ -32,17 +46,14 @@
 
 
     <!-- =====================================================
-         ENCABEZADO / LOGO
-
-         EL LOGO SE CARGA AUTOMÁTICAMENTE DESDE app.js
+         ENCABEZADO
     ====================================================== -->
 
     <header class="encabezado"></header>
 
 
-
     <!-- =====================================================
-         CARTA DIGITAL
+         CARTA
     ====================================================== -->
 
     <main>
@@ -54,7 +65,6 @@
         <div id="carta"></div>
 
     </main>
-
 
 
     <!-- =====================================================
@@ -89,7 +99,6 @@
     </div>
 
 
-
     <!-- =====================================================
          MODAL DEL CARRITO
     ====================================================== -->
@@ -102,8 +111,6 @@
         <div class="modal-contenido">
 
 
-            <!-- BOTÓN CERRAR -->
-
             <button
                 type="button"
                 class="cerrar"
@@ -114,19 +121,13 @@
             </button>
 
 
-            <!-- TÍTULO -->
-
             <h2>
                 Mi pedido
             </h2>
 
 
-            <!-- PRODUCTOS DEL CARRITO -->
-
             <div id="lista-carrito"></div>
 
-
-            <!-- TOTAL -->
 
             <div class="total-final">
 
@@ -139,16 +140,12 @@
             </div>
 
 
-            <!-- WHATSAPP -->
-
             <button
                 type="button"
                 class="btn-whatsapp"
                 onclick="enviarWhatsApp()"
             >
-
                 🟢 Enviar pedido por WhatsApp
-
             </button>
 
 
@@ -157,45 +154,22 @@
     </div>
 
 
-
     <!-- =====================================================
-         JAVASCRIPT
-         La versión se genera automáticamente.
-    ====================================================== -->
-
-    <script
-        src="app.js"
-        id="js-principal"
-        defer
-    ></script>
-
-
-
-    <!-- =====================================================
-         CONTROL AUTOMÁTICO DE CACHE
+         CARGA DINÁMICA DEL JAVASCRIPT
+         Cada visita obtiene una versión nueva.
     ====================================================== -->
 
     <script>
 
-        /*
-         * Generamos una versión única cada vez
-         * que se carga la página.
-         *
-         * Date.now() devuelve la fecha/hora actual
-         * en milisegundos.
-         */
-
         const VERSION_CACHE = Date.now();
 
 
-        /*
-         * Agregar versión al CSS
-         */
+        /* =====================================================
+           CSS SIN CACHE
+        ===================================================== */
 
         const css =
-            document.getElementById(
-                "css-principal"
-            );
+            document.getElementById("css-principal");
 
         if (css) {
 
@@ -206,22 +180,20 @@
         }
 
 
-        /*
-         * Agregar versión al JavaScript
-         */
+        /* =====================================================
+           JAVASCRIPT SIN CACHE
+        ===================================================== */
 
-        const js =
-            document.getElementById(
-                "js-principal"
-            );
+        const script =
+            document.createElement("script");
 
-        if (js) {
+        script.src =
+            "app.js?v=" +
+            VERSION_CACHE;
 
-            js.src =
-                "app.js?v=" +
-                VERSION_CACHE;
+        script.defer = true;
 
-        }
+        document.body.appendChild(script);
 
     </script>
 
