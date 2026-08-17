@@ -15,8 +15,11 @@
 
 body {
     font-family: Arial, Helvetica, sans-serif;
+
     background: #f5f5f5;
+
     color: #222;
+
     padding-bottom: 90px;
 }
 
@@ -25,15 +28,13 @@ body {
    ENCABEZADO
 ============================================================ */
 
-/* ============================================================
-   ENCABEZADO
-============================================================ */
-
 .encabezado {
     width: 100%;
+
     background: #111;
 
     display: flex;
+
     justify-content: center;
     align-items: center;
 
@@ -60,12 +61,14 @@ body {
     object-fit: contain;
 }
 
+
 /* ============================================================
    CARTA
 ============================================================ */
 
 main {
     width: 100%;
+
     max-width: 900px;
 
     margin: auto;
@@ -75,7 +78,7 @@ main {
 
 
 /* ============================================================
-   CATEGORÍA
+   CATEGORÍAS
 ============================================================ */
 
 .categoria {
@@ -115,12 +118,13 @@ main {
 
     gap: 10px;
 
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 
 /* ============================================================
-   IMAGEN PRODUCTO
+   IMAGEN DEL PRODUCTO
 ============================================================ */
 
 .producto-imagen {
@@ -144,15 +148,25 @@ main {
     object-fit: cover;
 
     display: block;
+
+    cursor: zoom-in;
+
+    transition: transform 0.15s ease;
+}
+
+
+.producto-imagen img:active {
+    transform: scale(0.95);
 }
 
 
 /* ============================================================
-   INFORMACIÓN PRODUCTO
+   INFORMACIÓN DEL PRODUCTO
 ============================================================ */
 
 .producto-info {
     flex: 1;
+
     min-width: 0;
 }
 
@@ -178,7 +192,7 @@ main {
 
 
 /* ============================================================
-   BOTÓN +
+   BOTÓN AGREGAR +
 ============================================================ */
 
 .btn-agregar {
@@ -255,7 +269,7 @@ main {
 
 
 /* ============================================================
-   MODAL
+   MODAL DEL CARRITO
 ============================================================ */
 
 .modal {
@@ -295,7 +309,7 @@ main {
 
 
 /* ============================================================
-   CERRAR MODAL
+   BOTÓN CERRAR CARRITO
 ============================================================ */
 
 .cerrar {
@@ -315,7 +329,7 @@ main {
 
 
 /* ============================================================
-   ITEM CARRITO
+   ITEMS DEL CARRITO
 ============================================================ */
 
 .item-carrito {
@@ -358,6 +372,11 @@ main {
 }
 
 
+.controles button:active {
+    transform: scale(0.9);
+}
+
+
 /* ============================================================
    TOTAL
 ============================================================ */
@@ -372,7 +391,7 @@ main {
 
 
 /* ============================================================
-   WHATSAPP
+   BOTÓN WHATSAPP
 ============================================================ */
 
 .btn-whatsapp {
@@ -396,8 +415,13 @@ main {
 }
 
 
+.btn-whatsapp:active {
+    transform: scale(0.98);
+}
+
+
 /* ============================================================
-   CARGANDO
+   MENSAJE CARGANDO
 ============================================================ */
 
 #cargando {
@@ -410,7 +434,7 @@ main {
 
 
 /* ============================================================
-   FORMULARIO PEDIDO
+   FORMULARIO DEL PEDIDO
 ============================================================ */
 
 #formulario-pedido {
@@ -450,8 +474,7 @@ main {
 
 
 /* ============================================================
-   LABEL + INPUT
-   CADA UNO EN SU PROPIO RENGLÓN
+   LABELS
 ============================================================ */
 
 .datos-pedido label {
@@ -466,6 +489,10 @@ main {
     margin-bottom: 5px;
 }
 
+
+/* ============================================================
+   INPUTS
+============================================================ */
 
 .datos-pedido input[type="text"],
 .datos-pedido input[type="tel"],
@@ -487,6 +514,16 @@ main {
     font-size: 16px;
 
     background: white;
+
+    outline: none;
+}
+
+
+.datos-pedido input:focus {
+    border-color: #25d366;
+
+    box-shadow:
+        0 0 0 2px rgba(37, 211, 102, 0.15);
 }
 
 
@@ -525,6 +562,8 @@ main {
     font-weight: normal !important;
 
     margin: 0 !important;
+
+    cursor: pointer;
 }
 
 
@@ -559,7 +598,7 @@ main {
 
 
 /* ============================================================
-   ALIAS
+   ALIAS DE TRANSFERENCIA
 ============================================================ */
 
 .alias-transferencia {
@@ -608,25 +647,186 @@ main {
 
 
 /* ============================================================
-   CELULAR
+   VISOR DE IMAGEN GRANDE
 ============================================================ */
 
+#visor-imagen {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 99999;
+
+    background: rgba(0, 0, 0, 0.88);
+
+    animation: aparecerVisor 0.15s ease-out;
+}
 
 
+/* ============================================================
+   FONDO DEL VISOR
+============================================================ */
 
-    /* CARTA */
+.visor-imagen-fondo {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    cursor: zoom-out;
+}
+
+
+/* ============================================================
+   IMAGEN AMPLIADA
+============================================================ */
+
+.visor-imagen-fondo img {
+    max-width: 95vw;
+
+    max-height: 90vh;
+
+    width: auto;
+    height: auto;
+
+    object-fit: contain;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 10px 40px rgba(0, 0, 0, 0.6);
+
+    cursor: default;
+}
+
+
+/* ============================================================
+   BOTÓN CERRAR IMAGEN
+============================================================ */
+
+.visor-imagen-cerrar {
+    position: absolute;
+
+    top: 20px;
+    right: 20px;
+
+    width: 45px;
+    height: 45px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.95);
+
+    color: #222;
+
+    font-size: 32px;
+
+    line-height: 40px;
+
+    cursor: pointer;
+
+    z-index: 10;
+}
+
+
+.visor-imagen-cerrar:hover {
+    background: white;
+}
+
+
+.visor-imagen-cerrar:active {
+    transform: scale(0.9);
+}
+
+
+/* ============================================================
+   ANIMACIÓN DEL VISOR
+============================================================ */
+
+@keyframes aparecerVisor {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+}
+
+
+/* ============================================================
+   CELULARES
+============================================================ */
+
+@media (max-width: 600px) {
+
+    /* --------------------------------------------------------
+       CARTA
+    -------------------------------------------------------- */
 
     main {
         padding: 0 10px;
     }
 
 
-    .categoria h2 {
-        font-size: 22px;
+    /* --------------------------------------------------------
+       ENCABEZADO
+    -------------------------------------------------------- */
+
+    .encabezado {
+        padding: 8px;
+
+        margin-bottom: 15px;
     }
 
 
-    /* PRODUCTOS */
+    .logo-don-elio {
+        width: 230px;
+
+        height: 230px;
+
+        max-width: 75vw;
+    }
+
+
+    /* --------------------------------------------------------
+       CATEGORÍAS
+    -------------------------------------------------------- */
+
+    .categoria {
+        margin-bottom: 25px;
+    }
+
+
+    .categoria h2 {
+        font-size: 22px;
+
+        margin-bottom: 12px;
+    }
+
+
+    /* --------------------------------------------------------
+       PRODUCTOS
+    -------------------------------------------------------- */
 
     .producto {
         padding: 12px;
@@ -637,6 +837,7 @@ main {
 
     .producto-imagen {
         width: 75px;
+
         height: 75px;
 
         margin-right: 4px;
@@ -655,6 +856,7 @@ main {
 
     .btn-agregar {
         width: 42px;
+
         height: 42px;
 
         min-width: 42px;
@@ -663,7 +865,9 @@ main {
     }
 
 
-    /* CARRITO */
+    /* --------------------------------------------------------
+       CARRITO
+    -------------------------------------------------------- */
 
     #carrito-barra {
         padding: 10px;
@@ -675,7 +879,9 @@ main {
     }
 
 
-    /* MODAL */
+    /* --------------------------------------------------------
+       MODAL
+    -------------------------------------------------------- */
 
     .modal {
         padding: 10px;
@@ -691,7 +897,9 @@ main {
     }
 
 
-    /* FORMULARIO */
+    /* --------------------------------------------------------
+       FORMULARIO
+    -------------------------------------------------------- */
 
     .datos-pedido {
         width: 100%;
@@ -713,6 +921,37 @@ main {
         font-size: 16px;
     }
 
+
+    /* --------------------------------------------------------
+       VISOR DE IMAGEN EN CELULAR
+    -------------------------------------------------------- */
+
+    .visor-imagen-fondo {
+        padding: 10px;
+    }
+
+
+    .visor-imagen-fondo img {
+        max-width: 96vw;
+
+        max-height: 82vh;
+
+        border-radius: 10px;
+    }
+
+
+    .visor-imagen-cerrar {
+        top: 10px;
+
+        right: 10px;
+
+        width: 42px;
+
+        height: 42px;
+
+        font-size: 29px;
+    }
+
 }
 
 
@@ -720,11 +959,11 @@ main {
    CELULARES MUY PEQUEÑOS
 ============================================================ */
 
-
-
+@media (max-width: 380px) {
 
     .producto-imagen {
         width: 65px;
+
         height: 65px;
     }
 
@@ -741,170 +980,24 @@ main {
 
     .btn-agregar {
         width: 40px;
+
         height: 40px;
 
         min-width: 40px;
+
+        font-size: 22px;
     }
 
 
     .modal-contenido {
         padding: 15px;
     }
-    
-}
-/* ============================================================
-   IMAGEN AMPLIADA
-============================================================ */
 
-.producto-imagen img {
-    cursor: pointer;
-}
 
+    .logo-don-elio {
+        width: 200px;
 
-/* CONTENEDOR PRINCIPAL */
-
-#visor-imagen {
-
-    position: fixed;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-    display: none;
-
-    align-items: center;
-    justify-content: center;
-
-    z-index: 9999;
-
-}
-
-
-/* CUANDO ESTÁ ABIERTO */
-
-#visor-imagen.activo {
-
-    display: flex;
-
-}
-
-
-/* FONDO OSCURO */
-
-.visor-fondo {
-
-    position: absolute;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-    background:
-        rgba(0, 0, 0, 0.85);
-
-}
-
-
-/* CONTENEDOR DE LA FOTO */
-
-.visor-contenido {
-
-    position: relative;
-
-    z-index: 2;
-
-    width: 90%;
-    max-width: 700px;
-
-    display: flex;
-
-    justify-content: center;
-    align-items: center;
-
-}
-
-
-/* FOTO */
-
-#imagen-ampliada {
-
-    width: 100%;
-
-    max-height: 85vh;
-
-    object-fit: contain;
-
-    border-radius: 12px;
-
-}
-
-
-/* BOTÓN CERRAR */
-
-.cerrar-imagen {
-
-    position: absolute;
-
-    top: -45px;
-    right: 0;
-
-    width: 40px;
-    height: 40px;
-
-    border: none;
-
-    border-radius: 50%;
-
-    font-size: 24px;
-
-    cursor: pointer;
-
-}
-/* ============================================================
-   VISOR DE IMAGEN
-============================================================ */
-
-.visor-imagen {
-
-    position: fixed;
-
-    inset: 0;
-
-    background: rgba(0, 0, 0, 0.85);
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    z-index: 9999;
-
-    padding: 20px;
-
-    cursor: zoom-out;
-
-}
-
-.visor-imagen img {
-
-    max-width: 95vw;
-
-    max-height: 90vh;
-
-    width: auto;
-
-    height: auto;
-
-    object-fit: contain;
-
-    border-radius: 12px;
-
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        height: 200px;
+    }
 
 }
