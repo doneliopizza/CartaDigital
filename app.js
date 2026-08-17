@@ -11,7 +11,7 @@ const URL_GITHUB =
     "https://raw.githubusercontent.com/doneliopizza/CartaDigital/main";
 
 const URL_PRODUCTOS =
-    URL_GITHUB + "/productos.json";
+    "https://cartadigitalapi.onrender.com/productos";
 
 const URL_FOTOS =
     URL_GITHUB + "/fotos/";
@@ -20,7 +20,7 @@ const URL_LOGO =
     URL_FOTOS + "logo.png";
 
 const IMAGEN_PLACEHOLDER =
-    "https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=500&q=80";
+    "https://raw.githubusercontent.com/doneliopizza/CartaDigital/refs/heads/main/fotos/logo.png";
 
 const TELEFONO_WHATSAPP =
     "5491170667389";
@@ -44,31 +44,33 @@ async function cargarProductos() {
             }
         );
 
-
         if (!respuesta.ok) {
 
             throw new Error(
-                "Error al consultar productos.json"
+                "Error al consultar la API"
             );
 
         }
 
-
         productos = await respuesta.json();
 
+        console.log(
+            "✅ Productos cargados desde API:",
+            productos
+        );
 
         mostrarCarta();
-
 
         document.getElementById(
             "cargando"
         ).style.display = "none";
 
-
     } catch (error) {
 
-        console.error(error);
-
+        console.error(
+            "❌ Error cargando productos:",
+            error
+        );
 
         document.getElementById(
             "cargando"
@@ -1423,33 +1425,18 @@ function validarPedido() {
 // GENERAR MENSAJE WHATSAPP
 // ============================================================
 
-// ============================================================
-// GENERAR MENSAJE WHATSAPP
-// ============================================================
-
 function generarMensajeWhatsApp() {
 
     const datos =
         obtenerDatosCliente();
 
+
     const total =
         obtenerTotalCarrito();
 
 
-    // Emojis mediante Unicode
-    // para evitar problemas de codificación
-    const EMOJI_PIZZA = "\u{1F355}";
-    const EMOJI_PERSONA = "\u{1F464}";
-    const EMOJI_UBICACION = "\u{1F4CD}";
-    const EMOJI_CARRITO = "\u{1F6D2}";
-    const EMOJI_DINERO = "\u{1F4B0}";
-    const EMOJI_TARJETA = "\u{1F4B3}";
-    const EMOJI_TELEFONO = "\u{1F4F2}";
-
-
     let mensaje =
-        EMOJI_PIZZA +
-        " *NUEVO PEDIDO - DON ELIO*";
+        "🍕 *NUEVO PEDIDO - DON ELIO*";
 
 
     mensaje +=
@@ -1461,8 +1448,7 @@ function generarMensajeWhatsApp() {
     // ========================================================
 
     mensaje +=
-        EMOJI_PERSONA +
-        " *CLIENTE*\n";
+        "👤 *CLIENTE*\n";
 
 
     mensaje +=
@@ -1482,8 +1468,7 @@ function generarMensajeWhatsApp() {
     // ========================================================
 
     mensaje +=
-        EMOJI_UBICACION +
-        " *DIRECCIÓN DE ENTREGA*\n";
+        "📍 *DIRECCIÓN DE ENTREGA*\n";
 
 
     mensaje +=
@@ -1509,11 +1494,12 @@ function generarMensajeWhatsApp() {
     // ========================================================
 
     mensaje +=
-        EMOJI_CARRITO +
-        " *PEDIDO*\n";
+        "🛒 *PEDIDO*\n";
 
 
-    Object.keys(carrito).forEach(
+    Object.keys(
+        carrito
+    ).forEach(
         id => {
 
             const producto =
@@ -1523,7 +1509,9 @@ function generarMensajeWhatsApp() {
 
 
             if (!producto) {
+
                 return;
+
             }
 
 
@@ -1541,7 +1529,9 @@ function generarMensajeWhatsApp() {
             mensaje +=
                 `${cantidad} x ` +
                 `${producto.nombre} - ` +
-                `$${formatearPrecio(subtotal)}\n`;
+                `$${formatearPrecio(
+                    subtotal
+                )}\n`;
 
         }
     );
@@ -1556,9 +1546,10 @@ function generarMensajeWhatsApp() {
     // ========================================================
 
     mensaje +=
-        EMOJI_DINERO +
-        " *TOTAL: $" +
-        formatearPrecio(total) +
+        "💰 *TOTAL: $" +
+        formatearPrecio(
+            total
+        ) +
         "*";
 
 
@@ -1571,23 +1562,18 @@ function generarMensajeWhatsApp() {
     // ========================================================
 
     mensaje +=
-        EMOJI_TARJETA +
-        " *MEDIO DE PAGO*\n";
+        "💳 *MEDIO DE PAGO*\n";
 
 
     if (
         datos.medioPago === "efectivo"
     ) {
 
-        const input =
-            document.getElementById(
-                "monto-efectivo"
-            );
-
-
         const monto =
             Number(
-                input?.value
+                document.getElementById(
+                    "monto-efectivo"
+                ).value
             );
 
 
@@ -1601,13 +1587,17 @@ function generarMensajeWhatsApp() {
 
         mensaje +=
             "Paga con: $" +
-            formatearPrecio(monto) +
+            formatearPrecio(
+                monto
+            ) +
             "\n";
 
 
         mensaje +=
             "Vuelto: $" +
-            formatearPrecio(vuelto);
+            formatearPrecio(
+                vuelto
+            );
 
     }
 
@@ -1646,13 +1636,13 @@ function generarMensajeWhatsApp() {
 
 
     mensaje +=
-        EMOJI_TELEFONO +
-        " Pedido realizado desde la carta digital.";
+        "📲 Pedido realizado desde la carta digital.";
 
 
     return mensaje;
 
 }
+
 
 // ============================================================
 // ENVIAR PEDIDO A WHATSAPP
@@ -1697,47 +1687,16 @@ function enviarWhatsApp() {
 
 
     // ========================================================
-    // GENERAR URL DE WHATSAPP
+    // CREAR URL
     // ========================================================
-
-    /*
-        URLSearchParams se encarga de codificar
-        correctamente UTF-8.
-
-        Esto permite conservar:
-
-        🍕
-        👤
-        📍
-        🛒
-        💰
-        💳
-        📲
-
-        y también:
-
-        á é í ó ú
-        ñ
-        ü
-        saltos de línea
-        etc.
-    */
-
-    const parametros =
-        new URLSearchParams();
-
-
-    parametros.set(
-        "text",
-        mensaje
-    );
-
 
     const url =
         "https://wa.me/" +
         TELEFONO_WHATSAPP +
-        "?" +
-        parametros.toString();
+        "?text=" +
+        encodeURIComponent(
+            mensaje
+        );
 
 
     // ========================================================
@@ -1750,6 +1709,7 @@ function enviarWhatsApp() {
     );
 
 }
+
 
 // ============================================================
 // INICIAR CARTA
