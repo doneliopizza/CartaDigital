@@ -353,7 +353,7 @@
     {
         "id": 264,
         "nombre": "Empanada test",
-        "precio": 3300.0,
+        "precio": 1000000.0,
         "rubro_id": 3,
         "rubro": "Empanadas",
         "orden": 0,
