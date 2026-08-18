@@ -100,7 +100,7 @@ function configurarEventos() {
 // ============================================================
 
 #async function cargarProductos() {
-const API_URL = "https://cartadigitalapi.onrender.com/productos";
+const API_URL = "https://cartadigitalapi.onrender.com";
 
 async function cargarProductos() {
 
