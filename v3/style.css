@@ -1,0 +1,1953 @@
+/* ============================================================
+   RESET
+============================================================ */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* ============================================================
+   BODY
+============================================================ */
+
+body {
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+        #f5f5f5;
+
+    color:
+        #222;
+
+    padding-bottom:
+        90px;
+
+}
+
+
+/* ============================================================
+   ENCABEZADO
+============================================================ */
+
+.encabezado {
+
+    width: 100%;
+
+    background:
+        #111;
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    padding:
+        10px;
+
+    margin-bottom:
+        10px;
+
+    overflow:
+        hidden;
+
+}
+
+
+/* ============================================================
+   LOGO
+============================================================ */
+
+.logo-don-elio {
+
+    display:
+        block;
+
+    width:
+        300px;
+
+    height:
+        300px;
+
+    max-width:
+        80vw;
+
+    object-fit:
+        contain;
+
+}
+
+
+/* ============================================================
+   ESTADO API
+============================================================ */
+
+.estado-api {
+
+    width:
+        fit-content;
+
+    margin:
+        10px auto 20px;
+
+    padding:
+        6px 12px;
+
+    border-radius:
+        20px;
+
+    font-size:
+        13px;
+
+    font-weight:
+        bold;
+
+}
+
+
+.estado-api.cargando {
+
+    background:
+        #fff3cd;
+
+    color:
+        #856404;
+
+}
+
+
+.estado-api.ok {
+
+    background:
+        #d4edda;
+
+    color:
+        #155724;
+
+}
+
+
+.estado-api.error {
+
+    background:
+        #f8d7da;
+
+    color:
+        #721c24;
+
+}
+
+
+/* ============================================================
+   MAIN
+============================================================ */
+
+main {
+
+    width:
+        100%;
+
+    max-width:
+        900px;
+
+    margin:
+        auto;
+
+    padding:
+        0 15px;
+
+}
+
+
+/* ============================================================
+   CARGANDO
+============================================================ */
+
+.cargando {
+
+    text-align:
+        center;
+
+    padding:
+        40px;
+
+    color:
+        #777;
+
+}
+
+
+/* ============================================================
+   CARTA
+============================================================ */
+
+.carta {
+
+    width:
+        100%;
+
+}
+
+
+/* ============================================================
+   CATEGORIA
+============================================================ */
+
+.categoria {
+
+    margin-bottom:
+        30px;
+
+}
+
+
+.categoria h2 {
+
+    font-size:
+        24px;
+
+    margin-bottom:
+        15px;
+
+    border-bottom:
+        2px solid #ddd;
+
+    padding-bottom:
+        8px;
+
+}
+
+
+/* ============================================================
+   PRODUCTO
+============================================================ */
+
+.producto {
+
+    background:
+        white;
+
+    border-radius:
+        12px;
+
+    padding:
+        15px;
+
+    margin-bottom:
+        12px;
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    box-shadow:
+        0 2px 6px rgba(
+            0,
+            0,
+            0,
+            0.08
+        );
+
+}
+
+
+/* ============================================================
+   IMAGEN
+============================================================ */
+
+.producto-imagen {
+
+    width:
+        90px;
+
+    height:
+        90px;
+
+    flex-shrink:
+        0;
+
+    overflow:
+        hidden;
+
+    border-radius:
+        10px;
+
+}
+
+
+.producto-imagen img {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        cover;
+
+    display:
+        block;
+
+    cursor:
+        zoom-in;
+
+    transition:
+        transform 0.15s ease;
+
+}
+
+
+.producto-imagen img:active {
+
+    transform:
+        scale(0.95);
+
+}
+
+
+/* ============================================================
+   INFORMACIÓN
+============================================================ */
+
+.producto-info {
+
+    flex:
+        1;
+
+    min-width:
+        0;
+
+}
+
+
+.producto-nombre {
+
+    font-size:
+        18px;
+
+    font-weight:
+        bold;
+
+    margin-bottom:
+        6px;
+
+    overflow-wrap:
+        break-word;
+
+}
+
+
+.producto-precio {
+
+    font-size:
+        18px;
+
+    font-weight:
+        bold;
+
+    color:
+        #d35400;
+
+}
+
+
+/* ============================================================
+   BADGE COMPUESTO
+============================================================ */
+
+.badge-compuesto {
+
+    display:
+        inline-block;
+
+    margin-top:
+        7px;
+
+    padding:
+        4px 8px;
+
+    border-radius:
+        12px;
+
+    background:
+        #eee;
+
+    color:
+        #555;
+
+    font-size:
+        11px;
+
+    font-weight:
+        bold;
+
+}
+
+
+/* ============================================================
+   BOTÓN +
+============================================================ */
+
+.btn-agregar {
+
+    background:
+        #25d366;
+
+    color:
+        white;
+
+    border:
+        none;
+
+    border-radius:
+        50%;
+
+    width:
+        45px;
+
+    height:
+        45px;
+
+    min-width:
+        45px;
+
+    font-size:
+        25px;
+
+    cursor:
+        pointer;
+
+    flex-shrink:
+        0;
+
+}
+
+
+.btn-agregar:active {
+
+    transform:
+        scale(0.9);
+
+}
+
+
+/* ============================================================
+   CARRITO BARRA
+============================================================ */
+
+.carrito-barra {
+
+    position:
+        fixed;
+
+    bottom:
+        0;
+
+    left:
+        0;
+
+    right:
+        0;
+
+    background:
+        #111;
+
+    color:
+        white;
+
+    padding:
+        12px 15px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
+
+    z-index:
+        1000;
+
+    box-shadow:
+        0 -3px 15px rgba(
+            0,
+            0,
+            0,
+            0.2
+        );
+
+}
+
+
+.carrito-resumen {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+}
+
+
+.carrito-icono {
+
+    font-size:
+        20px;
+
+}
+
+
+#cantidad-carrito {
+
+    font-size:
+        14px;
+
+}
+
+
+#total-carrito {
+
+    font-size:
+        18px;
+
+}
+
+
+.btn-ver-pedido {
+
+    background:
+        #25d366;
+
+    border:
+        none;
+
+    color:
+        white;
+
+    padding:
+        10px 15px;
+
+    border-radius:
+        8px;
+
+    font-weight:
+        bold;
+
+    cursor:
+        pointer;
+
+}
+
+
+/* ============================================================
+   MODAL
+============================================================ */
+
+.modal {
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            0.65
+        );
+
+    z-index:
+        2000;
+
+    padding:
+        15px;
+
+    overflow-y:
+        auto;
+
+}
+
+
+.modal.oculto {
+
+    display:
+        none;
+
+}
+
+
+.modal-contenido {
+
+    background:
+        white;
+
+    width:
+        100%;
+
+    max-width:
+        500px;
+
+    margin:
+        20px auto;
+
+    padding:
+        20px;
+
+    border-radius:
+        15px;
+
+    max-height:
+        92vh;
+
+    overflow-y:
+        auto;
+
+    position:
+        relative;
+
+}
+
+
+/* ============================================================
+   CERRAR
+============================================================ */
+
+.cerrar {
+
+    position:
+        absolute;
+
+    right:
+        15px;
+
+    top:
+        15px;
+
+    border:
+        none;
+
+    background:
+        none;
+
+    font-size:
+        30px;
+
+    cursor:
+        pointer;
+
+    color:
+        #333;
+
+}
+
+
+/* ============================================================
+   LISTA CARRITO
+============================================================ */
+
+.lista-carrito {
+
+    margin-top:
+        20px;
+
+}
+
+
+.item-carrito {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    padding:
+        12px 0;
+
+    border-bottom:
+        1px solid #ddd;
+
+}
+
+
+.item-carrito-info {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        4px;
+
+    min-width:
+        0;
+
+}
+
+
+.item-carrito-info strong {
+
+    overflow-wrap:
+        break-word;
+
+}
+
+
+.item-carrito-info span {
+
+    color:
+        #d35400;
+
+    font-weight:
+        bold;
+
+}
+
+
+.item-carrito-info small {
+
+    color:
+        #777;
+
+    font-size:
+        11px;
+
+}
+
+
+.controles {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    flex-shrink:
+        0;
+
+}
+
+
+.controles button {
+
+    width:
+        32px;
+
+    height:
+        32px;
+
+    border:
+        none;
+
+    border-radius:
+        6px;
+
+    background:
+        #ddd;
+
+    cursor:
+        pointer;
+
+    font-size:
+        18px;
+
+}
+
+
+.controles button:active {
+
+    transform:
+        scale(0.9);
+
+}
+
+
+/* ============================================================
+   CARRITO VACÍO
+============================================================ */
+
+.carrito-vacio {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    padding:
+        30px 10px;
+
+    color:
+        #777;
+
+}
+
+
+.carrito-vacio:first-letter {
+
+    font-size:
+        40px;
+
+}
+
+
+/* ============================================================
+   TOTAL
+============================================================ */
+
+.total-final {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    font-size:
+        22px;
+
+    padding:
+        20px 0;
+
+    border-bottom:
+        1px solid #ddd;
+
+}
+
+
+.total-final strong {
+
+    color:
+        #d35400;
+
+}
+
+
+/* ============================================================
+   FORMULARIO
+============================================================ */
+
+.formulario-pedido {
+
+    width:
+        100%;
+
+    margin-top:
+        20px;
+
+}
+
+
+.datos-pedido {
+
+    border-top:
+        1px solid #ddd;
+
+    padding-top:
+        20px;
+
+}
+
+
+.datos-pedido h3 {
+
+    font-size:
+        18px;
+
+    margin:
+        20px 0 12px;
+
+}
+
+
+.datos-pedido h3:first-child {
+
+    margin-top:
+        0;
+
+}
+
+
+.datos-pedido label {
+
+    display:
+        block;
+
+    font-size:
+        14px;
+
+    font-weight:
+        bold;
+
+    margin-bottom:
+        5px;
+
+}
+
+
+.datos-pedido input[type="text"],
+.datos-pedido input[type="tel"],
+.datos-pedido input[type="number"] {
+
+    display:
+        block;
+
+    width:
+        100%;
+
+    height:
+        44px;
+
+    padding:
+        10px 12px;
+
+    margin:
+        0 0 14px;
+
+    border:
+        1px solid #ccc;
+
+    border-radius:
+        8px;
+
+    font-size:
+        16px;
+
+    background:
+        white;
+
+    outline:
+        none;
+
+}
+
+
+.datos-pedido input:focus {
+
+    border-color:
+        #25d366;
+
+}
+
+
+/* ============================================================
+   MEDIOS DE PAGO
+============================================================ */
+
+.medios-pago {
+
+    width:
+        100%;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        10px;
+
+}
+
+
+.medio-opcion {
+
+    display:
+        flex;
+
+    flex-direction:
+        row;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    width:
+        100%;
+
+    padding:
+        12px;
+
+    background:
+        #f5f5f5;
+
+    border-radius:
+        8px;
+
+    cursor:
+        pointer;
+
+}
+
+
+.medio-opcion input {
+
+    width:
+        auto;
+
+    height:
+        auto;
+
+    margin:
+        0;
+
+}
+
+
+/* ============================================================
+   DETALLES PAGO
+============================================================ */
+
+.detalle-pago {
+
+    width:
+        100%;
+
+}
+
+
+.detalle-efectivo,
+.detalle-transferencia,
+.detalle-mercadopago {
+
+    width:
+        100%;
+
+    margin-top:
+        12px;
+
+    padding:
+        14px;
+
+    background:
+        #f7f7f7;
+
+    border-radius:
+        8px;
+
+}
+
+
+.detalle-efectivo label {
+
+    margin-top:
+        12px;
+
+}
+
+
+.detalle-efectivo input {
+
+    margin-top:
+        6px;
+
+}
+
+
+/* ============================================================
+   VUELTO
+============================================================ */
+
+.resultado-vuelto {
+
+    margin-top:
+        8px;
+
+}
+
+
+.vuelto-error {
+
+    color:
+        #c0392b;
+
+}
+
+
+.vuelto-ok {
+
+    color:
+        #27ae60;
+
+}
+
+
+/* ============================================================
+   ALIAS
+============================================================ */
+
+.alias-transferencia {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
+
+    margin:
+        10px 0;
+
+    padding:
+        10px;
+
+    background:
+        white;
+
+    border-radius:
+        8px;
+
+}
+
+
+.alias-transferencia span {
+
+    font-weight:
+        bold;
+
+    overflow-wrap:
+        anywhere;
+
+}
+
+
+.alias-transferencia button {
+
+    border:
+        none;
+
+    background:
+        #111;
+
+    color:
+        white;
+
+    padding:
+        8px 12px;
+
+    border-radius:
+        6px;
+
+    cursor:
+        pointer;
+
+}
+
+
+/* ============================================================
+   ACCIÓN PEDIDO
+============================================================ */
+
+.accion-pedido {
+
+    margin-top:
+        20px;
+
+}
+
+
+.btn-realizar-pedido {
+
+    width:
+        100%;
+
+    background:
+        #25d366;
+
+    color:
+        white;
+
+    border:
+        none;
+
+    padding:
+        15px;
+
+    border-radius:
+        10px;
+
+    font-size:
+        16px;
+
+    font-weight:
+        bold;
+
+    cursor:
+        pointer;
+
+}
+
+
+.btn-realizar-pedido:active {
+
+    transform:
+        scale(0.98);
+
+}
+
+
+/* ============================================================
+   MENSAJE PEDIDO
+============================================================ */
+
+.mensaje-pedido {
+
+    margin-top:
+        12px;
+
+    padding:
+        12px;
+
+    border-radius:
+        8px;
+
+    font-size:
+        14px;
+
+    display:
+        none;
+
+}
+
+
+.mensaje-pedido.success {
+
+    display:
+        block;
+
+    background:
+        #d4edda;
+
+    color:
+        #155724;
+
+}
+
+
+.mensaje-pedido.error {
+
+    display:
+        block;
+
+    background:
+        #f8d7da;
+
+    color:
+        #721c24;
+
+}
+
+
+/* ============================================================
+   NOTIFICACIÓN
+============================================================ */
+
+.notificacion {
+
+    position:
+        fixed;
+
+    left:
+        50%;
+
+    bottom:
+        100px;
+
+    transform:
+        translateX(-50%);
+
+    z-index:
+        10000;
+
+    padding:
+        12px 18px;
+
+    border-radius:
+        10px;
+
+    color:
+        white;
+
+    font-weight:
+        bold;
+
+    max-width:
+        90%;
+
+    text-align:
+        center;
+
+    box-shadow:
+        0 4px 15px rgba(
+            0,
+            0,
+            0,
+            0.25
+        );
+
+}
+
+
+.notificacion.oculto {
+
+    display:
+        none;
+
+}
+
+
+.notificacion.ok {
+
+    background:
+        #27ae60;
+
+}
+
+
+.notificacion.error {
+
+    background:
+        #c0392b;
+
+}
+
+
+/* ============================================================
+   ERROR PRODUCTOS
+============================================================ */
+
+.error-productos {
+
+    background:
+        white;
+
+    padding:
+        30px 20px;
+
+    border-radius:
+        12px;
+
+    text-align:
+        center;
+
+    box-shadow:
+        0 2px 6px rgba(
+            0,
+            0,
+            0,
+            0.08
+        );
+
+}
+
+
+.error-icono {
+
+    font-size:
+        45px;
+
+    margin-bottom:
+        10px;
+
+}
+
+
+.error-productos h2 {
+
+    margin-bottom:
+        10px;
+
+}
+
+
+.error-productos p {
+
+    color:
+        #777;
+
+    margin-bottom:
+        20px;
+
+    overflow-wrap:
+        break-word;
+
+}
+
+
+.error-productos button {
+
+    background:
+        #111;
+
+    color:
+        white;
+
+    border:
+        none;
+
+    padding:
+        12px 20px;
+
+    border-radius:
+        8px;
+
+    cursor:
+        pointer;
+
+}
+
+
+/* ============================================================
+   SIN PRODUCTOS
+============================================================ */
+
+.sin-productos {
+
+    text-align:
+        center;
+
+    padding:
+        40px;
+
+    color:
+        #777;
+
+}
+
+
+/* ============================================================
+   VISOR IMAGEN
+============================================================ */
+
+#visor-imagen {
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    z-index:
+        99999;
+
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            0.88
+        );
+
+    animation:
+        aparecerVisor
+        0.15s
+        ease-out;
+
+}
+
+
+.visor-imagen-fondo {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        20px;
+
+    cursor:
+        zoom-out;
+
+}
+
+
+.visor-imagen-fondo img {
+
+    max-width:
+        95vw;
+
+    max-height:
+        90vh;
+
+    width:
+        auto;
+
+    height:
+        auto;
+
+    object-fit:
+        contain;
+
+    border-radius:
+        12px;
+
+    box-shadow:
+        0 10px 40px rgba(
+            0,
+            0,
+            0,
+            0.6
+        );
+
+    cursor:
+        default;
+
+}
+
+
+.visor-imagen-cerrar {
+
+    position:
+        absolute;
+
+    top:
+        20px;
+
+    right:
+        20px;
+
+    width:
+        45px;
+
+    height:
+        45px;
+
+    border:
+        none;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.95
+        );
+
+    color:
+        #222;
+
+    font-size:
+        32px;
+
+    line-height:
+        40px;
+
+    cursor:
+        pointer;
+
+    z-index:
+        10;
+
+}
+
+
+@keyframes aparecerVisor {
+
+    from {
+
+        opacity:
+            0;
+
+    }
+
+    to {
+
+        opacity:
+            1;
+
+    }
+
+}
+
+
+/* ============================================================
+   CELULARES
+============================================================ */
+
+@media (
+    max-width: 600px
+) {
+
+    main {
+
+        padding:
+            0 10px;
+
+    }
+
+
+    .encabezado {
+
+        padding:
+            8px;
+
+    }
+
+
+    .logo-don-elio {
+
+        width:
+            230px;
+
+        height:
+            230px;
+
+        max-width:
+            75vw;
+
+    }
+
+
+    .categoria {
+
+        margin-bottom:
+            25px;
+
+    }
+
+
+    .categoria h2 {
+
+        font-size:
+            22px;
+
+        margin-bottom:
+            12px;
+
+    }
+
+
+    .producto {
+
+        padding:
+            12px;
+
+        gap:
+            8px;
+
+    }
+
+
+    .producto-imagen {
+
+        width:
+            75px;
+
+        height:
+            75px;
+
+    }
+
+
+    .producto-nombre {
+
+        font-size:
+            16px;
+
+    }
+
+
+    .producto-precio {
+
+        font-size:
+            17px;
+
+    }
+
+
+    .btn-agregar {
+
+        width:
+            42px;
+
+        height:
+            42px;
+
+        min-width:
+            42px;
+
+        font-size:
+            23px;
+
+    }
+
+
+    .carrito-barra {
+
+        padding:
+            10px;
+
+    }
+
+
+    #total-carrito {
+
+        font-size:
+            16px;
+
+    }
+
+
+    .btn-ver-pedido {
+
+        padding:
+            9px 12px;
+
+    }
+
+
+    .modal {
+
+        padding:
+            10px;
+
+    }
+
+
+    .modal-contenido {
+
+        margin:
+            10px auto;
+
+        padding:
+            18px;
+
+        max-height:
+            94vh;
+
+    }
+
+
+    .visor-imagen-fondo {
+
+        padding:
+            10px;
+
+    }
+
+
+    .visor-imagen-fondo img {
+
+        max-width:
+            96vw;
+
+        max-height:
+            82vh;
+
+    }
+
+
+    .visor-imagen-cerrar {
+
+        top:
+            10px;
+
+        right:
+            10px;
+
+        width:
+            42px;
+
+        height:
+            42px;
+
+        font-size:
+            29px;
+
+    }
+
+}
+
+
+/* ============================================================
+   CELULARES MUY PEQUEÑOS
+============================================================ */
+
+@media (
+    max-width: 380px
+) {
+
+    .producto-imagen {
+
+        width:
+            65px;
+
+        height:
+            65px;
+
+    }
+
+
+    .producto-nombre {
+
+        font-size:
+            15px;
+
+    }
+
+
+    .producto-precio {
+
+        font-size:
+            16px;
+
+    }
+
+
+    .btn-agregar {
+
+        width:
+            40px;
+
+        height:
+            40px;
+
+        min-width:
+            40px;
+
+        font-size:
+            22px;
+
+    }
+
+
+    .modal-contenido {
+
+        padding:
+            15px;
+
+    }
+
+
+    .logo-don-elio {
+
+        width:
+            200px;
+
+        height:
+            200px;
+
+    }
+
+
+    .carrito-barra {
+
+        gap:
+            6px;
+
+    }
+
+
+    #cantidad-carrito {
+
+        font-size:
+            12px;
+
+    }
+
+
+    #total-carrito {
+
+        font-size:
+            14px;
+
+    }
+
+
+    .btn-ver-pedido {
+
+        padding:
+            8px 9px;
+
+        font-size:
+            12px;
+
+    }
+
+}
