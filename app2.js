@@ -99,82 +99,74 @@ function configurarEventos() {
 // CARGAR PRODUCTOS
 // ============================================================
 
+#async function cargarProductos() {
+const API_URL = "https://cartadigitalapi.onrender.com/productos";
+
 async function cargarProductos() {
 
-    cambiarEstadoAPI(
-        "cargando",
-        "● Cargando..."
-    );
+    const estado = document.getElementById("estado-api");
+
+    estado.textContent = "● Conectando con API...";
+    estado.className = "api-status cargando";
 
     try {
 
-        const respuesta = await fetch(
-            `${URL_PRODUCTOS}?t=${Date.now()}`,
-            {
-                method: "GET",
+        const url = `${API_URL}/productos`;
 
-                cache: "no-store",
+        console.log("Consultando API:", url);
 
-                headers: {
-                    "Cache-Control": "no-cache",
-                    "Pragma": "no-cache"
-                }
+        const respuesta = await fetch(url, {
+            method: "GET",
+            cache: "no-store",
+            headers: {
+                "Accept": "application/json"
             }
-        );
+        });
 
+        console.log("HTTP:", respuesta.status);
+
+        const texto = await respuesta.text();
+
+        console.log("Respuesta:", texto);
 
         if (!respuesta.ok) {
-
             throw new Error(
-                `HTTP ${respuesta.status}`
+                `HTTP ${respuesta.status} - ${texto}`
             );
-
         }
 
+        let productos;
 
-        productos = await respuesta.json();
+        try {
+            productos = JSON.parse(texto);
+        } catch (e) {
+            throw new Error(
+                "La API respondió algo que no es JSON: " + texto
+            );
+        }
 
+        console.log("Productos recibidos:", productos);
 
-        console.log(
-            "Productos recibidos:",
-            productos
-        );
+        if (!Array.isArray(productos)) {
+            throw new Error("La API no devolvió una lista de productos");
+        }
 
+        estado.textContent =
+            `● API OK · ${productos.length} productos`;
 
-        cambiarEstadoAPI(
-            "ok",
-            "● API conectada"
-        );
+        estado.className = "api-status ok";
 
+        mostrarProductos(productos);
 
-        construirFiltrosRubros();
+    } catch (error) {
 
-        actualizarResumen();
+        console.error("ERROR API:", error);
 
-        aplicarFiltros();
+        estado.textContent =
+            "● Error API: " + error.message;
 
+        estado.className = "api-status error";
     }
-
-    catch (error) {
-
-        console.error(
-            "Error cargando productos:",
-            error
-        );
-
-
-        cambiarEstadoAPI(
-            "error",
-            "● Error API"
-        );
-
-
-        mostrarErrorProductos(
-            "No se pudieron cargar los productos."
-        );
-
-    }
-
 }
 
 
