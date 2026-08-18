@@ -4,12 +4,7 @@
    CONFIGURACIÓN
 ============================================================ */
 
-// CAMBIAR POR LA URL REAL DE TU API EN RENDER
-
 const API_URL = "https://cartadigitalapi.onrender.com";
-
-
-// GitHub
 
 const URL_GITHUB =
     "https://raw.githubusercontent.com/doneliopizza/CartaDigital/main";
@@ -45,8 +40,11 @@ let cantidadesCompuesto = {};
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    document.getElementById("logo").src =
-        URL_LOGO + "?v=" + Date.now();
+    const logo = document.getElementById("logo");
+
+    if (logo) {
+        logo.src = URL_LOGO + "?v=" + Date.now();
+    }
 
     configurarEventos();
 
@@ -61,92 +59,196 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function configurarEventos() {
 
-    document
-        .getElementById("buscarProducto")
-        .addEventListener("input", mostrarProductos);
+    const buscarProducto =
+        document.getElementById("buscarProducto");
+
+    if (buscarProducto) {
+        buscarProducto.addEventListener(
+            "input",
+            mostrarProductos
+        );
+    }
 
 
-    document
-        .getElementById("btnCarrito")
-        .addEventListener("click", abrirCarrito);
+    const btnCarrito =
+        document.getElementById("btnCarrito");
+
+    if (btnCarrito) {
+        btnCarrito.addEventListener(
+            "click",
+            abrirCarrito
+        );
+    }
 
 
-    document
-        .getElementById("cerrarCarrito")
-        .addEventListener("click", cerrarCarrito);
+    const cerrarCarritoBtn =
+        document.getElementById("cerrarCarrito");
+
+    if (cerrarCarritoBtn) {
+        cerrarCarritoBtn.addEventListener(
+            "click",
+            cerrarCarrito
+        );
+    }
 
 
-    document
-        .getElementById("cerrarCompuesto")
-        .addEventListener("click", cerrarCompuesto);
+    const cerrarCompuestoBtn =
+        document.getElementById("cerrarCompuesto");
+
+    if (cerrarCompuestoBtn) {
+        cerrarCompuestoBtn.addEventListener(
+            "click",
+            cerrarCompuesto
+        );
+    }
 
 
-    document
-        .getElementById("confirmarCompuesto")
-        .addEventListener(
+    const confirmarCompuestoBtn =
+        document.getElementById("confirmarCompuesto");
+
+    if (confirmarCompuestoBtn) {
+        confirmarCompuestoBtn.addEventListener(
             "click",
             confirmarCompuesto
         );
+    }
 
 
-    document
-        .getElementById("cerrarCliente")
-        .addEventListener(
+    const cerrarClienteBtn =
+        document.getElementById("cerrarCliente");
+
+    if (cerrarClienteBtn) {
+        cerrarClienteBtn.addEventListener(
             "click",
             cerrarCliente
         );
+    }
 
 
-    document
-        .getElementById("btnContinuarPedido")
-        .addEventListener(
+    const continuarPedidoBtn =
+        document.getElementById("btnContinuarPedido");
+
+    if (continuarPedidoBtn) {
+        continuarPedidoBtn.addEventListener(
             "click",
             abrirDatosCliente
         );
+    }
 
 
-    document
-        .getElementById("btnEnviarPedido")
-        .addEventListener(
+    const enviarPedidoBtn =
+        document.getElementById("btnEnviarPedido");
+
+    if (enviarPedidoBtn) {
+        enviarPedidoBtn.addEventListener(
             "click",
             enviarPedido
         );
+    }
 
 
-    document
-        .getElementById("cerrarExito")
-        .addEventListener(
+    const cerrarExitoBtn =
+        document.getElementById("cerrarExito");
+
+    if (cerrarExitoBtn) {
+        cerrarExitoBtn.addEventListener(
             "click",
             () => {
-                document
-                    .getElementById("modalExito")
-                    .classList.add("oculto");
-            }
-        );
 
+                const modal =
+                    document.getElementById(
+                        "modalExito"
+                    );
 
-    document
-        .getElementById("cerrarImagen")
-        .addEventListener(
-            "click",
-            cerrarVisor
-        );
-
-
-    document
-        .getElementById("visorImagen")
-        .addEventListener(
-            "click",
-            event => {
-
-                if (
-                    event.target.id === "visorImagen"
-                ) {
-                    cerrarVisor();
+                if (modal) {
+                    modal.classList.add("oculto");
                 }
 
             }
         );
+    }
+
+
+    /* ========================================================
+       VISOR DE IMÁGENES
+    ======================================================== */
+
+    const cerrarImagenBtn =
+        document.getElementById("cerrarImagen");
+
+    if (cerrarImagenBtn) {
+
+        cerrarImagenBtn.addEventListener(
+            "click",
+            event => {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+                cerrarVisor();
+
+            }
+        );
+
+    }
+
+
+    const visorImagen =
+        document.getElementById("visorImagen");
+
+    if (visorImagen) {
+
+        visorImagen.addEventListener(
+            "click",
+            event => {
+
+                /*
+                 * Si hacemos click sobre el fondo,
+                 * cerramos el visor.
+                 *
+                 * Si hacemos click sobre la imagen
+                 * o sobre el botón cerrar, no hacemos nada.
+                 */
+
+                if (
+                    event.target === visorImagen
+                ) {
+
+                    cerrarVisor();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* ========================================================
+       ESCAPE
+    ======================================================== */
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                cerrarVisor();
+
+                cerrarCompuesto();
+
+                cerrarCarrito();
+
+                cerrarCliente();
+
+            }
+
+        }
+    );
 
 }
 
@@ -159,17 +261,24 @@ async function cargarProductos() {
 
     try {
 
-        const respuesta = await fetch(
-            URL_PRODUCTOS + "?v=" + Date.now()
-        );
+        const respuesta =
+            await fetch(
+                URL_PRODUCTOS +
+                "?v=" +
+                Date.now()
+            );
 
         if (!respuesta.ok) {
+
             throw new Error(
-                "HTTP " + respuesta.status
+                "HTTP " +
+                respuesta.status
             );
+
         }
 
-        productos = await respuesta.json();
+        productos =
+            await respuesta.json();
 
         console.log(
             "Productos recibidos:",
@@ -187,13 +296,20 @@ async function cargarProductos() {
             error
         );
 
-        document.getElementById(
-            "productos"
-        ).innerHTML = `
-            <div class="mensaje-pedido">
-                No se pudo cargar la carta.
-            </div>
-        `;
+        const contenedor =
+            document.getElementById(
+                "productos"
+            );
+
+        if (contenedor) {
+
+            contenedor.innerHTML = `
+                <div class="mensaje-pedido">
+                    No se pudo cargar la carta.
+                </div>
+            `;
+
+        }
 
     }
 
@@ -209,24 +325,46 @@ function generarRubros() {
     const contenedor =
         document.getElementById("rubros");
 
+    if (!contenedor) {
+        return;
+    }
+
     contenedor.innerHTML = "";
 
 
     const rubros = {};
 
-    productos.forEach(producto => {
 
-        if (!rubros[producto.rubro_id]) {
+    productos.forEach(
+        producto => {
 
-            rubros[producto.rubro_id] = {
-                id: producto.rubro_id,
-                nombre: producto.rubro
-            };
+            if (
+                !rubros[
+                    producto.rubro_id
+                ]
+            ) {
+
+                rubros[
+                    producto.rubro_id
+                ] = {
+
+                    id:
+                        producto.rubro_id,
+
+                    nombre:
+                        producto.rubro
+
+                };
+
+            }
 
         }
+    );
 
-    });
 
+    /* ========================================================
+       TODOS
+    ======================================================== */
 
     const botonTodos =
         document.createElement("button");
@@ -252,43 +390,52 @@ function generarRubros() {
         }
     );
 
+
     contenedor.appendChild(
         botonTodos
     );
 
 
-    Object.values(rubros).forEach(rubro => {
+    /* ========================================================
+       RUBROS
+    ======================================================== */
 
-        const boton =
-            document.createElement("button");
+    Object.values(rubros).forEach(
+        rubro => {
 
-        boton.className =
-            "boton-rubro";
-
-        boton.textContent =
-            rubro.nombre;
-
-        boton.addEventListener(
-            "click",
-            () => {
-
-                rubroActivo =
-                    rubro.id;
-
-                marcarRubroActivo(
-                    boton
+            const boton =
+                document.createElement(
+                    "button"
                 );
 
-                mostrarProductos();
+            boton.className =
+                "boton-rubro";
 
-            }
-        );
+            boton.textContent =
+                rubro.nombre;
 
-        contenedor.appendChild(
-            boton
-        );
+            boton.addEventListener(
+                "click",
+                () => {
 
-    });
+                    rubroActivo =
+                        rubro.id;
+
+                    marcarRubroActivo(
+                        boton
+                    );
+
+                    mostrarProductos();
+
+                }
+            );
+
+            contenedor.appendChild(
+                boton
+            );
+
+        }
+    );
 
 }
 
@@ -297,17 +444,23 @@ function generarRubros() {
    RUBRO ACTIVO
 ============================================================ */
 
-function marcarRubroActivo(botonSeleccionado) {
+function marcarRubroActivo(
+    botonSeleccionado
+) {
 
     document
-        .querySelectorAll(".boton-rubro")
-        .forEach(boton => {
+        .querySelectorAll(
+            ".boton-rubro"
+        )
+        .forEach(
+            boton => {
 
-            boton.classList.remove(
-                "activo"
-            );
+                boton.classList.remove(
+                    "activo"
+                );
 
-        });
+            }
+        );
 
 
     botonSeleccionado.classList.add(
@@ -324,41 +477,65 @@ function marcarRubroActivo(botonSeleccionado) {
 function mostrarProductos() {
 
     const contenedor =
-        document.getElementById("productos");
+        document.getElementById(
+            "productos"
+        );
+
+    if (!contenedor) {
+        return;
+    }
+
+
+    const campoBusqueda =
+        document.getElementById(
+            "buscarProducto"
+        );
+
 
     const texto =
-        document
-            .getElementById("buscarProducto")
-            .value
-            .trim()
-            .toLowerCase();
+        campoBusqueda
+            ? campoBusqueda.value
+                .trim()
+                .toLowerCase()
+            : "";
 
 
     contenedor.innerHTML = "";
 
 
     const filtrados =
-        productos.filter(producto => {
+        productos.filter(
+            producto => {
 
-            if (
-                rubroActivo !== null &&
-                producto.rubro_id !== rubroActivo
-            ) {
-                return false;
-            }
+                if (
+                    rubroActivo !== null &&
+                    Number(producto.rubro_id) !==
+                    Number(rubroActivo)
+                ) {
 
-            if (
-                texto &&
-                !producto.nombre
+                    return false;
+
+                }
+
+
+                if (
+                    texto &&
+                    !String(
+                        producto.nombre
+                    )
                     .toLowerCase()
                     .includes(texto)
-            ) {
-                return false;
+                ) {
+
+                    return false;
+
+                }
+
+
+                return true;
+
             }
-
-            return true;
-
-        });
+        );
 
 
     if (!filtrados.length) {
@@ -370,6 +547,7 @@ function mostrarProductos() {
         `;
 
         return;
+
     }
 
 
@@ -377,14 +555,22 @@ function mostrarProductos() {
         producto => {
 
             const tarjeta =
-                document.createElement("article");
+                document.createElement(
+                    "article"
+                );
 
             tarjeta.className =
                 "producto";
 
 
+            /* =================================================
+               IMAGEN
+            ================================================= */
+
             const imagen =
-                document.createElement("img");
+                document.createElement(
+                    "img"
+                );
 
             imagen.className =
                 "producto-imagen";
@@ -392,12 +578,18 @@ function mostrarProductos() {
             imagen.alt =
                 producto.nombre;
 
-
             imagen.src =
                 obtenerImagen(producto);
 
 
             imagen.onerror = () => {
+
+                /*
+                 * Evitamos un bucle infinito
+                 * si también falla el logo.
+                 */
+
+                imagen.onerror = null;
 
                 imagen.src =
                     URL_LOGO;
@@ -407,7 +599,11 @@ function mostrarProductos() {
 
             imagen.addEventListener(
                 "click",
-                () => {
+                event => {
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
 
                     abrirVisor(
                         imagen.src,
@@ -418,15 +614,23 @@ function mostrarProductos() {
             );
 
 
+            /* =================================================
+               INFORMACIÓN
+            ================================================= */
+
             const info =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             info.className =
                 "producto-info";
 
 
             const nombre =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             nombre.className =
                 "producto-nombre";
@@ -436,7 +640,9 @@ function mostrarProductos() {
 
 
             const precio =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             precio.className =
                 "producto-precio";
@@ -448,13 +654,17 @@ function mostrarProductos() {
 
 
             const boton =
-                document.createElement("button");
+                document.createElement(
+                    "button"
+                );
 
             boton.className =
                 "producto-boton";
 
             boton.textContent =
-                producto.es_compuesto
+                Number(
+                    producto.es_compuesto
+                )
                     ? "Elegir opciones"
                     : "Agregar";
 
@@ -471,12 +681,27 @@ function mostrarProductos() {
             );
 
 
-            info.appendChild(nombre);
-            info.appendChild(precio);
-            info.appendChild(boton);
+            info.appendChild(
+                nombre
+            );
 
-            tarjeta.appendChild(imagen);
-            tarjeta.appendChild(info);
+            info.appendChild(
+                precio
+            );
+
+            info.appendChild(
+                boton
+            );
+
+
+            tarjeta.appendChild(
+                imagen
+            );
+
+            tarjeta.appendChild(
+                info
+            );
+
 
             contenedor.appendChild(
                 tarjeta
@@ -510,7 +735,12 @@ function obtenerImagen(producto) {
 
     }
 
-    return URL_LOGO;
+    return (
+        URL_LOGO +
+        "?v=" +
+        Date.now()
+    );
+
 }
 
 
@@ -518,10 +748,17 @@ function obtenerImagen(producto) {
    AGREGAR PRODUCTO
 ============================================================ */
 
-function agregarProducto(producto) {
+function agregarProducto(
+    producto
+) {
+
+    /*
+     * Si el producto es compuesto y tiene hijos,
+     * abrimos el selector.
+     */
 
     if (
-        producto.es_compuesto &&
+        Number(producto.es_compuesto) &&
         Array.isArray(producto.hijos)
     ) {
 
@@ -530,6 +767,7 @@ function agregarProducto(producto) {
         );
 
         return;
+
     }
 
 
@@ -544,12 +782,15 @@ function agregarProducto(producto) {
    PRODUCTO SIMPLE
 ============================================================ */
 
-function agregarSimple(producto) {
+function agregarSimple(
+    producto
+) {
 
     const existente =
         carrito.find(
             item =>
-                item.producto_id === producto.id &&
+                item.producto_id ===
+                    producto.id &&
                 !item.compuesto
         );
 
@@ -577,13 +818,17 @@ function agregarSimple(producto) {
                 producto.nombre,
 
             precio:
-                Number(producto.precio),
+                Number(
+                    producto.precio
+                ),
 
             cantidad:
                 1,
 
             subtotal:
-                Number(producto.precio),
+                Number(
+                    producto.precio
+                ),
 
             compuesto:
                 false
@@ -602,12 +847,29 @@ function agregarSimple(producto) {
    COMPUESTO
 ============================================================ */
 
-function abrirCompuesto(producto) {
+function abrirCompuesto(
+    producto
+) {
 
     productoCompuestoActual =
         producto;
 
     cantidadesCompuesto = {};
+
+
+    if (
+        !Array.isArray(
+            producto.hijos
+        )
+    ) {
+
+        mostrarMensaje(
+            "Este producto no tiene opciones configuradas."
+        );
+
+        return;
+
+    }
 
 
     producto.hijos.forEach(
@@ -621,26 +883,49 @@ function abrirCompuesto(producto) {
     );
 
 
-    document.getElementById(
-        "compuestoTitulo"
-    ).textContent =
-        producto.nombre;
-
-
-    document.getElementById(
-        "compuestoReglas"
-    ).textContent =
-        generarTextoReglas(
-            producto
+    const titulo =
+        document.getElementById(
+            "compuestoTitulo"
         );
+
+    if (titulo) {
+
+        titulo.textContent =
+            producto.nombre;
+
+    }
+
+
+    const reglas =
+        document.getElementById(
+            "compuestoReglas"
+        );
+
+    if (reglas) {
+
+        reglas.textContent =
+            generarTextoReglas(
+                producto
+            );
+
+    }
 
 
     mostrarOpcionesCompuesto();
 
 
-    document
-        .getElementById("modalCompuesto")
-        .classList.remove("oculto");
+    const modal =
+        document.getElementById(
+            "modalCompuesto"
+        );
+
+    if (modal) {
+
+        modal.classList.remove(
+            "oculto"
+        );
+
+    }
 
 }
 
@@ -649,26 +934,41 @@ function abrirCompuesto(producto) {
    REGLAS COMPUESTO
 ============================================================ */
 
-function generarTextoReglas(producto) {
+function generarTextoReglas(
+    producto
+) {
 
     const min =
-        Number(producto.cant_min || 0);
+        Number(
+            producto.cant_min || 0
+        );
 
     const max =
-        Number(producto.cant_max || 0);
+        Number(
+            producto.cant_max || 0
+        );
 
 
-    if (min && max && min === max) {
+    if (
+        min &&
+        max &&
+        min === max
+    ) {
 
         return `Elegí ${min} opciones.`;
 
     }
 
-    if (min && max) {
+
+    if (
+        min &&
+        max
+    ) {
 
         return `Elegí entre ${min} y ${max} opciones.`;
 
     }
+
 
     if (min) {
 
@@ -676,11 +976,13 @@ function generarTextoReglas(producto) {
 
     }
 
+
     if (max) {
 
         return `Elegí hasta ${max} opciones.`;
 
     }
+
 
     return "Elegí las opciones que quieras.";
 
@@ -698,6 +1000,11 @@ function mostrarOpcionesCompuesto() {
             "opcionesCompuesto"
         );
 
+    if (!contenedor) {
+        return;
+    }
+
+
     contenedor.innerHTML = "";
 
 
@@ -705,14 +1012,18 @@ function mostrarOpcionesCompuesto() {
         hijo => {
 
             const fila =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             fila.className =
                 "opcion-compuesto";
 
 
             const nombre =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             nombre.className =
                 "opcion-nombre";
@@ -722,14 +1033,21 @@ function mostrarOpcionesCompuesto() {
 
 
             const menos =
-                document.createElement("button");
+                document.createElement(
+                    "button"
+                );
+
+            menos.type =
+                "button";
 
             menos.textContent =
                 "−";
 
 
             const cantidad =
-                document.createElement("span");
+                document.createElement(
+                    "span"
+                );
 
             cantidad.className =
                 "opcion-cantidad";
@@ -741,7 +1059,12 @@ function mostrarOpcionesCompuesto() {
 
 
             const mas =
-                document.createElement("button");
+                document.createElement(
+                    "button"
+                );
+
+            mas.type =
+                "button";
 
             mas.textContent =
                 "+";
@@ -817,10 +1140,22 @@ function mostrarOpcionesCompuesto() {
             );
 
 
-            fila.appendChild(nombre);
-            fila.appendChild(menos);
-            fila.appendChild(cantidad);
-            fila.appendChild(mas);
+            fila.appendChild(
+                nombre
+            );
+
+            fila.appendChild(
+                menos
+            );
+
+            fila.appendChild(
+                cantidad
+            );
+
+            fila.appendChild(
+                mas
+            );
+
 
             contenedor.appendChild(
                 fila
@@ -844,8 +1179,12 @@ function obtenerTotalOpciones() {
     return Object.values(
         cantidadesCompuesto
     ).reduce(
-        (total, cantidad) =>
-            total + Number(cantidad),
+        (
+            total,
+            cantidad
+        ) =>
+            total +
+            Number(cantidad),
         0
     );
 
@@ -854,10 +1193,17 @@ function obtenerTotalOpciones() {
 
 function actualizarTotalOpciones() {
 
-    document.getElementById(
-        "totalOpciones"
-    ).textContent =
-        obtenerTotalOpciones();
+    const elemento =
+        document.getElementById(
+            "totalOpciones"
+        );
+
+    if (elemento) {
+
+        elemento.textContent =
+            obtenerTotalOpciones();
+
+    }
 
 }
 
@@ -872,15 +1218,24 @@ function confirmarCompuesto() {
         productoCompuestoActual;
 
 
+    if (!producto) {
+        return;
+    }
+
+
     const total =
         obtenerTotalOpciones();
 
 
     const min =
-        Number(producto.cant_min || 0);
+        Number(
+            producto.cant_min || 0
+        );
 
     const max =
-        Number(producto.cant_max || 0);
+        Number(
+            producto.cant_max || 0
+        );
 
 
     if (
@@ -965,19 +1320,25 @@ function confirmarCompuesto() {
             nombreFinal,
 
         precio:
-            Number(producto.precio),
+            Number(
+                producto.precio
+            ),
 
         cantidad:
             1,
 
         subtotal:
-            Number(producto.precio),
+            Number(
+                producto.precio
+            ),
 
         compuesto:
             true,
 
         hijos:
-            { ...cantidadesCompuesto }
+            {
+                ...cantidadesCompuesto
+            }
 
     });
 
@@ -995,11 +1356,19 @@ function confirmarCompuesto() {
 
 function cerrarCompuesto() {
 
-    document
-        .getElementById(
+    const modal =
+        document.getElementById(
             "modalCompuesto"
-        )
-        .classList.add("oculto");
+        );
+
+    if (modal) {
+
+        modal.classList.add(
+            "oculto"
+        );
+
+    }
+
 
     productoCompuestoActual =
         null;
@@ -1017,16 +1386,27 @@ function actualizarCarritoUI() {
 
     const cantidad =
         carrito.reduce(
-            (total, item) =>
-                total + item.cantidad,
+            (
+                total,
+                item
+            ) =>
+                total +
+                item.cantidad,
             0
         );
 
 
-    document.getElementById(
-        "cantidadCarrito"
-    ).textContent =
-        cantidad;
+    const cantidadCarrito =
+        document.getElementById(
+            "cantidadCarrito"
+        );
+
+    if (cantidadCarrito) {
+
+        cantidadCarrito.textContent =
+            cantidad;
+
+    }
 
 
     renderizarCarrito();
@@ -1034,16 +1414,28 @@ function actualizarCarritoUI() {
 }
 
 
+/* ============================================================
+   CALCULAR SUBTOTAL
+============================================================ */
+
 function calcularSubtotal() {
 
     return carrito.reduce(
-        (total, item) =>
-            total + item.subtotal,
+        (
+            total,
+            item
+        ) =>
+            total +
+            Number(item.subtotal || 0),
         0
     );
 
 }
 
+
+/* ============================================================
+   RENDERIZAR CARRITO
+============================================================ */
 
 function renderizarCarrito() {
 
@@ -1051,6 +1443,11 @@ function renderizarCarrito() {
         document.getElementById(
             "listaCarrito"
         );
+
+    if (!contenedor) {
+        return;
+    }
+
 
     contenedor.innerHTML = "";
 
@@ -1064,21 +1461,30 @@ function renderizarCarrito() {
 
 
     carrito.forEach(
-        (item, index) => {
+        (
+            item,
+            index
+        ) => {
 
             const fila =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             fila.className =
                 "item-carrito";
 
 
             const izquierda =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
 
             const nombre =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             nombre.className =
                 "item-carrito-nombre";
@@ -1088,13 +1494,17 @@ function renderizarCarrito() {
 
 
             const detalle =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             detalle.className =
                 "item-carrito-detalle";
 
             detalle.textContent =
-                `${item.cantidad} x ${formatearPrecio(item.precio)}`;
+                `${item.cantidad} x ${formatearPrecio(
+                    item.precio
+                )}`;
 
 
             izquierda.appendChild(
@@ -1107,35 +1517,54 @@ function renderizarCarrito() {
 
 
             const controles =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             controles.className =
                 "item-carrito-controles";
 
 
             const menos =
-                document.createElement("button");
+                document.createElement(
+                    "button"
+                );
+
+            menos.type =
+                "button";
 
             menos.textContent =
                 "−";
 
 
             const cantidad =
-                document.createElement("span");
+                document.createElement(
+                    "span"
+                );
 
             cantidad.textContent =
                 item.cantidad;
 
 
             const mas =
-                document.createElement("button");
+                document.createElement(
+                    "button"
+                );
+
+            mas.type =
+                "button";
 
             mas.textContent =
                 "+";
 
 
             const eliminar =
-                document.createElement("button");
+                document.createElement(
+                    "button"
+                );
+
+            eliminar.type =
+                "button";
 
             eliminar.textContent =
                 "×";
@@ -1149,6 +1578,7 @@ function renderizarCarrito() {
                 () => {
 
                     item.cantidad--;
+
 
                     if (
                         item.cantidad <= 0
@@ -1166,6 +1596,7 @@ function renderizarCarrito() {
                             item.precio;
 
                     }
+
 
                     actualizarCarritoUI();
 
@@ -1242,16 +1673,34 @@ function renderizarCarrito() {
         calcularSubtotal();
 
 
-    document.getElementById(
-        "subtotalCarrito"
-    ).textContent =
-        formatearPrecio(subtotal);
+    const subtotalElemento =
+        document.getElementById(
+            "subtotalCarrito"
+        );
+
+    if (subtotalElemento) {
+
+        subtotalElemento.textContent =
+            formatearPrecio(
+                subtotal
+            );
+
+    }
 
 
-    document.getElementById(
-        "totalCarrito"
-    ).textContent =
-        formatearPrecio(subtotal);
+    const totalElemento =
+        document.getElementById(
+            "totalCarrito"
+        );
+
+    if (totalElemento) {
+
+        totalElemento.textContent =
+            formatearPrecio(
+                subtotal
+            );
+
+    }
 
 }
 
@@ -1264,26 +1713,41 @@ function abrirCarrito() {
 
     renderizarCarrito();
 
-    document
-        .getElementById(
+
+    const modal =
+        document.getElementById(
             "modalCarrito"
-        )
-        .classList.remove(
+        );
+
+    if (modal) {
+
+        modal.classList.remove(
             "oculto"
         );
+
+    }
 
 }
 
 
+/* ============================================================
+   CERRAR CARRITO
+============================================================ */
+
 function cerrarCarrito() {
 
-    document
-        .getElementById(
+    const modal =
+        document.getElementById(
             "modalCarrito"
-        )
-        .classList.add(
+        );
+
+    if (modal) {
+
+        modal.classList.add(
             "oculto"
         );
+
+    }
 
 }
 
@@ -1308,34 +1772,61 @@ function abrirDatosCliente() {
     cerrarCarrito();
 
 
-    document.getElementById(
-        "totalConfirmacion"
-    ).textContent =
-        formatearPrecio(
-            calcularSubtotal()
+    const total =
+        calcularSubtotal();
+
+
+    const totalConfirmacion =
+        document.getElementById(
+            "totalConfirmacion"
         );
 
 
-    document
-        .getElementById(
+    if (totalConfirmacion) {
+
+        totalConfirmacion.textContent =
+            formatearPrecio(
+                total
+            );
+
+    }
+
+
+    const modal =
+        document.getElementById(
             "modalCliente"
-        )
-        .classList.remove(
+        );
+
+
+    if (modal) {
+
+        modal.classList.remove(
             "oculto"
         );
+
+    }
 
 }
 
 
+/* ============================================================
+   CERRAR CLIENTE
+============================================================ */
+
 function cerrarCliente() {
 
-    document
-        .getElementById(
+    const modal =
+        document.getElementById(
             "modalCliente"
-        )
-        .classList.add(
+        );
+
+    if (modal) {
+
+        modal.classList.add(
             "oculto"
         );
+
+    }
 
 }
 
@@ -1347,63 +1838,46 @@ function cerrarCliente() {
 async function enviarPedido() {
 
     const nombre =
-        document
-            .getElementById(
-                "clienteNombre"
-            )
-            .value
-            .trim();
-
+        obtenerValor(
+            "clienteNombre"
+        );
 
     const telefono =
-        document
-            .getElementById(
-                "clienteTelefono"
-            )
-            .value
-            .trim();
-
+        obtenerValor(
+            "clienteTelefono"
+        );
 
     const calle =
-        document
-            .getElementById(
-                "clienteCalle"
-            )
-            .value
-            .trim();
-
+        obtenerValor(
+            "clienteCalle"
+        );
 
     const altura =
-        document
-            .getElementById(
-                "clienteAltura"
-            )
-            .value
-            .trim();
-
+        obtenerValor(
+            "clienteAltura"
+        );
 
     const localidad =
-        document
-            .getElementById(
-                "clienteLocalidad"
-            )
-            .value
-            .trim();
+        obtenerValor(
+            "clienteLocalidad"
+        );
 
 
     const montoEfectivo =
         Number(
-            document
-                .getElementById(
-                    "montoEfectivo"
-                )
-                .value || 0
+            obtenerValor(
+                "montoEfectivo"
+            ) || 0
         );
 
 
     const total =
         calcularSubtotal();
 
+
+    /* ========================================================
+       VALIDACIONES
+    ======================================================== */
 
     if (!nombre) {
 
@@ -1474,6 +1948,10 @@ async function enviarPedido() {
     }
 
 
+    /* ========================================================
+       ITEMS
+    ======================================================== */
+
     const items =
         carrito.map(
             item => ({
@@ -1485,13 +1963,19 @@ async function enviarPedido() {
                     item.cantidad,
 
                 precio_unitario:
-                    item.precio,
+                    Number(
+                        item.precio
+                    ),
 
                 subtotal:
-                    item.subtotal,
+                    Number(
+                        item.subtotal
+                    ),
 
                 compuesto:
-                    item.compuesto,
+                    Boolean(
+                        item.compuesto
+                    ),
 
                 hijos:
                     item.compuesto
@@ -1501,6 +1985,10 @@ async function enviarPedido() {
             })
         );
 
+
+    /* ========================================================
+       PEDIDO
+    ======================================================== */
 
     const pedido = {
 
@@ -1542,8 +2030,19 @@ async function enviarPedido() {
 
 
     console.log(
-        "PEDIDO A ENVIAR:",
+        "================================"
+    );
+
+    console.log(
+        "PEDIDO A ENVIAR:"
+    );
+
+    console.log(
         pedido
+    );
+
+    console.log(
+        "================================"
     );
 
 
@@ -1553,20 +2052,27 @@ async function enviarPedido() {
         );
 
 
-    boton.disabled = true;
+    if (boton) {
 
-    boton.textContent =
-        "ENVIANDO...";
+        boton.disabled =
+            true;
+
+        boton.textContent =
+            "ENVIANDO...";
+
+    }
 
 
     try {
 
         const respuesta =
             await fetch(
-                API_URL + "/pedidos",
+                API_URL +
+                "/pedidos",
                 {
 
-                    method: "POST",
+                    method:
+                        "POST",
 
                     headers: {
 
@@ -1584,8 +2090,19 @@ async function enviarPedido() {
             );
 
 
-        const datos =
-            await respuesta.json();
+        let datos;
+
+
+        try {
+
+            datos =
+                await respuesta.json();
+
+        } catch {
+
+            datos = {};
+
+        }
 
 
         if (!respuesta.ok) {
@@ -1598,27 +2115,61 @@ async function enviarPedido() {
         }
 
 
+        console.log(
+            "PEDIDO REGISTRADO:",
+            datos
+        );
+
+
+        /* ====================================================
+           LIMPIAR
+        ==================================================== */
+
         cerrarCliente();
 
 
         carrito = [];
 
+
         actualizarCarritoUI();
 
 
-        document.getElementById(
-            "numeroPedido"
-        ).textContent =
-            "#" + datos.pedido_id;
+        /* ====================================================
+           MOSTRAR ÉXITO
+        ==================================================== */
+
+        const numeroPedido =
+            document.getElementById(
+                "numeroPedido"
+            );
 
 
-        document
-            .getElementById(
+        if (numeroPedido) {
+
+            numeroPedido.textContent =
+                "#" +
+                (
+                    datos.pedido_id ??
+                    datos.id ??
+                    ""
+                );
+
+        }
+
+
+        const modalExito =
+            document.getElementById(
                 "modalExito"
-            )
-            .classList.remove(
+            );
+
+
+        if (modalExito) {
+
+            modalExito.classList.remove(
                 "oculto"
             );
+
+        }
 
 
         limpiarFormulario();
@@ -1627,21 +2178,53 @@ async function enviarPedido() {
     } catch (error) {
 
         console.error(
+            "ERROR ENVIANDO PEDIDO:",
             error
         );
+
 
         mostrarMensaje(
             "No se pudo enviar el pedido. Intentá nuevamente."
         );
 
+
     } finally {
 
-        boton.disabled = false;
+        if (boton) {
 
-        boton.textContent =
-            "ENVIAR PEDIDO";
+            boton.disabled =
+                false;
+
+            boton.textContent =
+                "ENVIAR PEDIDO";
+
+        }
 
     }
+
+}
+
+
+/* ============================================================
+   OBTENER VALOR INPUT
+============================================================ */
+
+function obtenerValor(id) {
+
+    const elemento =
+        document.getElementById(id);
+
+
+    if (!elemento) {
+
+        return "";
+
+    }
+
+
+    return String(
+        elemento.value || ""
+    ).trim();
 
 }
 
@@ -1663,9 +2246,18 @@ function limpiarFormulario() {
     ].forEach(
         id => {
 
-            document
-                .getElementById(id)
-                .value = "";
+            const elemento =
+                document.getElementById(
+                    id
+                );
+
+
+            if (elemento) {
+
+                elemento.value =
+                    "";
+
+            }
 
         }
     );
@@ -1677,12 +2269,24 @@ function limpiarFormulario() {
    MENSAJE
 ============================================================ */
 
-function mostrarMensaje(texto) {
+function mostrarMensaje(
+    texto
+) {
 
     const mensaje =
         document.getElementById(
             "mensajePedido"
         );
+
+
+    if (!mensaje) {
+
+        alert(texto);
+
+        return;
+
+    }
+
 
     mensaje.textContent =
         texto;
@@ -1702,7 +2306,7 @@ function mostrarMensaje(texto) {
 
 
 /* ============================================================
-   IMÁGENES
+   VISOR DE IMÁGENES
 ============================================================ */
 
 function abrirVisor(
@@ -1710,35 +2314,94 @@ function abrirVisor(
     alt
 ) {
 
-    document.getElementById(
-        "imagenGrande"
-    ).src = src;
-
-    document.getElementById(
-        "imagenGrande"
-    ).alt = alt;
-
-
-    document
-        .getElementById(
+    const visor =
+        document.getElementById(
             "visorImagen"
-        )
-        .classList.remove(
-            "oculto"
         );
+
+    const imagen =
+        document.getElementById(
+            "imagenGrande"
+        );
+
+
+    if (!visor || !imagen) {
+
+        return;
+
+    }
+
+
+    imagen.src =
+        src;
+
+    imagen.alt =
+        alt || "";
+
+
+    /*
+     * El visor se muestra DESPUÉS de cargar
+     * la imagen.
+     */
+
+    visor.classList.remove(
+        "oculto"
+    );
+
+
+    /*
+     * Evita que el body siga desplazándose
+     * mientras el visor está abierto.
+     */
+
+    document.body.classList.add(
+        "visor-abierto"
+    );
 
 }
 
 
 function cerrarVisor() {
 
-    document
-        .getElementById(
+    const visor =
+        document.getElementById(
             "visorImagen"
-        )
-        .classList.add(
-            "oculto"
         );
+
+
+    if (!visor) {
+
+        return;
+
+    }
+
+
+    visor.classList.add(
+        "oculto"
+    );
+
+
+    document.body.classList.remove(
+        "visor-abierto"
+    );
+
+
+    /*
+     * Limpiamos la imagen para liberar
+     * el recurso y evitar que quede visible.
+     */
+
+    const imagen =
+        document.getElementById(
+            "imagenGrande"
+        );
+
+
+    if (imagen) {
+
+        imagen.src = "";
+
+    }
 
 }
 
@@ -1747,17 +2410,28 @@ function cerrarVisor() {
    FORMATO PRECIO
 ============================================================ */
 
-function formatearPrecio(valor) {
+function formatearPrecio(
+    valor
+) {
 
     return new Intl.NumberFormat(
         "es-AR",
         {
-            style: "currency",
-            currency: "ARS",
-            maximumFractionDigits: 0
+
+            style:
+                "currency",
+
+            currency:
+                "ARS",
+
+            maximumFractionDigits:
+                0
+
         }
     ).format(
-        Number(valor || 0)
+        Number(
+            valor || 0
+        )
     );
 
 }
