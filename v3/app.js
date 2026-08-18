@@ -173,23 +173,24 @@ function configurarEventos() {
        VISOR DE IMÁGENES
     ======================================================== */
 
-    const cerrarImagenBtn =
-        document.getElementById("cerrarImagen");
-
-    if (cerrarImagenBtn) {
-
-        cerrarImagenBtn.addEventListener(
-            "click",
-            event => {
-
-                event.preventDefault();
-
-                event.stopPropagation();
-
-                cerrarVisor();
-
-            }
-        );
+      const cerrarImagen =
+          document.getElementById("cerrarImagen");
+      
+      if (cerrarImagen) {
+      
+          cerrarImagen.addEventListener(
+              "click",
+              function (event) {
+      
+                  event.preventDefault();
+                  event.stopPropagation();
+      
+                  cerrarVisor();
+      
+              }
+          );
+      
+      
 
     }
 
@@ -2309,57 +2310,51 @@ function mostrarMensaje(
    VISOR DE IMÁGENES
 ============================================================ */
 
-function abrirVisor(
-    src,
-    alt
-) {
+function abrirVisor(src, alt) {
 
     const visor =
-        document.getElementById(
-            "visorImagen"
-        );
+        document.getElementById("visorImagen");
 
     const imagen =
-        document.getElementById(
-            "imagenGrande"
-        );
-
+        document.getElementById("imagenGrande");
 
     if (!visor || !imagen) {
-
         return;
-
     }
 
+    imagen.src = src;
+    imagen.alt = alt || "";
 
-    imagen.src =
-        src;
-
-    imagen.alt =
-        alt || "";
-
-
-    /*
-     * El visor se muestra DESPUÉS de cargar
-     * la imagen.
-     */
-
-    visor.classList.remove(
-        "oculto"
-    );
-
-
-    /*
-     * Evita que el body siga desplazándose
-     * mientras el visor está abierto.
-     */
-
-    document.body.classList.add(
-        "visor-abierto"
-    );
+    visor.classList.remove("oculto");
 
 }
 
+
+function cerrarVisor() {
+
+    const visor =
+        document.getElementById("visorImagen");
+
+    if (!visor) {
+        return;
+    }
+
+    visor.classList.add("oculto");
+
+    // Limpiamos la imagen después de cerrar
+    setTimeout(() => {
+
+        const imagen =
+            document.getElementById("imagenGrande");
+
+        if (imagen) {
+            imagen.src = "";
+            imagen.alt = "";
+        }
+
+    }, 200);
+
+}
 
 function cerrarVisor() {
 
