@@ -2129,21 +2129,90 @@ async function enviarPedido() {
            MOSTRAR ÉXITO
         ==================================================== */
 
-        const numeroPedido =
-            document.getElementById(
-                "numeroPedido"
-            );
-
-
-        if (numeroPedido) {
-
-            numeroPedido.textContent =
-                "#" +
-                (
-                    datos.pedido_id ??
-                    datos.id ??
-                    ""
-                );
+      #  const numeroPedido =
+         const numeroPedido =
+             document.getElementById(
+                 "numeroPedido"
+             );
+         
+         const idPedido =
+             datos.pedido_id ??
+             datos.id ??
+             "";
+         
+         
+         if (numeroPedido) {
+         
+             numeroPedido.textContent =
+                 "#" +
+                 idPedido;
+         
+         }
+         
+         
+         /* ========================================================
+            LINK DE SEGUIMIENTO
+         ======================================================== */
+         
+         if (
+             datos.seguimiento_url
+         ) {
+         
+             let enlace =
+                 document.getElementById(
+                     "linkSeguimiento"
+                 );
+         
+         
+             if (!enlace) {
+         
+                 enlace =
+                     document.createElement(
+                         "a"
+                     );
+         
+                 enlace.id =
+                     "linkSeguimiento";
+         
+                 enlace.target =
+                     "_blank";
+         
+                 enlace.rel =
+                     "noopener noreferrer";
+         
+         
+                 if (numeroPedido) {
+         
+                     numeroPedido.parentNode
+                         .appendChild(
+                             enlace
+                         );
+         
+                 }
+         
+             }
+         
+         
+             enlace.href =
+                 datos.seguimiento_url;
+         
+             enlace.textContent =
+                 "📦 Ver seguimiento del pedido";
+         
+         
+             enlace.style.display =
+                 "block";
+         
+             enlace.style.marginTop =
+                 "15px";
+         
+             enlace.style.textAlign =
+                 "center";
+         
+             enlace.style.fontWeight =
+                 "bold";
+         
+         }
 
         }
 
