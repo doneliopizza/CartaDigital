@@ -23,7 +23,7 @@
 // ============================================================
 
 const API_BASE =
-    "https://cartadigitalapi.onrender.com/";
+    "https://cartadigitalapi.onrender.com";
 
 const URL_PRODUCTOS =
     `${API_BASE}/productos`;
