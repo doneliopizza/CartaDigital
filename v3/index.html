@@ -2,7 +2,6 @@
 <html lang="es">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -15,21 +14,15 @@
         content="Don Elio Pizzas & Pastas - Carta Digital"
     >
 
-    <title>
-        Don Elio - Carta Digital
-    </title>
+    <title>Don Elio - Carta Digital</title>
 
     <link
         rel="stylesheet"
-        href="style.css"
-        id="css-principal"
+        href="style.css?v=2"
     >
-
 </head>
 
-
 <body>
-
 
     <!-- =====================================================
          ENCABEZADO
@@ -37,79 +30,158 @@
 
     <header class="encabezado">
 
-        <div id="logo-contenedor"></div>
+        <img
+            id="logo"
+            class="logo"
+            src=""
+            alt="Don Elio"
+        >
+
+        <h1>Don Elio</h1>
+
+        <p>Pizzas & Pastas</p>
 
     </header>
 
 
     <!-- =====================================================
-         ESTADO API
-    ====================================================== -->
-
-    <div
-        id="estado-api"
-        class="estado-api cargando"
-    >
-        ● Conectando...
-    </div>
-
-
-    <!-- =====================================================
-         CARTA
+         CONTENIDO
     ====================================================== -->
 
     <main>
 
-        <div
-            id="cargando"
-            class="cargando"
-        >
-            Cargando carta...
-        </div>
+        <!-- RUBROS -->
+
+        <section class="seccion-rubros">
+
+            <div
+                id="rubros"
+                class="rubros"
+            ></div>
+
+        </section>
 
 
-        <div
-            id="carta"
-            class="carta"
-        ></div>
+        <!-- BUSCADOR -->
+
+        <section class="buscador">
+
+            <input
+                type="text"
+                id="buscarProducto"
+                placeholder="Buscar producto..."
+                autocomplete="off"
+            >
+
+        </section>
+
+
+        <!-- PRODUCTOS -->
+
+        <section>
+
+            <div
+                id="productos"
+                class="productos"
+            ></div>
+
+        </section>
 
     </main>
 
 
     <!-- =====================================================
-         BARRA CARRITO
+         BOTÓN CARRITO
+    ====================================================== -->
+
+    <button
+        id="btnCarrito"
+        class="boton-carrito"
+        type="button"
+    >
+
+        🛒
+
+        <span>Ver pedido</span>
+
+        <strong id="cantidadCarrito">0</strong>
+
+    </button>
+
+
+    <!-- =====================================================
+         MODAL PRODUCTO COMPUESTO
     ====================================================== -->
 
     <div
-        id="carrito-barra"
-        class="carrito-barra"
+        id="modalCompuesto"
+        class="modal oculto"
     >
 
-        <div class="carrito-resumen">
+        <div class="modal-contenido">
 
-            <span class="carrito-icono">
-                🛒
-            </span>
+            <button
+                id="cerrarCompuesto"
+                class="cerrar"
+                type="button"
+            >
+                ×
+            </button>
 
-            <span id="cantidad-carrito">
-                0 productos
-            </span>
+            <h2 id="compuestoTitulo"></h2>
+
+            <p id="compuestoReglas"></p>
+
+            <div
+                id="opcionesCompuesto"
+                class="opciones-compuesto"
+            ></div>
+
+            <div class="modal-total">
+
+                Seleccionadas:
+
+                <strong id="totalOpciones">
+                    0
+                </strong>
+
+            </div>
+
+            <button
+                id="confirmarCompuesto"
+                class="boton-principal"
+                type="button"
+            >
+                Agregar al pedido
+            </button>
 
         </div>
 
+    </div>
 
-        <strong id="total-carrito">
-            $0
-        </strong>
 
+    <!-- =====================================================
+         VISOR DE IMAGEN
+    ====================================================== -->
+
+    <div
+        id="visorImagen"
+        class="visor oculto"
+    >
 
         <button
+            id="cerrarImagen"
+            class="cerrar visor-cerrar"
             type="button"
-            class="btn-ver-pedido"
-            onclick="mostrarCarrito()"
         >
-            Ver pedido
+            ×
         </button>
+
+        <img
+            id="imagenGrande"
+            src=""
+            alt=""
+        >
 
     </div>
 
@@ -119,225 +191,52 @@
     ====================================================== -->
 
     <div
-        id="modal-carrito"
+        id="modalCarrito"
         class="modal oculto"
     >
 
-        <div class="modal-contenido">
-
+        <div class="modal-contenido carrito-modal">
 
             <button
-                type="button"
+                id="cerrarCarrito"
                 class="cerrar"
-                onclick="cerrarCarrito()"
-                aria-label="Cerrar"
+                type="button"
             >
                 ×
             </button>
 
-
-            <h2>
-                Mi pedido
-            </h2>
-
+            <h2>Tu pedido</h2>
 
             <div
-                id="lista-carrito"
+                id="listaCarrito"
                 class="lista-carrito"
             ></div>
 
+            <div class="resumen-carrito">
 
-            <div class="total-final">
+                <div>
+                    Subtotal:
+                    <strong id="subtotalCarrito">
+                        $0
+                    </strong>
+                </div>
 
-                <span>
-                    Total
-                </span>
-
-                <strong id="total-modal">
-                    $0
-                </strong>
-
-            </div>
-
-
-            <!-- =================================================
-                 FORMULARIO CLIENTE
-            ================================================== -->
-
-            <div
-                id="formulario-pedido"
-                class="formulario-pedido"
-            >
-
-                <div class="datos-pedido">
-
-
-                    <h3>
-                        👤 Datos del cliente
-                    </h3>
-
-
-                    <label for="cliente-nombre">
-                        Nombre
-                    </label>
-
-                    <input
-                        type="text"
-                        id="cliente-nombre"
-                        placeholder="Tu nombre"
-                        autocomplete="name"
-                    >
-
-
-                    <label for="cliente-telefono">
-                        Teléfono de contacto
-                    </label>
-
-                    <input
-                        type="tel"
-                        id="cliente-telefono"
-                        placeholder="Ej: 11 7066 7389"
-                        autocomplete="tel"
-                    >
-
-
-                    <h3>
-                        📍 Dirección de entrega
-                    </h3>
-
-
-                    <label for="cliente-calle">
-                        Calle
-                    </label>
-
-                    <input
-                        type="text"
-                        id="cliente-calle"
-                        placeholder="Ej: Av. San Martín"
-                        autocomplete="street-address"
-                    >
-
-
-                    <label for="cliente-altura">
-                        Altura
-                    </label>
-
-                    <input
-                        type="number"
-                        id="cliente-altura"
-                        placeholder="Ej: 1234"
-                        inputmode="numeric"
-                    >
-
-
-                    <label for="cliente-localidad">
-                        Localidad
-                    </label>
-
-                    <input
-                        type="text"
-                        id="cliente-localidad"
-                        placeholder="Ej: Villa Ballester"
-                        autocomplete="address-level2"
-                    >
-
-
-                    <h3>
-                        💳 Medio de pago
-                    </h3>
-
-
-                    <div class="medios-pago">
-
-
-                        <label class="medio-opcion">
-
-                            <input
-                                type="radio"
-                                name="medio-pago"
-                                value="efectivo"
-                                onchange="cambiarMedioPago()"
-                            >
-
-                            <span>
-                                💵 Efectivo
-                            </span>
-
-                        </label>
-
-
-                        <label class="medio-opcion">
-
-                            <input
-                                type="radio"
-                                name="medio-pago"
-                                value="transferencia"
-                                onchange="cambiarMedioPago()"
-                            >
-
-                            <span>
-                                🏦 Transferencia
-                            </span>
-
-                        </label>
-
-
-                        <label class="medio-opcion">
-
-                            <input
-                                type="radio"
-                                name="medio-pago"
-                                value="mercadopago"
-                                onchange="cambiarMedioPago()"
-                            >
-
-                            <span>
-                                💙 Mercado Pago
-                            </span>
-
-                        </label>
-
-
-                    </div>
-
-
-                    <div
-                        id="detalle-pago"
-                        class="detalle-pago"
-                    ></div>
-
-
+                <div class="total-carrito">
+                    Total:
+                    <strong id="totalCarrito">
+                        $0
+                    </strong>
                 </div>
 
             </div>
 
-
-            <!-- =================================================
-                 ACCIÓN V2
-            ================================================== -->
-
-            <div class="accion-pedido">
-
-
-                <button
-                    type="button"
-                    class="btn-realizar-pedido"
-                    onclick="prepararPedido()"
-                >
-
-                    Continuar con el pedido
-
-                </button>
-
-
-                <div
-                    id="mensaje-pedido"
-                    class="mensaje-pedido"
-                ></div>
-
-
-            </div>
-
+            <button
+                id="btnContinuarPedido"
+                class="boton-principal"
+                type="button"
+            >
+                Continuar
+            </button>
 
         </div>
 
@@ -345,50 +244,183 @@
 
 
     <!-- =====================================================
-         NOTIFICACIÓN
+         MODAL DATOS CLIENTE
     ====================================================== -->
 
     <div
-        id="notificacion"
-        class="notificacion oculto"
-    ></div>
+        id="modalCliente"
+        class="modal oculto"
+    >
+
+        <div class="modal-contenido">
+
+            <button
+                id="cerrarCliente"
+                class="cerrar"
+                type="button"
+            >
+                ×
+            </button>
+
+            <h2>Datos del pedido</h2>
+
+            <p class="texto-ayuda">
+                Completá tus datos para recibir el pedido.
+            </p>
+
+            <label>
+                Nombre
+            </label>
+
+            <input
+                id="clienteNombre"
+                type="text"
+                placeholder="Tu nombre"
+                autocomplete="name"
+            >
+
+            <label>
+                Teléfono
+            </label>
+
+            <input
+                id="clienteTelefono"
+                type="tel"
+                placeholder="Ej: 1123456789"
+                autocomplete="tel"
+            >
+
+            <label>
+                Calle
+            </label>
+
+            <input
+                id="clienteCalle"
+                type="text"
+                placeholder="Calle"
+                autocomplete="street-address"
+            >
+
+            <label>
+                Altura
+            </label>
+
+            <input
+                id="clienteAltura"
+                type="text"
+                placeholder="Altura"
+            >
+
+            <label>
+                Localidad
+            </label>
+
+            <input
+                id="clienteLocalidad"
+                type="text"
+                placeholder="Localidad"
+            >
+
+            <div class="medio-pago">
+
+                <h3>Medio de pago</h3>
+
+                <div class="medio-pago-seleccionado">
+
+                    💵 EFECTIVO
+
+                </div>
+
+            </div>
+
+            <label>
+                ¿Con cuánto pagás?
+            </label>
+
+            <input
+                id="montoEfectivo"
+                type="number"
+                min="0"
+                step="1"
+                placeholder="Ej: 30000"
+            >
+
+            <div class="confirmacion-total">
+
+                Total:
+
+                <strong id="totalConfirmacion">
+                    $0
+                </strong>
+
+            </div>
+
+            <button
+                id="btnEnviarPedido"
+                class="boton-principal"
+                type="button"
+            >
+                ENVIAR PEDIDO
+            </button>
+
+            <div
+                id="mensajePedido"
+                class="mensaje-pedido"
+            ></div>
+
+        </div>
+
+    </div>
 
 
     <!-- =====================================================
-         JAVASCRIPT
+         MODAL PEDIDO ENVIADO
     ====================================================== -->
 
-    <script>
+    <div
+        id="modalExito"
+        class="modal oculto"
+    >
 
-        /*
-         * Cache busting.
-         * Cada carga obtiene una versión nueva.
-         */
+        <div class="modal-contenido exito">
 
-        const versionCache = Date.now();
+            <div class="icono-exito">
+                ✓
+            </div>
 
-        const css =
-            document.getElementById(
-                "css-principal"
-            );
+            <h2>¡Pedido recibido!</h2>
 
-        if (css) {
+            <p>
+                Tu pedido fue enviado correctamente.
+            </p>
 
-            css.href =
-                "style.css?v=" +
-                versionCache;
+            <p>
+                Número de pedido:
+            </p>
 
-        }
+            <strong
+                id="numeroPedido"
+                class="numero-pedido"
+            >
+            </strong>
 
-    </script>
+            <button
+                id="cerrarExito"
+                class="boton-principal"
+                type="button"
+            >
+                Volver a la carta
+            </button>
+
+        </div>
+
+    </div>
 
 
     <script
-        src="app.js"
-        id="js-principal"
+        src="app.js?v=2"
         defer
     ></script>
-
 
 </body>
 
