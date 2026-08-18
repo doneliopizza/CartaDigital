@@ -550,3 +550,79 @@ main {
         font-size: 13px;
     }
 }
+/* ============================================================
+   CORRECCIÓN VISOR DE IMAGEN
+============================================================ */
+
+#visorImagen {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    background: rgba(0, 0, 0, 0.88);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* MUY IMPORTANTE:
+   cuando tiene oculto NO debe aparecer */
+#visorImagen.oculto {
+    display: none !important;
+}
+
+
+/* Imagen ampliada */
+
+#imagenGrande {
+    max-width: 95vw;
+    max-height: 90vh;
+
+    width: auto;
+    height: auto;
+
+    object-fit: contain;
+
+    border-radius: 12px;
+
+    cursor: zoom-out;
+}
+
+
+/* Botón X */
+
+#cerrarImagen {
+    position: absolute;
+
+    top: 15px;
+    right: 20px;
+
+    width: 50px;
+    height: 50px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.95);
+
+    color: #111;
+
+    font-size: 36px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    z-index: 100000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#cerrarImagen:hover {
+    background: white;
+}
