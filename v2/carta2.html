@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Don Elio - Administración V2</title>
+
+    <link
+        rel="stylesheet"
+        href="style2.css"
+    >
+
+</head>
+
+<body>
+
+    <!-- =========================================================
+         ENCABEZADO
+    ========================================================== -->
+
+    <header class="topbar">
+
+        <div class="topbar-left">
+
+            <div class="logo-circle">
+                🍕
+            </div>
+
+            <div>
+                <h1>Don Elio</h1>
+                <span>Administración de productos · V2</span>
+            </div>
+
+        </div>
+
+        <div class="topbar-right">
+
+            <span
+                id="estado-api"
+                class="estado-api cargando"
+            >
+                ● Conectando...
+            </span>
+
+            <button
+                class="btn-secundario"
+                onclick="cargarProductos()"
+            >
+                ↻ Actualizar
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================================
+         CONTENIDO PRINCIPAL
+    ========================================================== -->
+
+    <main class="contenedor">
+
+
+        <!-- =====================================================
+             BARRA DE HERRAMIENTAS
+        ====================================================== -->
+
+        <section class="toolbar">
+
+            <div class="busqueda">
+
+                <span>🔎</span>
+
+                <input
+                    type="text"
+                    id="buscar"
+                    placeholder="Buscar producto..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <div
+                id="filtros-rubros"
+                class="filtros-rubros"
+            >
+
+                <button
+                    class="filtro activo"
+                    data-rubro=""
+                    onclick="filtrarRubro('')"
+                >
+                    TODOS
+                </button>
+
+            </div>
+
+
+            <button
+                class="btn-nuevo"
+                onclick="abrirNuevoProducto()"
+            >
+                ＋ Nuevo producto
+            </button>
+
+        </section>
+
+
+        <!-- =====================================================
+             INFORMACIÓN
+        ====================================================== -->
+
+        <section class="resumen">
+
+            <div class="resumen-card">
+
+                <span>Productos</span>
+
+                <strong id="cantidad-productos">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="resumen-card">
+
+                <span>Activos</span>
+
+                <strong id="cantidad-activos">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="resumen-card">
+
+                <span>Inactivos</span>
+
+                <strong id="cantidad-inactivos">
+                    0
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             PRODUCTOS
+        ====================================================== -->
+
+        <section
+            id="productos"
+            class="productos-grid"
+        >
+
+            <div class="cargando-productos">
+                Cargando productos...
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- =========================================================
+         MODAL PRODUCTO
+    ========================================================== -->
+
+    <div
+        id="modal-producto"
+        class="modal oculto"
+    >
+
+        <div class="modal-contenido">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <h2 id="modal-titulo">
+                        Nuevo producto
+                    </h2>
+
+                    <span id="modal-subtitulo">
+                        Crear producto
+                    </span>
+
+                </div>
+
+                <button
+                    class="btn-cerrar"
+                    onclick="cerrarModal()"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 FORMULARIO
+            ================================================== -->
+
+            <form id="form-producto">
+
+                <input
+                    type="hidden"
+                    id="producto-id"
+                >
+
+
+                <div class="form-grid">
+
+
+                    <div class="campo campo-grande">
+
+                        <label>
+                            Nombre
+                        </label>
+
+                        <input
+                            type="text"
+                            id="nombre"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label>
+                            Precio
+                        </label>
+
+                        <input
+                            type="number"
+                            id="precio"
+                            min="0"
+                            step="0.01"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label>
+                            Rubro ID
+                        </label>
+
+                        <input
+                            type="number"
+                            id="rubro-id"
+                            min="1"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label>
+                            Orden
+                        </label>
+
+                        <input
+                            type="number"
+                            id="orden"
+                            min="0"
+                            value="0"
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label>
+                            Tipo producto
+                        </label>
+
+                        <select id="tipo-producto">
+
+                            <option value="simple">
+                                Simple
+                            </option>
+
+                            <option value="pizza_dos_gustos">
+                                Pizza 2 gustos
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label>
+                            Estado
+                        </label>
+
+                        <select id="estado">
+
+                            <option value="1">
+                                Activo
+                            </option>
+
+                            <option value="0">
+                                Inactivo
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label>
+                            ¿Es compuesto?
+                        </label>
+
+                        <select id="es-compuesto">
+
+                            <option value="0">
+                                No
+                            </option>
+
+                            <option value="1">
+                                Sí
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label>
+                            Cantidad mínima
+                        </label>
+
+                        <input
+                            type="number"
+                            id="cant-min"
+                            min="0"
+                            value="0"
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label>
+                            Cantidad máxima
+                        </label>
+
+                        <input
+                            type="number"
+                            id="cant-max"
+                            min="0"
+                            value="0"
+                        >
+
+                    </div>
+
+
+                    <div class="campo campo-grande">
+
+                        <label>
+                            Imagen / URL
+                        </label>
+
+                        <input
+                            type="text"
+                            id="url"
+                            placeholder="Ej: 125.jpg"
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- =================================================
+                     PREVISUALIZACIÓN IMAGEN
+                ================================================== -->
+
+                <div class="preview-container">
+
+                    <div class="preview-label">
+                        Vista previa
+                    </div>
+
+                    <div
+                        id="preview-imagen"
+                        class="preview-imagen"
+                    >
+
+                        <span>
+                            Sin imagen
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     BOTONES
+                ================================================== -->
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn-cancelar"
+                        onclick="cerrarModal()"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn-guardar"
+                    >
+                        💾 Guardar producto
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         NOTIFICACIONES
+    ========================================================== -->
+
+    <div
+        id="notificacion"
+        class="notificacion oculto"
+    ></div>
+
+
+    <script src="app2.js"></script>
+
+</body>
+
+</html>
