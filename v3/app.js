@@ -6,7 +6,7 @@
 
 // CAMBIAR POR LA URL REAL DE TU API EN RENDER
 
-const API_URL = "https://cartadigitalapi.onrender.com/";
+const API_URL = "https://cartadigitalapi.onrender.com";
 
 
 // GitHub
