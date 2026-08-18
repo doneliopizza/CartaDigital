@@ -15,11 +15,13 @@
         Seguimiento de pedido - Don Elio
     </title>
 
+
     <style>
 
         * {
             box-sizing: border-box;
         }
+
 
         body {
 
@@ -40,6 +42,7 @@
 
         }
 
+
         .contenedor {
 
             max-width: 600px;
@@ -48,6 +51,7 @@
                 0 auto;
 
         }
+
 
         .tarjeta {
 
@@ -65,6 +69,11 @@
                 rgba(0,0,0,0.10);
 
         }
+
+
+        /* ====================================================
+           LOGO
+        ==================================================== */
 
         .logo {
 
@@ -85,6 +94,7 @@
 
         }
 
+
         h1 {
 
             text-align:
@@ -94,6 +104,7 @@
                 0 0 10px;
 
         }
+
 
         .numero {
 
@@ -111,6 +122,11 @@
 
         }
 
+
+        /* ====================================================
+           ESTADO ACTUAL
+        ==================================================== */
+
         .estado {
 
             text-align:
@@ -123,9 +139,10 @@
                 bold;
 
             margin:
-                20px 0;
+                20px 0 10px;
 
         }
+
 
         .mensaje {
 
@@ -136,9 +153,25 @@
                 #666;
 
             margin-bottom:
-                25px;
+                30px;
+
+            line-height:
+                1.5;
 
         }
+
+
+        /* ====================================================
+           SEGUIMIENTO
+        ==================================================== */
+
+        .seguimiento {
+
+            margin-top:
+                20px;
+
+        }
+
 
         .linea {
 
@@ -149,52 +182,158 @@
                 center;
 
             margin:
-                15px 0;
+                18px 0;
 
         }
+
 
         .circulo {
 
             width:
-                22px;
+                24px;
 
             height:
-                22px;
+                24px;
 
             border-radius:
                 50%;
 
             background:
-                #ddd;
+                #d9d9d9;
 
             flex-shrink:
                 0;
 
+            border:
+                3px solid #d9d9d9;
+
         }
+
 
         .circulo.activo {
 
             background:
                 #20a464;
 
+            border-color:
+                #20a464;
+
         }
 
-        .circulo.cancelado {
+
+        .circulo.actual {
 
             background:
-                #d93025;
+                #ff9800;
+
+            border-color:
+                #ff9800;
 
         }
+
 
         .texto-estado {
 
             margin-left:
-                12px;
+                14px;
 
             font-size:
-                16px;
+                17px;
+
+            color:
+                #888;
 
         }
+
+
+        .texto-estado.activo {
+
+            color:
+                #222;
+
+            font-weight:
+                bold;
+
+        }
+
+
+        .texto-estado.actual {
+
+            color:
+                #e65100;
+
+            font-weight:
+                bold;
+
+        }
+
+
+        /* ====================================================
+           CANCELADO
+        ==================================================== */
+
+        .cancelado {
+
+            text-align:
+                center;
+
+            background:
+                #ffebee;
+
+            border:
+                1px solid #ef9a9a;
+
+            border-radius:
+                12px;
+
+            padding:
+                20px;
+
+            margin:
+                20px 0;
+
+        }
+
+
+        .cancelado-icono {
+
+            font-size:
+                42px;
+
+            margin-bottom:
+                10px;
+
+        }
+
+
+        .cancelado-titulo {
+
+            color:
+                #c62828;
+
+            font-size:
+                23px;
+
+            font-weight:
+                bold;
+
+        }
+
+
+        .cancelado-mensaje {
+
+            color:
+                #b71c1c;
+
+            margin-top:
+                10px;
+
+        }
+
+
+        /* ====================================================
+           DETALLE
+        ==================================================== */
 
         .detalle {
 
@@ -209,6 +348,15 @@
 
         }
 
+
+        .detalle h3 {
+
+            margin-top:
+                0;
+
+        }
+
+
         .producto {
 
             display:
@@ -221,12 +369,32 @@
                 15px;
 
             padding:
-                10px 0;
+                12px 0;
 
             border-bottom:
                 1px solid #eee;
 
         }
+
+
+        .producto-nombre {
+
+            flex:
+                1;
+
+        }
+
+
+        .producto-precio {
+
+            white-space:
+                nowrap;
+
+            font-weight:
+                bold;
+
+        }
+
 
         .total {
 
@@ -247,6 +415,11 @@
 
         }
 
+
+        /* ====================================================
+           ERROR
+        ==================================================== */
+
         .error {
 
             text-align:
@@ -263,6 +436,7 @@
 
         }
 
+
         .cargando {
 
             text-align:
@@ -273,6 +447,27 @@
 
             color:
                 #666;
+
+        }
+
+
+        /* ====================================================
+           ACTUALIZACIÓN
+        ==================================================== */
+
+        .actualizando {
+
+            text-align:
+                center;
+
+            font-size:
+                12px;
+
+            color:
+                #999;
+
+            margin-top:
+                25px;
 
         }
 
@@ -289,9 +484,13 @@
     <div class="tarjeta">
 
 
+        <!-- =================================================
+             LOGO
+        ================================================== -->
+
         <img
+            id="logo"
             class="logo"
-            src="https://raw.githubusercontent.com/doneliopizza/CartaDigital/main/fotos/logo.png"
             alt="Don Elio"
         >
 
@@ -300,6 +499,10 @@
             Seguimiento de pedido
         </h1>
 
+
+        <!-- =================================================
+             CONTENIDO
+        ================================================== -->
 
         <div
             id="contenido"
@@ -327,6 +530,36 @@ const API_URL =
     "https://cartadigitalapi.onrender.com";
 
 
+const URL_GITHUB =
+    "https://raw.githubusercontent.com/"
+    + "doneliopizza/CartaDigital/main";
+
+
+const URL_LOGO =
+    URL_GITHUB +
+    "/fotos/logo.png";
+
+
+/* ============================================================
+   LOGO
+============================================================ */
+
+const logo =
+    document.getElementById(
+        "logo"
+    );
+
+
+if (logo) {
+
+    logo.src =
+        URL_LOGO +
+        "?v=" +
+        Date.now();
+
+}
+
+
 /* ============================================================
    OBTENER TOKEN
 ============================================================ */
@@ -352,62 +585,89 @@ const contenido =
 
 
 /* ============================================================
-   ESTADOS
+   ESTADOS DE COCINA
+===============================================================
+   
+   IMPORTANTE:
+
+   Estos IDs corresponden DIRECTAMENTE
+   a la tabla estados_cocina:
+
+   1 = En preparación
+   2 = Listo
+   3 = Enviar delivery
+   4 = Finalizado
+   5 = Cancelado
+
 ============================================================ */
 
 const estados = [
 
-    "PEDIDO REALIZADO",
+    {
+        id: 1,
+        nombre: "En preparación"
+    },
 
-    "PEDIDO CONFIRMADO",
+    {
+        id: 2,
+        nombre: "Listo"
+    },
 
-    "EN CAMINO",
+    {
+        id: 3,
+        nombre: "Enviar delivery"
+    },
 
-    "ENTREGADO"
+    {
+        id: 4,
+        nombre: "Finalizado"
+    }
 
 ];
 
 
 /* ============================================================
-   DESCRIPCIÓN
+   MENSAJE SEGÚN ESTADO
 ============================================================ */
 
 function obtenerMensaje(
-    estado
+    estadoId
 ) {
 
-    switch (estado) {
+    switch (
+        Number(estadoId)
+    ) {
 
-        case "PEDIDO REALIZADO":
+        case 1:
 
             return (
-                "Recibimos tu pedido. " +
-                "Estamos esperando la confirmación."
+                "Recibimos tu pedido y " +
+                "ya estamos preparándolo."
             );
 
 
-        case "PEDIDO CONFIRMADO":
+        case 2:
 
             return (
-                "¡Tu pedido fue confirmado!"
+                "¡Tu pedido está listo!"
             );
 
 
-        case "EN CAMINO":
+        case 3:
 
             return (
                 "Tu pedido está en camino."
             );
 
 
-        case "ENTREGADO":
+        case 4:
 
             return (
                 "¡Tu pedido fue entregado!"
             );
 
 
-        case "CANCELADO":
+        case 5:
 
             return (
                 "Este pedido fue cancelado."
@@ -435,9 +695,13 @@ async function cargarPedido() {
     if (!token) {
 
         contenido.innerHTML = `
+
             <div class="error">
+
                 Enlace de seguimiento inválido.
+
             </div>
+
         `;
 
         return;
@@ -450,6 +714,7 @@ async function cargarPedido() {
 
         const respuesta =
             await fetch(
+
                 API_URL +
                 "/pedidos/seguimiento/" +
                 encodeURIComponent(
@@ -457,6 +722,7 @@ async function cargarPedido() {
                 ) +
                 "?v=" +
                 Date.now()
+
             );
 
 
@@ -478,8 +744,21 @@ async function cargarPedido() {
         if (!respuesta.ok) {
 
             throw new Error(
+
                 datos.detail ||
                 "No se pudo consultar el pedido."
+
+            );
+
+        }
+
+
+        if (
+            !datos.pedido
+        ) {
+
+            throw new Error(
+                "La API no devolvió el pedido."
             );
 
         }
@@ -492,15 +771,23 @@ async function cargarPedido() {
 
     } catch (error) {
 
+
         console.error(
+            "Error seguimiento:",
             error
         );
 
 
         contenido.innerHTML = `
+
             <div class="error">
-                ${error.message}
+
+                ${escapeHtml(
+                    error.message
+                )}
+
             </div>
+
         `;
 
     }
@@ -517,26 +804,53 @@ function mostrarPedido(
 ) {
 
 
-    const estado =
-        pedido.estado;
+    const estadoId =
+        Number(
+            pedido.estado_cocina_id
+        );
+
+
+    const estadoNombre =
+        pedido.estado_cocina ||
+        "Estado desconocido";
 
 
     let estadoHtml = "";
 
 
+    /* ========================================================
+       CANCELADO
+    ======================================================== */
+
     if (
-        estado === "CANCELADO"
+        estadoId === 5
     ) {
 
 
         estadoHtml = `
 
-            <div class="estado">
-                🔴 PEDIDO CANCELADO
-            </div>
+            <div class="cancelado">
 
-            <div class="mensaje">
-                ${obtenerMensaje(estado)}
+                <div class="cancelado-icono">
+                    🔴
+                </div>
+
+                <div class="cancelado-titulo">
+
+                    Pedido cancelado
+
+                </div>
+
+                <div class="cancelado-mensaje">
+
+                    ${escapeHtml(
+                        obtenerMensaje(
+                            estadoId
+                        )
+                    )}
+
+                </div>
+
             </div>
 
         `;
@@ -545,9 +859,15 @@ function mostrarPedido(
     } else {
 
 
+        /* ====================================================
+           ESTADO ACTUAL
+        ==================================================== */
+
         const posicion =
-            estados.indexOf(
-                estado
+            estados.findIndex(
+                estado =>
+                    estado.id ===
+                    estadoId
             );
 
 
@@ -556,15 +876,52 @@ function mostrarPedido(
 
         estados.forEach(
             (
-                nombreEstado,
+                estado,
                 indice
             ) => {
 
 
-                const activo =
-                    indice <= posicion
-                        ? "activo"
-                        : "";
+                let claseCirculo =
+                    "";
+
+
+                let claseTexto =
+                    "";
+
+
+                /* ============================================
+                   ESTADOS YA COMPLETADOS
+                ============================================ */
+
+                if (
+                    posicion >= 0 &&
+                    indice < posicion
+                ) {
+
+                    claseCirculo =
+                        "activo";
+
+                    claseTexto =
+                        "activo";
+
+                }
+
+
+                /* ============================================
+                   ESTADO ACTUAL
+                ============================================ */
+
+                else if (
+                    indice === posicion
+                ) {
+
+                    claseCirculo =
+                        "actual";
+
+                    claseTexto =
+                        "actual";
+
+                }
 
 
                 pasos += `
@@ -572,12 +929,16 @@ function mostrarPedido(
                     <div class="linea">
 
                         <div
-                            class="circulo ${activo}"
+                            class="circulo ${claseCirculo}"
                         ></div>
 
-                        <div class="texto-estado">
+                        <div
+                            class="texto-estado ${claseTexto}"
+                        >
 
-                            ${nombreEstado}
+                            ${escapeHtml(
+                                estado.nombre
+                            )}
 
                         </div>
 
@@ -593,64 +954,101 @@ function mostrarPedido(
 
             <div class="estado">
 
-                ${estado}
+                ${escapeHtml(
+                    estadoNombre
+                )}
 
             </div>
+
 
             <div class="mensaje">
 
-                ${obtenerMensaje(estado)}
+                ${escapeHtml(
+                    obtenerMensaje(
+                        estadoId
+                    )
+                )}
 
             </div>
 
-            ${pasos}
+
+            <div class="seguimiento">
+
+                ${pasos}
+
+            </div>
 
         `;
 
     }
 
 
+    /* ========================================================
+       DETALLE
+    ======================================================== */
+
     let detalleHtml = "";
 
 
-    pedido.detalle.forEach(
-        item => {
+    if (
+        Array.isArray(
+            pedido.detalle
+        )
+    ) {
 
-            detalleHtml += `
 
-                <div class="producto">
+        pedido.detalle.forEach(
+            item => {
 
-                    <div>
 
-                        ${item.cantidad}
-                        x
-                        ${item.nombre_producto}
+                detalleHtml += `
+
+                    <div class="producto">
+
+                        <div class="producto-nombre">
+
+                            ${escapeHtml(
+                                item.cantidad
+                            )}
+
+                            x
+
+                            ${escapeHtml(
+                                item.nombre_producto
+                            )}
+
+                        </div>
+
+
+                        <div class="producto-precio">
+
+                            ${formatearPrecio(
+                                item.subtotal
+                            )}
+
+                        </div>
 
                     </div>
 
-                    <div>
+                `;
 
-                        $${Number(
-                            item.subtotal
-                        ).toLocaleString(
-                            "es-AR"
-                        )}
+            }
+        );
 
-                    </div>
+    }
 
-                </div>
 
-            `;
-
-        }
-    );
-
+    /* ========================================================
+       HTML FINAL
+    ======================================================== */
 
     contenido.innerHTML = `
 
         <div class="numero">
 
-            Pedido #${pedido.numero_pedido}
+            Pedido #${escapeHtml(
+                pedido.numero_pedido
+            )}
 
         </div>
 
@@ -664,6 +1062,7 @@ function mostrarPedido(
                 Detalle
             </h3>
 
+
             ${detalleHtml}
 
 
@@ -673,12 +1072,11 @@ function mostrarPedido(
                     TOTAL
                 </span>
 
+
                 <span>
 
-                    $${Number(
+                    ${formatearPrecio(
                         pedido.total
-                    ).toLocaleString(
-                        "es-AR"
                     )}
 
                 </span>
@@ -687,7 +1085,80 @@ function mostrarPedido(
 
         </div>
 
+
+        <div class="actualizando">
+
+            El estado se actualiza automáticamente.
+
+        </div>
+
     `;
+
+}
+
+
+/* ============================================================
+   FORMATEAR PRECIO
+============================================================ */
+
+function formatearPrecio(
+    valor
+) {
+
+    return new Intl.NumberFormat(
+        "es-AR",
+        {
+
+            style:
+                "currency",
+
+            currency:
+                "ARS",
+
+            maximumFractionDigits:
+                0
+
+        }
+    ).format(
+        Number(
+            valor || 0
+        )
+    );
+
+}
+
+
+/* ============================================================
+   SEGURIDAD HTML
+============================================================ */
+
+function escapeHtml(
+    valor
+) {
+
+    return String(
+        valor ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
