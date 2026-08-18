@@ -195,35 +195,25 @@ function configurarEventos() {
     }
 
 
-    const visorImagen =
-        document.getElementById("visorImagen");
-
-    if (visorImagen) {
-
-        visorImagen.addEventListener(
-            "click",
-            event => {
-
-                /*
-                 * Si hacemos click sobre el fondo,
-                 * cerramos el visor.
-                 *
-                 * Si hacemos click sobre la imagen
-                 * o sobre el botón cerrar, no hacemos nada.
-                 */
-
-                if (
-                    event.target === visorImagen
-                ) {
-
-                    cerrarVisor();
-
-                }
-
-            }
-        );
-
-    }
+   const visorImagen =
+       document.getElementById("visorImagen");
+   
+   if (visorImagen) {
+   
+       visorImagen.addEventListener(
+           "click",
+           function (event) {
+   
+               if (
+                   event.target === visorImagen
+               ) {
+                   cerrarVisor();
+               }
+   
+           }
+       );
+   
+   }
 
 
     /* ========================================================
