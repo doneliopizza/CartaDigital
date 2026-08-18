@@ -22,9 +22,11 @@
 // CONFIGURACIÓN
 // ============================================================
 
-const API_BASE = "https://api.doneliopizzeria.com.ar";
+const API_BASE =
+    "https://cartadigitalapi.onrender.com/";
 
-const URL_PRODUCTOS = `${API_BASE}/productos`;
+const URL_PRODUCTOS =
+    `${API_BASE}/productos`;
 
 
 // ============================================================
@@ -57,50 +59,69 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function configurarEventos() {
 
-    const buscar = document.getElementById("buscar");
+    const buscar =
+        document.getElementById("buscar");
 
-    buscar.addEventListener("input", () => {
+    if (buscar) {
 
-        aplicarFiltros();
+        buscar.addEventListener("input", () => {
 
-    });
+            aplicarFiltros();
 
+        });
 
-    const url = document.getElementById("url");
-
-    url.addEventListener("input", () => {
-
-        actualizarPreview();
-
-    });
+    }
 
 
-    const form = document.getElementById("form-producto");
+    const url =
+        document.getElementById("url");
 
-    form.addEventListener("submit", guardarProducto);
+    if (url) {
+
+        url.addEventListener("input", () => {
+
+            actualizarPreview();
+
+        });
+
+    }
 
 
-    const modal = document.getElementById("modal-producto");
+    const form =
+        document.getElementById("form-producto");
 
-    modal.addEventListener("click", (event) => {
+    if (form) {
 
-        if (event.target === modal) {
+        form.addEventListener(
+            "submit",
+            guardarProducto
+        );
 
-            cerrarModal();
+    }
 
-        }
 
-    });
+    const modal =
+        document.getElementById("modal-producto");
+
+    if (modal) {
+
+        modal.addEventListener(
+            "click",
+            (event) => {
+
+                if (event.target === modal) {
+
+                    cerrarModal();
+
+                }
+
+            }
+        );
+
+    }
 
 }
 
-
-// ============================================================
-// CARGAR PRODUCTOS
-// ============================================================
-
-#async function cargarProductos() {
-const API_URL = "https://cartadigitalapi.onrender.com/productos";
 
 // ============================================================
 // CARGAR PRODUCTOS
@@ -111,11 +132,17 @@ async function cargarProductos() {
     const estado =
         document.getElementById("estado-api");
 
-    estado.textContent =
-        "● Conectando con API...";
 
-    estado.className =
-        "api-status cargando";
+    if (estado) {
+
+        estado.textContent =
+            "● Conectando con API...";
+
+        estado.className =
+            "api-status cargando";
+
+    }
+
 
     try {
 
@@ -124,30 +151,38 @@ async function cargarProductos() {
             URL_PRODUCTOS
         );
 
+
         const respuesta =
             await fetch(
                 URL_PRODUCTOS,
                 {
                     method: "GET",
+
                     cache: "no-store",
+
                     headers: {
-                        "Accept": "application/json"
+                        "Accept":
+                            "application/json"
                     }
                 }
             );
+
 
         console.log(
             "HTTP:",
             respuesta.status
         );
 
+
         const texto =
             await respuesta.text();
+
 
         console.log(
             "Respuesta:",
             texto
         );
+
 
         if (!respuesta.ok) {
 
@@ -157,14 +192,18 @@ async function cargarProductos() {
 
         }
 
+
         let datos;
+
 
         try {
 
             datos =
                 JSON.parse(texto);
 
-        } catch (e) {
+        }
+
+        catch (e) {
 
             throw new Error(
                 "La API respondió algo que no es JSON: " +
@@ -173,10 +212,12 @@ async function cargarProductos() {
 
         }
 
+
         console.log(
             "Productos recibidos:",
             datos
         );
+
 
         if (!Array.isArray(datos)) {
 
@@ -186,26 +227,51 @@ async function cargarProductos() {
 
         }
 
-        // Guardamos los productos globalmente
+
+        // ====================================================
+        // GUARDAR PRODUCTOS
+        // ====================================================
+
         productos = datos;
 
-        // Construimos los botones de rubros
+
+        // ====================================================
+        // CONSTRUIR RUBROS
+        // ====================================================
+
         construirFiltrosRubros();
 
-        // Aplicamos filtros
+
+        // ====================================================
+        // APLICAR FILTROS
+        // ====================================================
+
         aplicarFiltros();
 
-        // Actualizamos resumen
+
+        // ====================================================
+        // ACTUALIZAR RESUMEN
+        // ====================================================
+
         actualizarResumen();
 
-        // Estado API
-        estado.textContent =
-            `● API OK · ${productos.length} productos`;
 
-        estado.className =
-            "api-status ok";
+        // ====================================================
+        // ESTADO API
+        // ====================================================
+
+        if (estado) {
+
+            estado.textContent =
+                `● API OK · ${productos.length} productos`;
+
+            estado.className =
+                "api-status ok";
+
+        }
 
     }
+
 
     catch (error) {
 
@@ -214,12 +280,18 @@ async function cargarProductos() {
             error
         );
 
-        estado.textContent =
-            "● Error API: " +
-            error.message;
 
-        estado.className =
-            "api-status error";
+        if (estado) {
+
+            estado.textContent =
+                "● Error API: " +
+                error.message;
+
+            estado.className =
+                "api-status error";
+
+        }
+
 
         mostrarErrorProductos(
             error.message
@@ -228,10 +300,28 @@ async function cargarProductos() {
     }
 
 }
-function cambiarEstadoAPI(tipo, texto) {
+
+
+// ============================================================
+// ESTADO API
+// ============================================================
+
+function cambiarEstadoAPI(
+    tipo,
+    texto
+) {
 
     const elemento =
-        document.getElementById("estado-api");
+        document.getElementById(
+            "estado-api"
+        );
+
+
+    if (!elemento) {
+
+        return;
+
+    }
 
 
     elemento.className =
@@ -251,22 +341,50 @@ function cambiarEstadoAPI(tipo, texto) {
 function construirFiltrosRubros() {
 
     const contenedor =
-        document.getElementById("filtros-rubros");
+        document.getElementById(
+            "filtros-rubros"
+        );
+
+
+    if (!contenedor) {
+
+        return;
+
+    }
 
 
     contenedor.innerHTML = "";
 
 
+    // ========================================================
+    // BOTÓN TODOS
+    // ========================================================
+
     const botonTodos =
-        document.createElement("button");
+        document.createElement(
+            "button"
+        );
+
 
     botonTodos.className =
-        "filtro activo";
+        "filtro";
+
 
     botonTodos.textContent =
         "TODOS";
 
-    botonTodos.dataset.rubro = "";
+
+    botonTodos.dataset.rubro =
+        "";
+
+
+    if (rubroActivo === "") {
+
+        botonTodos.classList.add(
+            "activo"
+        );
+
+    }
 
 
     botonTodos.onclick = () => {
@@ -281,32 +399,44 @@ function construirFiltrosRubros() {
     );
 
 
-    const rubros = new Map();
+    // ========================================================
+    // OBTENER RUBROS
+    // ========================================================
+
+    const rubros =
+        new Map();
 
 
-    productos.forEach(producto => {
+    productos.forEach(
+        producto => {
 
-        if (
-            producto.rubro_id &&
-            producto.rubro
-        ) {
-
-            rubros.set(
-                producto.rubro_id,
+            if (
+                producto.rubro_id &&
                 producto.rubro
-            );
+            ) {
+
+                rubros.set(
+                    producto.rubro_id,
+                    producto.rubro
+                );
+
+            }
 
         }
+    );
 
-    });
 
+    // ========================================================
+    // CREAR BOTONES
+    // ========================================================
 
     [...rubros.entries()]
-        .sort((a, b) =>
-            a[1].localeCompare(
-                b[1],
-                "es"
-            )
+        .sort(
+            (a, b) =>
+                a[1].localeCompare(
+                    b[1],
+                    "es"
+                )
         )
         .forEach(
             ([id, nombre]) => {
@@ -327,6 +457,18 @@ function construirFiltrosRubros() {
 
                 boton.dataset.rubro =
                     id;
+
+
+                if (
+                    String(id) ===
+                    rubroActivo
+                ) {
+
+                    boton.classList.add(
+                        "activo"
+                    );
+
+                }
 
 
                 boton.onclick = () => {
@@ -350,34 +492,40 @@ function construirFiltrosRubros() {
 // FILTRAR RUBRO
 // ============================================================
 
-function filtrarRubro(rubro) {
+function filtrarRubro(
+    rubro
+) {
 
     rubroActivo =
         String(rubro);
 
 
     document
-        .querySelectorAll(".filtro")
-        .forEach(boton => {
+        .querySelectorAll(
+            ".filtro"
+        )
+        .forEach(
+            boton => {
 
-            boton.classList.remove(
-                "activo"
-            );
-
-
-            if (
-                String(
-                    boton.dataset.rubro
-                ) === rubroActivo
-            ) {
-
-                boton.classList.add(
+                boton.classList.remove(
                     "activo"
                 );
 
-            }
 
-        });
+                if (
+                    String(
+                        boton.dataset.rubro
+                    ) === rubroActivo
+                ) {
+
+                    boton.classList.add(
+                        "activo"
+                    );
+
+                }
+
+            }
+        );
 
 
     aplicarFiltros();
@@ -391,60 +539,71 @@ function filtrarRubro(rubro) {
 
 function aplicarFiltros() {
 
+    const buscar =
+        document.getElementById(
+            "buscar"
+        );
+
+
     const texto =
-        document
-            .getElementById("buscar")
-            .value
-            .trim()
-            .toLowerCase();
+        buscar
+            ? buscar.value
+                .trim()
+                .toLowerCase()
+            : "";
 
 
     productosFiltrados =
-        productos.filter(producto => {
+        productos.filter(
+            producto => {
 
 
-            // ----------------------------
-            // FILTRO RUBRO
-            // ----------------------------
-
-            if (
-                rubroActivo &&
-                String(producto.rubro_id) !==
-                rubroActivo
-            ) {
-
-                return false;
-
-            }
-
-
-            // ----------------------------
-            // FILTRO TEXTO
-            // ----------------------------
-
-            if (texto) {
-
-                const nombre =
-                    String(
-                        producto.nombre || ""
-                    )
-                    .toLowerCase();
-
+                // --------------------------------------------
+                // FILTRO RUBRO
+                // --------------------------------------------
 
                 if (
-                    !nombre.includes(texto)
+                    rubroActivo &&
+                    String(
+                        producto.rubro_id
+                    ) !== rubroActivo
                 ) {
 
                     return false;
 
                 }
 
+
+                // --------------------------------------------
+                // FILTRO TEXTO
+                // --------------------------------------------
+
+                if (texto) {
+
+                    const nombre =
+                        String(
+                            producto.nombre || ""
+                        )
+                        .toLowerCase();
+
+
+                    if (
+                        !nombre.includes(
+                            texto
+                        )
+                    ) {
+
+                        return false;
+
+                    }
+
+                }
+
+
+                return true;
+
             }
-
-
-            return true;
-
-        });
+        );
 
 
     renderProductos();
@@ -460,7 +619,10 @@ function actualizarResumen() {
 
     const activos =
         productos.filter(
-            p => Number(p.estado) === 1
+            producto =>
+                Number(
+                    producto.estado
+                ) === 1
         ).length;
 
 
@@ -469,28 +631,46 @@ function actualizarResumen() {
         activos;
 
 
-    document
-        .getElementById(
+    const cantidadProductos =
+        document.getElementById(
             "cantidad-productos"
-        )
-        .textContent =
-        productos.length;
+        );
 
 
-    document
-        .getElementById(
+    if (cantidadProductos) {
+
+        cantidadProductos.textContent =
+            productos.length;
+
+    }
+
+
+    const cantidadActivos =
+        document.getElementById(
             "cantidad-activos"
-        )
-        .textContent =
-        activos;
+        );
 
 
-    document
-        .getElementById(
+    if (cantidadActivos) {
+
+        cantidadActivos.textContent =
+            activos;
+
+    }
+
+
+    const cantidadInactivos =
+        document.getElementById(
             "cantidad-inactivos"
-        )
-        .textContent =
-        inactivos;
+        );
+
+
+    if (cantidadInactivos) {
+
+        cantidadInactivos.textContent =
+            inactivos;
+
+    }
 
 }
 
@@ -505,6 +685,13 @@ function renderProductos() {
         document.getElementById(
             "productos"
         );
+
+
+    if (!contenedor) {
+
+        return;
+
+    }
 
 
     contenedor.innerHTML = "";
@@ -591,7 +778,7 @@ function crearTarjetaProducto(
 
 
         imagen.alt =
-            producto.nombre;
+            producto.nombre || "";
 
 
         imagen.loading =
@@ -650,6 +837,10 @@ function crearTarjetaProducto(
         "producto-info";
 
 
+    // ========================================================
+    // NOMBRE
+    // ========================================================
+
     const nombre =
         document.createElement(
             "div"
@@ -661,13 +852,17 @@ function crearTarjetaProducto(
 
 
     nombre.textContent =
-        producto.nombre;
+        producto.nombre || "";
 
 
     info.appendChild(
         nombre
     );
 
+
+    // ========================================================
+    // RUBRO
+    // ========================================================
 
     const rubro =
         document.createElement(
@@ -690,6 +885,10 @@ function crearTarjetaProducto(
     );
 
 
+    // ========================================================
+    // PRECIO
+    // ========================================================
+
     const precio =
         document.createElement(
             "div"
@@ -710,6 +909,10 @@ function crearTarjetaProducto(
         precio
     );
 
+
+    // ========================================================
+    // ID
+    // ========================================================
 
     const id =
         document.createElement(
@@ -744,6 +947,10 @@ function crearTarjetaProducto(
         "badges";
 
 
+    // ========================================================
+    // ESTADO
+    // ========================================================
+
     const estado =
         document.createElement(
             "span"
@@ -769,8 +976,14 @@ function crearTarjetaProducto(
     );
 
 
+    // ========================================================
+    // COMPUESTO
+    // ========================================================
+
     if (
-        Number(producto.es_compuesto) === 1
+        Number(
+            producto.es_compuesto
+        ) === 1
     ) {
 
         const compuesto =
@@ -794,7 +1007,13 @@ function crearTarjetaProducto(
     }
 
 
-    if (producto.tipo_producto) {
+    // ========================================================
+    // TIPO PRODUCTO
+    // ========================================================
+
+    if (
+        producto.tipo_producto
+    ) {
 
         const tipo =
             document.createElement(
@@ -883,17 +1102,20 @@ function crearTarjetaProducto(
 // URL IMAGEN
 // ============================================================
 //
-// Mantiene compatible el sistema que ya venís usando.
-//
 // Si JSON devuelve:
+//
 // 125.jpg
 //
 // se busca:
-// https://raw.githubusercontent.com/doneliopizza/CartaDigital/main/fotos/125.jpg
+//
+// https://raw.githubusercontent.com/doneliopizza/
+// CartaDigital/main/fotos/125.jpg
 //
 // ============================================================
 
-function obtenerURLImagen(url) {
+function obtenerURLImagen(
+    url
+) {
 
     if (!url) {
 
@@ -902,12 +1124,17 @@ function obtenerURLImagen(url) {
     }
 
 
-    url = String(url).trim();
+    url =
+        String(url).trim();
 
 
     if (
-        url.startsWith("http://") ||
-        url.startsWith("https://")
+        url.startsWith(
+            "http://"
+        ) ||
+        url.startsWith(
+            "https://"
+        )
     ) {
 
         return url;
@@ -933,7 +1160,9 @@ function obtenerURLImagen(url) {
 // FORMATEAR PRECIO
 // ============================================================
 
-function formatoPrecio(valor) {
+function formatoPrecio(
+    valor
+) {
 
     const numero =
         Number(valor) || 0;
@@ -960,29 +1189,47 @@ function abrirNuevoProducto() {
     limpiarFormulario();
 
 
-    document
-        .getElementById(
+    const titulo =
+        document.getElementById(
             "modal-titulo"
-        )
-        .textContent =
-        "Nuevo producto";
+        );
 
 
-    document
-        .getElementById(
+    if (titulo) {
+
+        titulo.textContent =
+            "Nuevo producto";
+
+    }
+
+
+    const subtitulo =
+        document.getElementById(
             "modal-subtitulo"
-        )
-        .textContent =
-        "Crear producto";
+        );
 
 
-    document
-        .getElementById(
+    if (subtitulo) {
+
+        subtitulo.textContent =
+            "Crear producto";
+
+    }
+
+
+    const modal =
+        document.getElementById(
             "modal-producto"
-        )
-        .classList.remove(
+        );
+
+
+    if (modal) {
+
+        modal.classList.remove(
             "oculto"
         );
+
+    }
 
 }
 
@@ -1032,7 +1279,8 @@ function abrirEditarProducto(
             "tipo-producto"
         )
         .value =
-        producto.tipo_producto || "simple";
+        producto.tipo_producto ||
+        "simple";
 
 
     document
@@ -1096,7 +1344,7 @@ function abrirEditarProducto(
             "modal-subtitulo"
         )
         .textContent =
-        producto.nombre;
+        producto.nombre || "";
 
 
     actualizarPreview();
@@ -1119,11 +1367,17 @@ function abrirEditarProducto(
 
 function limpiarFormulario() {
 
-    document
-        .getElementById(
+    const form =
+        document.getElementById(
             "form-producto"
-        )
-        .reset();
+        );
+
+
+    if (form) {
+
+        form.reset();
+
+    }
 
 
     document
@@ -1181,12 +1435,18 @@ function limpiarFormulario() {
         "0";
 
 
-    document
-        .getElementById(
+    const preview =
+        document.getElementById(
             "preview-imagen"
-        )
-        .innerHTML =
-        "<span>Sin imagen</span>";
+        );
+
+
+    if (preview) {
+
+        preview.innerHTML =
+            "<span>Sin imagen</span>";
+
+    }
 
 }
 
@@ -1197,13 +1457,19 @@ function limpiarFormulario() {
 
 function cerrarModal() {
 
-    document
-        .getElementById(
+    const modal =
+        document.getElementById(
             "modal-producto"
-        )
-        .classList.add(
+        );
+
+
+    if (modal) {
+
+        modal.classList.add(
             "oculto"
         );
+
+    }
 
 }
 
@@ -1237,6 +1503,7 @@ async function guardarProducto(
                 .value
                 .trim(),
 
+
         precio:
             Number(
                 document
@@ -1246,6 +1513,7 @@ async function guardarProducto(
                     .value
             ),
 
+
         url:
             document
                 .getElementById(
@@ -1254,12 +1522,14 @@ async function guardarProducto(
                 .value
                 .trim() || null,
 
+
         tipo_producto:
             document
                 .getElementById(
                     "tipo-producto"
                 )
                 .value,
+
 
         rubro_id:
             Number(
@@ -1270,6 +1540,7 @@ async function guardarProducto(
                     .value
             ),
 
+
         orden:
             Number(
                 document
@@ -1278,6 +1549,7 @@ async function guardarProducto(
                     )
                     .value
             ),
+
 
         estado:
             Number(
@@ -1288,6 +1560,7 @@ async function guardarProducto(
                     .value
             ),
 
+
         es_compuesto:
             Number(
                 document
@@ -1297,6 +1570,7 @@ async function guardarProducto(
                     .value
             ),
 
+
         cant_min:
             Number(
                 document
@@ -1305,6 +1579,7 @@ async function guardarProducto(
                     )
                     .value
             ),
+
 
         cant_max:
             Number(
@@ -1334,7 +1609,10 @@ async function guardarProducto(
     }
 
 
-    if (!datos.precio || datos.precio < 0) {
+    if (
+        !datos.precio ||
+        datos.precio < 0
+    ) {
 
         mostrarNotificacion(
             "El precio no es válido.",
@@ -1389,6 +1667,7 @@ async function guardarProducto(
 
         }
 
+
         // ====================================================
         // CREAR
         // ====================================================
@@ -1416,6 +1695,10 @@ async function guardarProducto(
         }
 
 
+        // ====================================================
+        // RESPUESTA ERROR
+        // ====================================================
+
         if (!respuesta.ok) {
 
             const texto =
@@ -1429,6 +1712,10 @@ async function guardarProducto(
         }
 
 
+        // ====================================================
+        // RESPUESTA JSON
+        // ====================================================
+
         const resultado =
             await respuesta.json();
 
@@ -1439,8 +1726,16 @@ async function guardarProducto(
         );
 
 
+        // ====================================================
+        // CERRAR MODAL
+        // ====================================================
+
         cerrarModal();
 
+
+        // ====================================================
+        // NOTIFICACIÓN
+        // ====================================================
 
         mostrarNotificacion(
             id
@@ -1450,9 +1745,14 @@ async function guardarProducto(
         );
 
 
+        // ====================================================
+        // RECARGAR PRODUCTOS
+        // ====================================================
+
         await cargarProductos();
 
     }
+
 
     catch (error) {
 
@@ -1478,20 +1778,28 @@ async function guardarProducto(
 
 function actualizarPreview() {
 
-    const url =
-        document
-            .getElementById(
-                "url"
-            )
-            .value
-            .trim();
+    const campoURL =
+        document.getElementById(
+            "url"
+        );
 
 
     const preview =
-        document
-            .getElementById(
-                "preview-imagen"
-            );
+        document.getElementById(
+            "preview-imagen"
+        );
+
+
+    if (!campoURL || !preview) {
+
+        return;
+
+    }
+
+
+    const url =
+        campoURL.value
+            .trim();
 
 
     if (!url) {
@@ -1505,7 +1813,9 @@ function actualizarPreview() {
 
 
     const imagen =
-        obtenerURLImagen(url);
+        obtenerURLImagen(
+            url
+        );
 
 
     preview.innerHTML = `
@@ -1567,9 +1877,10 @@ function abrirImagenGrande(
                 ×
             </button>
 
+
             <img
                 src="${src}"
-                alt="${nombre}"
+                alt="${nombre || ""}"
                 style="
                     max-width:100%;
                     max-height:85vh;
@@ -1584,17 +1895,18 @@ function abrirImagenGrande(
     `;
 
 
-    modal.onclick = (event) => {
+    modal.onclick =
+        (event) => {
 
-        if (
-            event.target === modal
-        ) {
+            if (
+                event.target === modal
+            ) {
 
-            modal.remove();
+                modal.remove();
 
-        }
+            }
 
-    };
+        };
 
 
     document.body.appendChild(
@@ -1619,6 +1931,13 @@ function mostrarNotificacion(
         );
 
 
+    if (!elemento) {
+
+        return;
+
+    }
+
+
     elemento.textContent =
         mensaje;
 
@@ -1627,13 +1946,16 @@ function mostrarNotificacion(
         `notificacion ${tipo}`;
 
 
-    setTimeout(() => {
+    setTimeout(
+        () => {
 
-        elemento.classList.add(
-            "oculto"
-        );
+            elemento.classList.add(
+                "oculto"
+            );
 
-    }, 3000);
+        },
+        3000
+    );
 
 }
 
@@ -1650,6 +1972,13 @@ function mostrarErrorProductos(
         document.getElementById(
             "productos"
         );
+
+
+    if (!contenedor) {
+
+        return;
+
+    }
 
 
     contenedor.innerHTML = `
