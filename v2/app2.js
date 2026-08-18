@@ -100,80 +100,134 @@ function configurarEventos() {
 // ============================================================
 
 #async function cargarProductos() {
-const API_URL = "https://cartadigitalapi.onrender.com";
+const API_URL = "https://cartadigitalapi.onrender.com/productos";
+
+// ============================================================
+// CARGAR PRODUCTOS
+// ============================================================
 
 async function cargarProductos() {
 
-    const estado = document.getElementById("estado-api");
+    const estado =
+        document.getElementById("estado-api");
 
-    estado.textContent = "● Conectando con API...";
-    estado.className = "api-status cargando";
+    estado.textContent =
+        "● Conectando con API...";
+
+    estado.className =
+        "api-status cargando";
 
     try {
 
-        const url = `${API_URL}/productos`;
+        console.log(
+            "Consultando API:",
+            URL_PRODUCTOS
+        );
 
-        console.log("Consultando API:", url);
+        const respuesta =
+            await fetch(
+                URL_PRODUCTOS,
+                {
+                    method: "GET",
+                    cache: "no-store",
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                }
+            );
 
-        const respuesta = await fetch(url, {
-            method: "GET",
-            cache: "no-store",
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        console.log(
+            "HTTP:",
+            respuesta.status
+        );
 
-        console.log("HTTP:", respuesta.status);
+        const texto =
+            await respuesta.text();
 
-        const texto = await respuesta.text();
-
-        console.log("Respuesta:", texto);
+        console.log(
+            "Respuesta:",
+            texto
+        );
 
         if (!respuesta.ok) {
+
             throw new Error(
                 `HTTP ${respuesta.status} - ${texto}`
             );
+
         }
 
-        let productos;
+        let datos;
 
         try {
-            productos = JSON.parse(texto);
+
+            datos =
+                JSON.parse(texto);
+
         } catch (e) {
+
             throw new Error(
-                "La API respondió algo que no es JSON: " + texto
+                "La API respondió algo que no es JSON: " +
+                texto
             );
+
         }
 
-        console.log("Productos recibidos:", productos);
+        console.log(
+            "Productos recibidos:",
+            datos
+        );
 
-        if (!Array.isArray(productos)) {
-            throw new Error("La API no devolvió una lista de productos");
+        if (!Array.isArray(datos)) {
+
+            throw new Error(
+                "La API no devolvió una lista de productos"
+            );
+
         }
 
+        // Guardamos los productos globalmente
+        productos = datos;
+
+        // Construimos los botones de rubros
+        construirFiltrosRubros();
+
+        // Aplicamos filtros
+        aplicarFiltros();
+
+        // Actualizamos resumen
+        actualizarResumen();
+
+        // Estado API
         estado.textContent =
             `● API OK · ${productos.length} productos`;
 
-        estado.className = "api-status ok";
+        estado.className =
+            "api-status ok";
 
-        mostrarProductos(productos);
+    }
 
-    } catch (error) {
+    catch (error) {
 
-        console.error("ERROR API:", error);
+        console.error(
+            "ERROR API:",
+            error
+        );
 
         estado.textContent =
-            "● Error API: " + error.message;
+            "● Error API: " +
+            error.message;
 
-        estado.className = "api-status error";
+        estado.className =
+            "api-status error";
+
+        mostrarErrorProductos(
+            error.message
+        );
+
     }
+
 }
-
-
-// ============================================================
-// ESTADO API
-// ============================================================
-
 function cambiarEstadoAPI(tipo, texto) {
 
     const elemento =
