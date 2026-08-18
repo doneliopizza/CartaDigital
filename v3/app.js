@@ -4,7 +4,8 @@
    CONFIGURACIÓN
 ============================================================ */
 
-const API_URL = "https://cartadigitalapi.onrender.com";
+const API_URL =
+    "https://cartadigitalapi.onrender.com";
 
 const URL_GITHUB =
     "https://raw.githubusercontent.com/doneliopizza/CartaDigital/main";
@@ -38,19 +39,30 @@ let cantidadesCompuesto = {};
    INICIO
 ============================================================ */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-    const logo = document.getElementById("logo");
+        const logo =
+            document.getElementById(
+                "logo"
+            );
 
-    if (logo) {
-        logo.src = URL_LOGO + "?v=" + Date.now();
+        if (logo) {
+
+            logo.src =
+                URL_LOGO +
+                "?v=" +
+                Date.now();
+
+        }
+
+        configurarEventos();
+
+        cargarProductos();
+
     }
-
-    configurarEventos();
-
-    cargarProductos();
-
-});
+);
 
 
 /* ============================================================
@@ -59,98 +71,154 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function configurarEventos() {
 
+
+    /* ========================================================
+       BUSCAR PRODUCTO
+    ======================================================== */
+
     const buscarProducto =
-        document.getElementById("buscarProducto");
+        document.getElementById(
+            "buscarProducto"
+        );
 
     if (buscarProducto) {
+
         buscarProducto.addEventListener(
             "input",
             mostrarProductos
         );
+
     }
 
 
+    /* ========================================================
+       CARRITO
+    ======================================================== */
+
     const btnCarrito =
-        document.getElementById("btnCarrito");
+        document.getElementById(
+            "btnCarrito"
+        );
 
     if (btnCarrito) {
+
         btnCarrito.addEventListener(
             "click",
             abrirCarrito
         );
+
     }
 
 
     const cerrarCarritoBtn =
-        document.getElementById("cerrarCarrito");
+        document.getElementById(
+            "cerrarCarrito"
+        );
 
     if (cerrarCarritoBtn) {
+
         cerrarCarritoBtn.addEventListener(
             "click",
             cerrarCarrito
         );
+
     }
 
 
+    /* ========================================================
+       COMPUESTO
+    ======================================================== */
+
     const cerrarCompuestoBtn =
-        document.getElementById("cerrarCompuesto");
+        document.getElementById(
+            "cerrarCompuesto"
+        );
 
     if (cerrarCompuestoBtn) {
+
         cerrarCompuestoBtn.addEventListener(
             "click",
             cerrarCompuesto
         );
+
     }
 
 
     const confirmarCompuestoBtn =
-        document.getElementById("confirmarCompuesto");
+        document.getElementById(
+            "confirmarCompuesto"
+        );
 
     if (confirmarCompuestoBtn) {
+
         confirmarCompuestoBtn.addEventListener(
             "click",
             confirmarCompuesto
         );
+
     }
 
 
+    /* ========================================================
+       CLIENTE
+    ======================================================== */
+
     const cerrarClienteBtn =
-        document.getElementById("cerrarCliente");
+        document.getElementById(
+            "cerrarCliente"
+        );
 
     if (cerrarClienteBtn) {
+
         cerrarClienteBtn.addEventListener(
             "click",
             cerrarCliente
         );
+
     }
 
 
     const continuarPedidoBtn =
-        document.getElementById("btnContinuarPedido");
+        document.getElementById(
+            "btnContinuarPedido"
+        );
 
     if (continuarPedidoBtn) {
+
         continuarPedidoBtn.addEventListener(
             "click",
             abrirDatosCliente
         );
+
     }
 
 
     const enviarPedidoBtn =
-        document.getElementById("btnEnviarPedido");
+        document.getElementById(
+            "btnEnviarPedido"
+        );
 
     if (enviarPedidoBtn) {
+
         enviarPedidoBtn.addEventListener(
             "click",
             enviarPedido
         );
+
     }
 
 
+    /* ========================================================
+       ÉXITO
+    ======================================================== */
+
     const cerrarExitoBtn =
-        document.getElementById("cerrarExito");
+        document.getElementById(
+            "cerrarExito"
+        );
 
     if (cerrarExitoBtn) {
+
         cerrarExitoBtn.addEventListener(
             "click",
             () => {
@@ -161,11 +229,16 @@ function configurarEventos() {
                     );
 
                 if (modal) {
-                    modal.classList.add("oculto");
+
+                    modal.classList.add(
+                        "oculto"
+                    );
+
                 }
 
             }
         );
+
     }
 
 
@@ -173,47 +246,53 @@ function configurarEventos() {
        VISOR DE IMÁGENES
     ======================================================== */
 
-      const cerrarImagen =
-          document.getElementById("cerrarImagen");
-      
-      if (cerrarImagen) {
-      
-          cerrarImagen.addEventListener(
-              "click",
-              function (event) {
-      
-                  event.preventDefault();
-                  event.stopPropagation();
-      
-                  cerrarVisor();
-      
-              }
-          );
-      
-      
+    const cerrarImagen =
+        document.getElementById(
+            "cerrarImagen"
+        );
+
+    if (cerrarImagen) {
+
+        cerrarImagen.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+                cerrarVisor();
+
+            }
+        );
 
     }
 
 
-   const visorImagen =
-       document.getElementById("visorImagen");
-   
-   if (visorImagen) {
-   
-       visorImagen.addEventListener(
-           "click",
-           function (event) {
-   
-               if (
-                   event.target === visorImagen
-               ) {
-                   cerrarVisor();
-               }
-   
-           }
-       );
-   
-   }
+    const visorImagen =
+        document.getElementById(
+            "visorImagen"
+        );
+
+    if (visorImagen) {
+
+        visorImagen.addEventListener(
+            "click",
+            function (event) {
+
+                if (
+                    event.target ===
+                    visorImagen
+                ) {
+
+                    cerrarVisor();
+
+                }
+
+            }
+        );
+
+    }
 
 
     /* ========================================================
@@ -225,7 +304,8 @@ function configurarEventos() {
         event => {
 
             if (
-                event.key === "Escape"
+                event.key ===
+                "Escape"
             ) {
 
                 cerrarVisor();
@@ -259,6 +339,7 @@ async function cargarProductos() {
                 Date.now()
             );
 
+
         if (!respuesta.ok) {
 
             throw new Error(
@@ -268,17 +349,21 @@ async function cargarProductos() {
 
         }
 
+
         productos =
             await respuesta.json();
+
 
         console.log(
             "Productos recibidos:",
             productos
         );
 
+
         generarRubros();
 
         mostrarProductos();
+
 
     } catch (error) {
 
@@ -287,10 +372,12 @@ async function cargarProductos() {
             error
         );
 
+
         const contenedor =
             document.getElementById(
                 "productos"
             );
+
 
         if (contenedor) {
 
@@ -314,11 +401,17 @@ async function cargarProductos() {
 function generarRubros() {
 
     const contenedor =
-        document.getElementById("rubros");
+        document.getElementById(
+            "rubros"
+        );
+
 
     if (!contenedor) {
+
         return;
+
     }
+
 
     contenedor.innerHTML = "";
 
@@ -358,23 +451,31 @@ function generarRubros() {
     ======================================================== */
 
     const botonTodos =
-        document.createElement("button");
+        document.createElement(
+            "button"
+        );
+
 
     botonTodos.className =
         "boton-rubro activo";
 
+
     botonTodos.textContent =
         "Todos";
+
 
     botonTodos.addEventListener(
         "click",
         () => {
 
-            rubroActivo = null;
+            rubroActivo =
+                null;
+
 
             marcarRubroActivo(
                 botonTodos
             );
+
 
             mostrarProductos();
 
@@ -399,11 +500,14 @@ function generarRubros() {
                     "button"
                 );
 
+
             boton.className =
                 "boton-rubro";
 
+
             boton.textContent =
                 rubro.nombre;
+
 
             boton.addEventListener(
                 "click",
@@ -412,14 +516,17 @@ function generarRubros() {
                     rubroActivo =
                         rubro.id;
 
+
                     marcarRubroActivo(
                         boton
                     );
+
 
                     mostrarProductos();
 
                 }
             );
+
 
             contenedor.appendChild(
                 boton
@@ -472,8 +579,11 @@ function mostrarProductos() {
             "productos"
         );
 
+
     if (!contenedor) {
+
         return;
+
     }
 
 
@@ -500,8 +610,12 @@ function mostrarProductos() {
 
                 if (
                     rubroActivo !== null &&
-                    Number(producto.rubro_id) !==
-                    Number(rubroActivo)
+                    Number(
+                        producto.rubro_id
+                    ) !==
+                    Number(
+                        rubroActivo
+                    )
                 ) {
 
                     return false;
@@ -515,7 +629,9 @@ function mostrarProductos() {
                         producto.nombre
                     )
                     .toLowerCase()
-                    .includes(texto)
+                    .includes(
+                        texto
+                    )
                 ) {
 
                     return false;
@@ -550,6 +666,7 @@ function mostrarProductos() {
                     "article"
                 );
 
+
             tarjeta.className =
                 "producto";
 
@@ -563,24 +680,26 @@ function mostrarProductos() {
                     "img"
                 );
 
+
             imagen.className =
                 "producto-imagen";
+
 
             imagen.alt =
                 producto.nombre;
 
+
             imagen.src =
-                obtenerImagen(producto);
+                obtenerImagen(
+                    producto
+                );
 
 
             imagen.onerror = () => {
 
-                /*
-                 * Evitamos un bucle infinito
-                 * si también falla el logo.
-                 */
+                imagen.onerror =
+                    null;
 
-                imagen.onerror = null;
 
                 imagen.src =
                     URL_LOGO;
@@ -614,6 +733,7 @@ function mostrarProductos() {
                     "div"
                 );
 
+
             info.className =
                 "producto-info";
 
@@ -623,8 +743,10 @@ function mostrarProductos() {
                     "div"
                 );
 
+
             nombre.className =
                 "producto-nombre";
+
 
             nombre.textContent =
                 producto.nombre;
@@ -635,8 +757,10 @@ function mostrarProductos() {
                     "div"
                 );
 
+
             precio.className =
                 "producto-precio";
+
 
             precio.textContent =
                 formatearPrecio(
@@ -649,8 +773,10 @@ function mostrarProductos() {
                     "button"
                 );
 
+
             boton.className =
                 "producto-boton";
+
 
             boton.textContent =
                 Number(
@@ -676,9 +802,11 @@ function mostrarProductos() {
                 nombre
             );
 
+
             info.appendChild(
                 precio
             );
+
 
             info.appendChild(
                 boton
@@ -688,6 +816,7 @@ function mostrarProductos() {
             tarjeta.appendChild(
                 imagen
             );
+
 
             tarjeta.appendChild(
                 info
@@ -708,7 +837,9 @@ function mostrarProductos() {
    IMAGEN
 ============================================================ */
 
-function obtenerImagen(producto) {
+function obtenerImagen(
+    producto
+) {
 
     if (
         producto.url &&
@@ -725,6 +856,7 @@ function obtenerImagen(producto) {
         );
 
     }
+
 
     return (
         URL_LOGO +
@@ -743,14 +875,13 @@ function agregarProducto(
     producto
 ) {
 
-    /*
-     * Si el producto es compuesto y tiene hijos,
-     * abrimos el selector.
-     */
-
     if (
-        Number(producto.es_compuesto) &&
-        Array.isArray(producto.hijos)
+        Number(
+            producto.es_compuesto
+        ) &&
+        Array.isArray(
+            producto.hijos
+        )
     ) {
 
         abrirCompuesto(
@@ -789,6 +920,7 @@ function agregarSimple(
     if (existente) {
 
         existente.cantidad++;
+
 
         existente.subtotal =
             existente.cantidad *
@@ -845,6 +977,7 @@ function abrirCompuesto(
     productoCompuestoActual =
         producto;
 
+
     cantidadesCompuesto = {};
 
 
@@ -879,6 +1012,7 @@ function abrirCompuesto(
             "compuestoTitulo"
         );
 
+
     if (titulo) {
 
         titulo.textContent =
@@ -891,6 +1025,7 @@ function abrirCompuesto(
         document.getElementById(
             "compuestoReglas"
         );
+
 
     if (reglas) {
 
@@ -909,6 +1044,7 @@ function abrirCompuesto(
         document.getElementById(
             "modalCompuesto"
         );
+
 
     if (modal) {
 
@@ -934,6 +1070,7 @@ function generarTextoReglas(
             producto.cant_min || 0
         );
 
+
     const max =
         Number(
             producto.cant_max || 0
@@ -946,7 +1083,9 @@ function generarTextoReglas(
         min === max
     ) {
 
-        return `Elegí ${min} opciones.`;
+        return (
+            `Elegí ${min} opciones.`
+        );
 
     }
 
@@ -956,26 +1095,34 @@ function generarTextoReglas(
         max
     ) {
 
-        return `Elegí entre ${min} y ${max} opciones.`;
+        return (
+            `Elegí entre ${min} y ${max} opciones.`
+        );
 
     }
 
 
     if (min) {
 
-        return `Elegí al menos ${min} opciones.`;
+        return (
+            `Elegí al menos ${min} opciones.`
+        );
 
     }
 
 
     if (max) {
 
-        return `Elegí hasta ${max} opciones.`;
+        return (
+            `Elegí hasta ${max} opciones.`
+        );
 
     }
 
 
-    return "Elegí las opciones que quieras.";
+    return (
+        "Elegí las opciones que quieras."
+    );
 
 }
 
@@ -991,8 +1138,11 @@ function mostrarOpcionesCompuesto() {
             "opcionesCompuesto"
         );
 
+
     if (!contenedor) {
+
         return;
+
     }
 
 
@@ -1007,6 +1157,7 @@ function mostrarOpcionesCompuesto() {
                     "div"
                 );
 
+
             fila.className =
                 "opcion-compuesto";
 
@@ -1016,8 +1167,10 @@ function mostrarOpcionesCompuesto() {
                     "div"
                 );
 
+
             nombre.className =
                 "opcion-nombre";
+
 
             nombre.textContent =
                 hijo.nombre;
@@ -1028,8 +1181,10 @@ function mostrarOpcionesCompuesto() {
                     "button"
                 );
 
+
             menos.type =
                 "button";
+
 
             menos.textContent =
                 "−";
@@ -1040,8 +1195,10 @@ function mostrarOpcionesCompuesto() {
                     "span"
                 );
 
+
             cantidad.className =
                 "opcion-cantidad";
+
 
             cantidad.textContent =
                 cantidadesCompuesto[
@@ -1054,8 +1211,10 @@ function mostrarOpcionesCompuesto() {
                     "button"
                 );
 
+
             mas.type =
                 "button";
+
 
             mas.textContent =
                 "+";
@@ -1075,10 +1234,12 @@ function mostrarOpcionesCompuesto() {
                             hijo.id
                         ]--;
 
+
                         cantidad.textContent =
                             cantidadesCompuesto[
                                 hijo.id
                             ];
+
 
                         actualizarTotalOpciones();
 
@@ -1094,6 +1255,7 @@ function mostrarOpcionesCompuesto() {
 
                     const total =
                         obtenerTotalOpciones();
+
 
                     const max =
                         Number(
@@ -1120,10 +1282,12 @@ function mostrarOpcionesCompuesto() {
                         hijo.id
                     ]++;
 
+
                     cantidad.textContent =
                         cantidadesCompuesto[
                             hijo.id
                         ];
+
 
                     actualizarTotalOpciones();
 
@@ -1135,13 +1299,16 @@ function mostrarOpcionesCompuesto() {
                 nombre
             );
 
+
             fila.appendChild(
                 menos
             );
 
+
             fila.appendChild(
                 cantidad
             );
+
 
             fila.appendChild(
                 mas
@@ -1175,7 +1342,9 @@ function obtenerTotalOpciones() {
             cantidad
         ) =>
             total +
-            Number(cantidad),
+            Number(
+                cantidad
+            ),
         0
     );
 
@@ -1188,6 +1357,7 @@ function actualizarTotalOpciones() {
         document.getElementById(
             "totalOpciones"
         );
+
 
     if (elemento) {
 
@@ -1210,7 +1380,9 @@ function confirmarCompuesto() {
 
 
     if (!producto) {
+
         return;
+
     }
 
 
@@ -1222,6 +1394,7 @@ function confirmarCompuesto() {
         Number(
             producto.cant_min || 0
         );
+
 
     const max =
         Number(
@@ -1352,6 +1525,7 @@ function cerrarCompuesto() {
             "modalCompuesto"
         );
 
+
     if (modal) {
 
         modal.classList.add(
@@ -1363,6 +1537,7 @@ function cerrarCompuesto() {
 
     productoCompuestoActual =
         null;
+
 
     cantidadesCompuesto = {};
 
@@ -1392,6 +1567,7 @@ function actualizarCarritoUI() {
             "cantidadCarrito"
         );
 
+
     if (cantidadCarrito) {
 
         cantidadCarrito.textContent =
@@ -1417,7 +1593,9 @@ function calcularSubtotal() {
             item
         ) =>
             total +
-            Number(item.subtotal || 0),
+            Number(
+                item.subtotal || 0
+            ),
         0
     );
 
@@ -1435,8 +1613,11 @@ function renderizarCarrito() {
             "listaCarrito"
         );
 
+
     if (!contenedor) {
+
         return;
+
     }
 
 
@@ -1462,6 +1643,7 @@ function renderizarCarrito() {
                     "div"
                 );
 
+
             fila.className =
                 "item-carrito";
 
@@ -1477,8 +1659,10 @@ function renderizarCarrito() {
                     "div"
                 );
 
+
             nombre.className =
                 "item-carrito-nombre";
+
 
             nombre.textContent =
                 item.nombre;
@@ -1489,8 +1673,10 @@ function renderizarCarrito() {
                     "div"
                 );
 
+
             detalle.className =
                 "item-carrito-detalle";
+
 
             detalle.textContent =
                 `${item.cantidad} x ${formatearPrecio(
@@ -1502,6 +1688,7 @@ function renderizarCarrito() {
                 nombre
             );
 
+
             izquierda.appendChild(
                 detalle
             );
@@ -1512,6 +1699,7 @@ function renderizarCarrito() {
                     "div"
                 );
 
+
             controles.className =
                 "item-carrito-controles";
 
@@ -1521,8 +1709,10 @@ function renderizarCarrito() {
                     "button"
                 );
 
+
             menos.type =
                 "button";
+
 
             menos.textContent =
                 "−";
@@ -1533,6 +1723,7 @@ function renderizarCarrito() {
                     "span"
                 );
 
+
             cantidad.textContent =
                 item.cantidad;
 
@@ -1542,8 +1733,10 @@ function renderizarCarrito() {
                     "button"
                 );
 
+
             mas.type =
                 "button";
+
 
             mas.textContent =
                 "+";
@@ -1554,11 +1747,14 @@ function renderizarCarrito() {
                     "button"
                 );
 
+
             eliminar.type =
                 "button";
 
+
             eliminar.textContent =
                 "×";
+
 
             eliminar.className =
                 "eliminar-item";
@@ -1601,9 +1797,11 @@ function renderizarCarrito() {
 
                     item.cantidad++;
 
+
                     item.subtotal =
                         item.cantidad *
                         item.precio;
+
 
                     actualizarCarritoUI();
 
@@ -1620,6 +1818,7 @@ function renderizarCarrito() {
                         1
                     );
 
+
                     actualizarCarritoUI();
 
                 }
@@ -1630,13 +1829,16 @@ function renderizarCarrito() {
                 menos
             );
 
+
             controles.appendChild(
                 cantidad
             );
 
+
             controles.appendChild(
                 mas
             );
+
 
             controles.appendChild(
                 eliminar
@@ -1646,6 +1848,7 @@ function renderizarCarrito() {
             fila.appendChild(
                 izquierda
             );
+
 
             fila.appendChild(
                 controles
@@ -1669,6 +1872,7 @@ function renderizarCarrito() {
             "subtotalCarrito"
         );
 
+
     if (subtotalElemento) {
 
         subtotalElemento.textContent =
@@ -1683,6 +1887,7 @@ function renderizarCarrito() {
         document.getElementById(
             "totalCarrito"
         );
+
 
     if (totalElemento) {
 
@@ -1710,6 +1915,7 @@ function abrirCarrito() {
             "modalCarrito"
         );
 
+
     if (modal) {
 
         modal.classList.remove(
@@ -1731,6 +1937,7 @@ function cerrarCarrito() {
         document.getElementById(
             "modalCarrito"
         );
+
 
     if (modal) {
 
@@ -1811,6 +2018,7 @@ function cerrarCliente() {
             "modalCliente"
         );
 
+
     if (modal) {
 
         modal.classList.add(
@@ -1825,9 +2033,6 @@ function cerrarCliente() {
 /* ============================================================
    ENVIAR PEDIDO
 ============================================================ */
-/* ============================================================
-   ENVIAR PEDIDO
-============================================================ */
 
 async function enviarPedido() {
 
@@ -1836,25 +2041,30 @@ async function enviarPedido() {
             "clienteNombre"
         );
 
+
     const telefono =
         obtenerValor(
             "clienteTelefono"
         );
+
 
     const calle =
         obtenerValor(
             "clienteCalle"
         );
 
+
     const altura =
         obtenerValor(
             "clienteAltura"
         );
 
+
     const localidad =
         obtenerValor(
             "clienteLocalidad"
         );
+
 
     const montoEfectivo =
         Number(
@@ -1862,6 +2072,7 @@ async function enviarPedido() {
                 "montoEfectivo"
             ) || 0
         );
+
 
     const total =
         calcularSubtotal();
@@ -1878,6 +2089,7 @@ async function enviarPedido() {
         );
 
         return;
+
     }
 
 
@@ -1888,6 +2100,7 @@ async function enviarPedido() {
         );
 
         return;
+
     }
 
 
@@ -1898,6 +2111,7 @@ async function enviarPedido() {
         );
 
         return;
+
     }
 
 
@@ -1908,6 +2122,7 @@ async function enviarPedido() {
         );
 
         return;
+
     }
 
 
@@ -1918,6 +2133,7 @@ async function enviarPedido() {
         );
 
         return;
+
     }
 
 
@@ -1931,6 +2147,7 @@ async function enviarPedido() {
         );
 
         return;
+
     }
 
 
@@ -2019,13 +2236,16 @@ async function enviarPedido() {
         "================================"
     );
 
+
     console.log(
         "PEDIDO A ENVIAR:"
     );
 
+
     console.log(
         pedido
     );
+
 
     console.log(
         "================================"
@@ -2043,6 +2263,7 @@ async function enviarPedido() {
         boton.disabled =
             true;
 
+
         boton.textContent =
             "ENVIANDO...";
 
@@ -2050,6 +2271,10 @@ async function enviarPedido() {
 
 
     try {
+
+        /* ====================================================
+           ENVIAR A FASTAPI
+        ==================================================== */
 
         const respuesta =
             await fetch(
@@ -2108,7 +2333,7 @@ async function enviarPedido() {
 
 
         /* ====================================================
-           OBTENER ID DEL PEDIDO
+           DATOS DEVUELTOS POR LA API
         ==================================================== */
 
         const idPedido =
@@ -2117,24 +2342,35 @@ async function enviarPedido() {
             "";
 
 
+        const numero =
+            datos.numero_pedido ??
+            idPedido;
+
+
+        const seguimientoUrl =
+            datos.seguimiento_url ??
+            "";
+
+
         /* ====================================================
-           CERRAR DATOS DEL CLIENTE
+           CERRAR DATOS CLIENTE
         ==================================================== */
 
         cerrarCliente();
 
 
         /* ====================================================
-           LIMPIAR CARRITO
+           VACIAR CARRITO
         ==================================================== */
 
         carrito = [];
+
 
         actualizarCarritoUI();
 
 
         /* ====================================================
-           MOSTRAR NÚMERO DE PEDIDO
+           MOSTRAR NÚMERO PEDIDO
         ==================================================== */
 
         const numeroPedido =
@@ -2147,7 +2383,7 @@ async function enviarPedido() {
 
             numeroPedido.textContent =
                 "#" +
-                idPedido;
+                numero;
 
         }
 
@@ -2156,68 +2392,14 @@ async function enviarPedido() {
            LINK DE SEGUIMIENTO
         ==================================================== */
 
-        if (
-            datos.seguimiento_url
-        ) {
-
-            let enlace =
-                document.getElementById(
-                    "linkSeguimiento"
-                );
-
-
-            if (!enlace) {
-
-                enlace =
-                    document.createElement(
-                        "a"
-                    );
-
-                enlace.id =
-                    "linkSeguimiento";
-
-                enlace.target =
-                    "_blank";
-
-                enlace.rel =
-                    "noopener noreferrer";
-
-
-                if (numeroPedido) {
-
-                    numeroPedido.parentNode
-                        .appendChild(
-                            enlace
-                        );
-
-                }
-
-            }
-
-
-            enlace.href =
-                datos.seguimiento_url;
-
-            enlace.textContent =
-                "📦 Ver seguimiento del pedido";
-
-            enlace.style.display =
-                "block";
-
-            enlace.style.marginTop =
-                "15px";
-
-            enlace.style.textAlign =
-                "center";
-
-            enlace.style.fontWeight =
-                "bold";
-
-        }
+        crearLinkSeguimiento(
+            seguimientoUrl,
+            numeroPedido
+        );
 
 
         /* ====================================================
-           MOSTRAR MODAL DE ÉXITO
+           MOSTRAR MODAL ÉXITO
         ==================================================== */
 
         const modalExito =
@@ -2251,6 +2433,7 @@ async function enviarPedido() {
 
 
         mostrarMensaje(
+            error.message ||
             "No se pudo enviar el pedido. Intentá nuevamente."
         );
 
@@ -2262,6 +2445,7 @@ async function enviarPedido() {
             boton.disabled =
                 false;
 
+
             boton.textContent =
                 "ENVIAR PEDIDO";
 
@@ -2270,14 +2454,110 @@ async function enviarPedido() {
     }
 
 }
+
+
+/* ============================================================
+   CREAR LINK SEGUIMIENTO
+============================================================ */
+
+function crearLinkSeguimiento(
+    url,
+    numeroPedidoElemento
+) {
+
+    if (!url) {
+
+        console.warn(
+            "La API no devolvió seguimiento_url."
+        );
+
+        return;
+
+    }
+
+
+    let enlace =
+        document.getElementById(
+            "linkSeguimiento"
+        );
+
+
+    if (!enlace) {
+
+        enlace =
+            document.createElement(
+                "a"
+            );
+
+
+        enlace.id =
+            "linkSeguimiento";
+
+
+        enlace.target =
+            "_blank";
+
+
+        enlace.rel =
+            "noopener noreferrer";
+
+
+        if (
+            numeroPedidoElemento &&
+            numeroPedidoElemento.parentNode
+        ) {
+
+            numeroPedidoElemento.parentNode.appendChild(
+                enlace
+            );
+
+        }
+
+    }
+
+
+    enlace.href =
+        url;
+
+
+    enlace.textContent =
+        "📦 Ver seguimiento del pedido";
+
+
+    enlace.style.display =
+        "block";
+
+
+    enlace.style.marginTop =
+        "15px";
+
+
+    enlace.style.textAlign =
+        "center";
+
+
+    enlace.style.fontWeight =
+        "bold";
+
+
+    enlace.style.cursor =
+        "pointer";
+
+}
+
+
 /* ============================================================
    OBTENER VALOR INPUT
 ============================================================ */
 
-function obtenerValor(id) {
+function obtenerValor(
+    id
+) {
 
     const elemento =
-        document.getElementById(id);
+        document.getElementById(
+            id
+        );
 
 
     if (!elemento) {
@@ -2346,7 +2626,9 @@ function mostrarMensaje(
 
     if (!mensaje) {
 
-        alert(texto);
+        alert(
+            texto
+        );
 
         return;
 
@@ -2374,51 +2656,56 @@ function mostrarMensaje(
    VISOR DE IMÁGENES
 ============================================================ */
 
-function abrirVisor(src, alt) {
+function abrirVisor(
+    src,
+    alt
+) {
 
     const visor =
-        document.getElementById("visorImagen");
+        document.getElementById(
+            "visorImagen"
+        );
+
 
     const imagen =
-        document.getElementById("imagenGrande");
+        document.getElementById(
+            "imagenGrande"
+        );
 
-    if (!visor || !imagen) {
+
+    if (
+        !visor ||
+        !imagen
+    ) {
+
         return;
+
     }
 
-    imagen.src = src;
-    imagen.alt = alt || "";
 
-    visor.classList.remove("oculto");
+    imagen.src =
+        src;
+
+
+    imagen.alt =
+        alt || "";
+
+
+    visor.classList.remove(
+        "oculto"
+    );
+
+
+    document.body.classList.add(
+        "visor-abierto"
+    );
 
 }
 
 
-function cerrarVisor() {
-
-    const visor =
-        document.getElementById("visorImagen");
-
-    if (!visor) {
-        return;
-    }
-
-    visor.classList.add("oculto");
-
-    // Limpiamos la imagen después de cerrar
-    setTimeout(() => {
-
-        const imagen =
-            document.getElementById("imagenGrande");
-
-        if (imagen) {
-            imagen.src = "";
-            imagen.alt = "";
-        }
-
-    }, 200);
-
-}
+/* ============================================================
+   CERRAR VISOR
+============================================================ */
 
 function cerrarVisor() {
 
@@ -2445,11 +2732,6 @@ function cerrarVisor() {
     );
 
 
-    /*
-     * Limpiamos la imagen para liberar
-     * el recurso y evitar que quede visible.
-     */
-
     const imagen =
         document.getElementById(
             "imagenGrande"
@@ -2458,7 +2740,11 @@ function cerrarVisor() {
 
     if (imagen) {
 
-        imagen.src = "";
+        imagen.src =
+            "";
+
+        imagen.alt =
+            "";
 
     }
 
