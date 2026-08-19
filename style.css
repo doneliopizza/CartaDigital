@@ -1,23 +1,29 @@
 /* ============================================================
-   RESET
+   GENERAL
 ============================================================ */
 
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
-
-/* ============================================================
-   BODY
-============================================================ */
+html {
+    scroll-behavior: smooth;
+}
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f5f5f5;
-    color: #222;
-    padding-bottom: 90px;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: #fff;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
 }
 
 
@@ -26,588 +32,313 @@ body {
 ============================================================ */
 
 .encabezado {
-    width: 100%;
-    background: #111;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    padding: 10px;
-    margin-bottom: 20px;
-
-    overflow: hidden;
+    text-align: center;
+    padding: 20px 15px 15px;
 }
 
-
-/* ============================================================
-   LOGO
-============================================================ */
-
-.logo-don-elio {
-    display: block;
-
-    width: 300px;
-    height: 300px;
-
-    max-width: 80vw;
-
+.logo {
+    width: 110px;
+    height: 110px;
     object-fit: contain;
+    display: block;
+    margin: auto;
+}
+
+.encabezado h1 {
+    margin: 8px 0 0;
+    font-size: 30px;
+}
+
+.encabezado p {
+    margin: 5px 0;
+    color: #bbb;
 }
 
 
 /* ============================================================
-   CARTA
+   CONTENIDO
 ============================================================ */
 
 main {
     width: 100%;
-    max-width: 900px;
-
+    max-width: 1100px;
     margin: auto;
-
-    padding: 0 15px;
+    padding: 0 12px 100px;
 }
 
 
 /* ============================================================
-   CATEGORÍA
+   RUBROS
 ============================================================ */
 
-.categoria {
-    margin-bottom: 30px;
-}
-
-
-.categoria h2 {
-    font-size: 24px;
-
-    margin-bottom: 15px;
-
-    border-bottom: 2px solid #ddd;
-
-    padding-bottom: 8px;
-}
-
-
-/* ============================================================
-   PRODUCTO
-============================================================ */
-
-.producto {
-    background: white;
-
-    border-radius: 12px;
-
-    padding: 15px;
-
-    margin-bottom: 12px;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    gap: 10px;
-
-    box-shadow:
-        0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-
-/* ============================================================
-   IMAGEN PRODUCTO
-============================================================ */
-
-.producto-imagen {
-    width: 90px;
-    height: 90px;
-
-    flex-shrink: 0;
-
-    margin-right: 5px;
-
-    overflow: hidden;
-
-    border-radius: 10px;
-}
-
-
-.producto-imagen img {
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-
-    display: block;
-
-    cursor: zoom-in;
-
-    transition: transform 0.15s ease;
-}
-
-
-.producto-imagen img:active {
-    transform: scale(0.95);
-}
-
-
-/* ============================================================
-   INFORMACIÓN
-============================================================ */
-
-.producto-info {
-    flex: 1;
-    min-width: 0;
-}
-
-
-.producto-nombre {
-    font-size: 18px;
-
-    font-weight: bold;
-
-    margin-bottom: 6px;
-
-    overflow-wrap: break-word;
-}
-
-
-.producto-precio {
-    font-size: 18px;
-
-    font-weight: bold;
-
-    color: #d35400;
-}
-
-
-/* ============================================================
-   BOTÓN +
-============================================================ */
-
-.btn-agregar {
-    background: #25d366;
-
-    color: white;
-
-    border: none;
-
-    border-radius: 50%;
-
-    width: 45px;
-    height: 45px;
-
-    min-width: 45px;
-
-    font-size: 25px;
-
-    cursor: pointer;
-
-    flex-shrink: 0;
-}
-
-
-.btn-agregar:active {
-    transform: scale(0.9);
-}
-
-
-/* ============================================================
-   CARRITO
-============================================================ */
-
-#carrito-barra {
-    position: fixed;
-
-    bottom: 0;
-    left: 0;
-    right: 0;
-
+.seccion-rubros {
+    position: sticky;
+    top: 0;
+    z-index: 20;
     background: #111;
+    padding: 8px 0;
+}
 
-    color: white;
-
-    padding: 12px 15px;
-
+.rubros {
     display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 10px;
-
-    z-index: 1000;
-}
-
-
-#carrito-barra button {
-    background: #25d366;
-
-    border: none;
-
-    color: white;
-
-    padding: 10px 15px;
-
-    border-radius: 8px;
-
-    font-weight: bold;
-
-    cursor: pointer;
-}
-
-
-/* ============================================================
-   MODAL
-============================================================ */
-
-.modal {
-    display: none;
-
-    position: fixed;
-
-    inset: 0;
-
-    background: rgba(0, 0, 0, 0.65);
-
-    z-index: 2000;
-
-    padding: 15px;
-}
-
-
-.modal-contenido {
-    background: white;
-
-    width: 100%;
-    max-width: 500px;
-
-    margin: 20px auto;
-
-    padding: 20px;
-
-    border-radius: 15px;
-
-    max-height: 92vh;
-
-    overflow-y: auto;
-
-    position: relative;
-}
-
-
-/* ============================================================
-   CERRAR
-============================================================ */
-
-.cerrar {
-    position: absolute;
-
-    right: 15px;
-    top: 15px;
-
-    border: none;
-
-    background: none;
-
-    font-size: 25px;
-
-    cursor: pointer;
-}
-
-
-/* ============================================================
-   CARRITO ITEMS
-============================================================ */
-
-.item-carrito {
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    gap: 10px;
-
-    padding: 12px 0;
-
-    border-bottom: 1px solid #ddd;
-}
-
-
-.controles {
-    display: flex;
-
-    align-items: center;
-
     gap: 8px;
-
-    flex-shrink: 0;
+    overflow-x: auto;
+    padding: 3px;
 }
 
-
-.controles button {
-    width: 30px;
-    height: 30px;
-
-    border: none;
-
-    border-radius: 5px;
-
-    background: #ddd;
-
-    cursor: pointer;
+.rubros::-webkit-scrollbar {
+    display: none;
 }
 
-
-/* ============================================================
-   TOTAL
-============================================================ */
-
-.total-final {
-    font-size: 22px;
-
-    padding: 20px 0;
-
-    text-align: right;
-}
-
-
-/* ============================================================
-   WHATSAPP
-============================================================ */
-
-.btn-whatsapp {
-    width: 100%;
-
-    background: #25d366;
-
+.boton-rubro {
+    border: 0;
+    background: #2b2b2b;
     color: white;
+    border-radius: 20px;
+    padding: 10px 18px;
+    white-space: nowrap;
+}
 
-    border: none;
+.boton-rubro.activo {
+    background: #e53935;
+}
 
-    padding: 15px;
 
+/* ============================================================
+   BUSCADOR
+============================================================ */
+
+.buscador {
+    margin: 10px 0 15px;
+}
+
+.buscador input {
+    width: 100%;
+    border: 1px solid #444;
     border-radius: 10px;
-
+    background: #1e1e1e;
+    color: white;
+    padding: 13px;
     font-size: 16px;
-
-    font-weight: bold;
-
-    cursor: pointer;
-}
-
-
-/* ============================================================
-   CARGANDO
-============================================================ */
-
-#cargando {
-    text-align: center;
-
-    padding: 40px;
-
-    color: #777;
-}
-
-
-/* ============================================================
-   FORMULARIO
-============================================================ */
-
-#formulario-pedido {
-    width: 100%;
-    margin-top: 20px;
-}
-
-
-.datos-pedido {
-    border-top: 1px solid #ddd;
-
-    padding-top: 20px;
-
-    width: 100%;
-}
-
-
-.datos-pedido h3 {
-    display: block;
-
-    width: 100%;
-
-    font-size: 18px;
-
-    margin: 20px 0 12px;
-}
-
-
-.datos-pedido h3:first-child {
-    margin-top: 0;
-}
-
-
-.datos-pedido label {
-    display: block;
-
-    width: 100%;
-
-    font-size: 14px;
-
-    font-weight: bold;
-
-    margin-bottom: 5px;
-}
-
-
-.datos-pedido input[type="text"],
-.datos-pedido input[type="tel"],
-.datos-pedido input[type="number"] {
-    display: block;
-
-    width: 100%;
-
-    height: 44px;
-
-    padding: 10px 12px;
-
-    margin: 0 0 14px 0;
-
-    border: 1px solid #ccc;
-
-    border-radius: 8px;
-
-    font-size: 16px;
-
-    background: white;
-
     outline: none;
 }
 
 
-.datos-pedido input:focus {
-    border-color: #25d366;
+/* ============================================================
+   PRODUCTOS
+============================================================ */
+
+.productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 15px;
+}
+
+.producto {
+    background: #1c1c1c;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0,0,0,.3);
+}
+
+.producto-imagen {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    cursor: pointer;
+}
+
+.producto-info {
+    padding: 13px;
+}
+
+.producto-nombre {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.producto-precio {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.producto-boton {
+    width: 100%;
+    border: 0;
+    background: #e53935;
+    color: white;
+    border-radius: 8px;
+    padding: 11px;
+    font-weight: bold;
 }
 
 
 /* ============================================================
-   MEDIOS DE PAGO
+   CARRITO FLOTANTE
 ============================================================ */
 
-.medios-pago {
-    width: 100%;
+.boton-carrito {
+    position: fixed;
+    left: 50%;
+    bottom: 15px;
+    transform: translateX(-50%);
+    z-index: 50;
 
     display: flex;
-
-    flex-direction: column;
-
+    align-items: center;
     gap: 10px;
+
+    border: 0;
+    border-radius: 30px;
+
+    background: #e53935;
+    color: white;
+
+    padding: 14px 22px;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    box-shadow: 0 5px 20px rgba(0,0,0,.5);
+}
+
+#cantidadCarrito {
+    background: white;
+    color: #e53935;
+    min-width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 
-.medio-opcion {
-    display: flex !important;
+/* ============================================================
+   MODALES
+============================================================ */
 
-    flex-direction: row !important;
+.modal {
+    position: fixed;
+    inset: 0;
 
+    z-index: 100;
+
+    background: rgba(0,0,0,.75);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 15px;
+}
+
+.oculto {
+    display: none;
+}
+
+.modal-contenido {
+    position: relative;
+
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    background: #1d1d1d;
+
+    border-radius: 15px;
+
+    padding: 22px;
+
+    box-shadow: 0 10px 40px rgba(0,0,0,.6);
+}
+
+.cerrar {
+    position: absolute;
+    right: 10px;
+    top: 8px;
+
+    border: 0;
+    background: transparent;
+
+    color: white;
+
+    font-size: 32px;
+}
+
+
+/* ============================================================
+   COMPUESTOS
+============================================================ */
+
+.opciones-compuesto {
+    margin-top: 15px;
+}
+
+.opcion-compuesto {
+    display: flex;
     align-items: center;
 
     gap: 8px;
 
-    width: 100%;
-
-    padding: 11px;
-
-    background: #f5f5f5;
+    background: #292929;
 
     border-radius: 8px;
 
-    font-weight: normal !important;
+    padding: 8px;
 
-    margin: 0 !important;
-
-    cursor: pointer;
+    margin-bottom: 8px;
 }
 
-
-.medio-opcion input {
-    width: auto !important;
-
-    height: auto !important;
-
-    margin: 0 !important;
-
-    flex-shrink: 0;
+.opcion-nombre {
+    flex: 1;
 }
 
-
-/* ============================================================
-   DETALLES PAGO
-============================================================ */
-
-.detalle-efectivo,
-.detalle-transferencia,
-.detalle-mercadopago {
-    width: 100%;
-
-    margin-top: 12px;
-
-    padding: 12px;
-
-    background: #f7f7f7;
-
-    border-radius: 8px;
-}
-
-
-/* ============================================================
-   ALIAS
-============================================================ */
-
-.alias-transferencia {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 10px;
-
-    margin: 10px 0;
-
-    padding: 10px;
-
-    background: white;
-
-    border-radius: 8px;
-
-    overflow: hidden;
-}
-
-
-.alias-transferencia span {
+.opcion-cantidad {
+    width: 30px;
+    text-align: center;
     font-weight: bold;
-
-    overflow-wrap: anywhere;
 }
 
+.opcion-compuesto button {
+    width: 32px;
+    height: 32px;
 
-.alias-transferencia button {
-    border: none;
-
-    background: #111;
-
-    color: white;
-
-    padding: 8px 12px;
-
+    border: 0;
     border-radius: 6px;
 
-    cursor: pointer;
+    background: #444;
+    color: white;
+}
 
-    flex-shrink: 0;
+.modal-total {
+    margin: 15px 0;
+    font-size: 17px;
+}
+
+
+/* ============================================================
+   BOTONES
+============================================================ */
+
+.boton-principal {
+    width: 100%;
+
+    border: 0;
+    border-radius: 9px;
+
+    background: #e53935;
+    color: white;
+
+    padding: 13px;
+
+    font-size: 16px;
+    font-weight: bold;
 }
 
 
@@ -615,45 +346,240 @@ main {
    VISOR IMAGEN
 ============================================================ */
 
-#visor-imagen {
+.visor {
     position: fixed;
-
     inset: 0;
 
-    width: 100%;
-    height: 100%;
+    background: rgba(0,0,0,.95);
 
+    z-index: 200;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+}
+
+.visor img {
+    max-width: 95%;
+    max-height: 90%;
+    object-fit: contain;
+}
+
+.visor-cerrar {
+    z-index: 210;
+}
+
+
+/* ============================================================
+   CARRITO
+============================================================ */
+
+.lista-carrito {
+    margin-top: 15px;
+}
+
+.item-carrito {
+    display: grid;
+
+    grid-template-columns: 1fr auto;
+
+    gap: 10px;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid #333;
+}
+
+.item-carrito-nombre {
+    font-weight: bold;
+}
+
+.item-carrito-detalle {
+    color: #aaa;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.item-carrito-controles {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.item-carrito-controles button {
+    border: 0;
+    border-radius: 5px;
+    background: #444;
+    color: white;
+
+    width: 30px;
+    height: 30px;
+}
+
+.eliminar-item {
+    background: #b71c1c !important;
+}
+
+.resumen-carrito {
+    margin: 20px 0;
+}
+
+.total-carrito {
+    font-size: 22px;
+    margin-top: 10px;
+}
+
+
+/* ============================================================
+   DATOS CLIENTE
+============================================================ */
+
+.modal-contenido label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 5px;
+    color: #ccc;
+}
+
+.modal-contenido input {
+    width: 100%;
+
+    border: 1px solid #444;
+    border-radius: 8px;
+
+    background: #292929;
+    color: white;
+
+    padding: 12px;
+
+    font-size: 16px;
+}
+
+.texto-ayuda {
+    color: #aaa;
+}
+
+.medio-pago {
+    margin-top: 20px;
+}
+
+.medio-pago h3 {
+    margin-bottom: 8px;
+}
+
+.medio-pago-seleccionado {
+    background: #2e7d32;
+    border-radius: 8px;
+    padding: 12px;
+    font-weight: bold;
+}
+
+.confirmacion-total {
+    font-size: 22px;
+    margin: 20px 0;
+}
+
+.mensaje-pedido {
+    margin-top: 12px;
+    text-align: center;
+    color: #ff8a80;
+}
+
+
+/* ============================================================
+   ÉXITO
+============================================================ */
+
+.exito {
+    text-align: center;
+}
+
+.icono-exito {
+    width: 65px;
+    height: 65px;
+
+    margin: auto;
+
+    border-radius: 50%;
+
+    background: #2e7d32;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 40px;
+}
+
+.numero-pedido {
+    display: block;
+
+    font-size: 35px;
+
+    margin: 10px 0 20px;
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 600px) {
+
+    .productos {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .producto-nombre {
+        font-size: 15px;
+    }
+
+    .producto-precio {
+        font-size: 17px;
+    }
+
+    .producto-info {
+        padding: 9px;
+    }
+
+    .producto-boton {
+        padding: 9px 5px;
+        font-size: 13px;
+    }
+}
+/* ============================================================
+   CORRECCIÓN VISOR DE IMAGEN
+============================================================ */
+
+#visorImagen {
+    position: fixed;
+    inset: 0;
     z-index: 99999;
 
     background: rgba(0, 0, 0, 0.88);
 
-    animation: aparecerVisor 0.15s ease-out;
-}
-
-
-.visor-imagen-fondo {
-    position: absolute;
-
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
     padding: 20px;
+    box-sizing: border-box;
+}
 
-    cursor: zoom-out;
+/* MUY IMPORTANTE:
+   cuando tiene oculto NO debe aparecer */
+#visorImagen.oculto {
+    display: none !important;
 }
 
 
-.visor-imagen-fondo img {
-    max-width: 95vw;
+/* Imagen ampliada */
 
+#imagenGrande {
+    max-width: 95vw;
     max-height: 90vh;
 
     width: auto;
@@ -663,201 +589,40 @@ main {
 
     border-radius: 12px;
 
-    box-shadow:
-        0 10px 40px rgba(0, 0, 0, 0.6);
-
-    cursor: default;
+    cursor: zoom-out;
 }
 
 
-.visor-imagen-cerrar {
+/* Botón X */
+
+#cerrarImagen {
     position: absolute;
 
-    top: 20px;
+    top: 15px;
     right: 20px;
 
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
 
     border: none;
-
     border-radius: 50%;
 
     background: rgba(255, 255, 255, 0.95);
 
-    color: #222;
+    color: #111;
 
-    font-size: 32px;
-
-    line-height: 40px;
+    font-size: 36px;
+    line-height: 1;
 
     cursor: pointer;
 
-    z-index: 10;
+    z-index: 100000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-
-@keyframes aparecerVisor {
-
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-
-}
-
-
-/* ============================================================
-   CELULARES
-============================================================ */
-
-@media (max-width: 600px) {
-
-    main {
-        padding: 0 10px;
-    }
-
-
-    .encabezado {
-        padding: 8px;
-        margin-bottom: 15px;
-    }
-
-
-    .logo-don-elio {
-        width: 230px;
-        height: 230px;
-        max-width: 75vw;
-    }
-
-
-    .categoria {
-        margin-bottom: 25px;
-    }
-
-
-    .categoria h2 {
-        font-size: 22px;
-        margin-bottom: 12px;
-    }
-
-
-    .producto {
-        padding: 12px;
-        gap: 8px;
-    }
-
-
-    .producto-imagen {
-        width: 75px;
-        height: 75px;
-        margin-right: 4px;
-    }
-
-
-    .producto-nombre {
-        font-size: 16px;
-    }
-
-
-    .producto-precio {
-        font-size: 17px;
-    }
-
-
-    .btn-agregar {
-        width: 42px;
-        height: 42px;
-        min-width: 42px;
-        font-size: 23px;
-    }
-
-
-    #carrito-barra {
-        padding: 10px;
-    }
-
-
-    #carrito-barra button {
-        padding: 9px 12px;
-    }
-
-
-    .modal {
-        padding: 10px;
-    }
-
-
-    .modal-contenido {
-        margin: 10px auto;
-        padding: 18px;
-        max-height: 94vh;
-    }
-
-
-    .visor-imagen-fondo {
-        padding: 10px;
-    }
-
-
-    .visor-imagen-fondo img {
-        max-width: 96vw;
-        max-height: 82vh;
-    }
-
-
-    .visor-imagen-cerrar {
-        top: 10px;
-        right: 10px;
-        width: 42px;
-        height: 42px;
-        font-size: 29px;
-    }
-
-}
-
-
-/* ============================================================
-   CELULARES MUY PEQUEÑOS
-============================================================ */
-
-@media (max-width: 380px) {
-
-    .producto-imagen {
-        width: 65px;
-        height: 65px;
-    }
-
-
-    .producto-nombre {
-        font-size: 15px;
-    }
-
-
-    .producto-precio {
-        font-size: 16px;
-    }
-
-
-    .btn-agregar {
-        width: 40px;
-        height: 40px;
-        min-width: 40px;
-        font-size: 22px;
-    }
-
-
-    .modal-contenido {
-        padding: 15px;
-    }
-
-
-    .logo-don-elio {
-        width: 200px;
-        height: 200px;
-    }
-
+#cerrarImagen:hover {
+    background: white;
 }
