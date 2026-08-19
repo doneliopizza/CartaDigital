@@ -778,13 +778,13 @@ function mostrarProductos() {
                 "producto-boton";
 
 
-            boton.textContent =
+
+           boton.textContent =
                 Number(
-                    producto.es_compuesto
-                )
+                    producto.cant_min || 0
+                ) > 0
                     ? "Elegir opciones"
                     : "Agregar";
-
 
             boton.addEventListener(
                 "click",
@@ -875,28 +875,39 @@ function agregarProducto(
     producto
 ) {
 
-    if (
+    const esCompuesto =
         Number(
-            producto.es_compuesto
-        ) &&
-        Array.isArray(
-            producto.hijos
-        )
+            producto.cant_min || 0
+        ) > 0;
+
+    if (
+        esCompuesto
     ) {
+
+        if (
+            !Array.isArray(
+                producto.hijos
+            ) ||
+            producto.hijos.length === 0
+        ) {
+
+            mostrarMensaje(
+                "Este producto compuesto no tiene opciones configuradas."
+            );
+
+            return;
+        }
 
         abrirCompuesto(
             producto
         );
 
         return;
-
     }
-
 
     agregarSimple(
         producto
     );
-
 }
 
 
