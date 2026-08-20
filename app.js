@@ -34,7 +34,7 @@ let productoCompuestoActual = null;
 
 let cantidadesCompuesto = {};
 
-
+let medioPagoSeleccionado = "Efectivo";
 /* ============================================================
    INICIO
 ============================================================ */
