@@ -64,7 +64,155 @@ document.addEventListener(
     }
 );
 
+// ============================================================
+// MEDIOS DE PAGO
+// ============================================================
 
+document.addEventListener("DOMContentLoaded", () => {
+
+    const mediosPago = document.querySelectorAll(
+        'input[name="medio-pago"]'
+    );
+
+    const detallePago = document.getElementById(
+        "detalle-pago"
+    );
+
+    const detalleEfectivo = document.getElementById(
+        "detalle-efectivo"
+    );
+
+    const detalleTransferencia = document.getElementById(
+        "detalle-transferencia"
+    );
+
+    const detalleMercadoPago = document.getElementById(
+        "detalle-mercadopagoqr"
+    );
+
+
+    // --------------------------------------------------------
+    // CAMBIO DE MEDIO DE PAGO
+    // --------------------------------------------------------
+
+    mediosPago.forEach(medio => {
+
+        medio.addEventListener("change", () => {
+
+            // Ocultar todo
+
+            detalleEfectivo.classList.add("oculto");
+
+            detalleTransferencia.classList.add("oculto");
+
+            detalleMercadoPago.classList.add("oculto");
+
+
+            // Mostrar contenedor
+
+            detallePago.classList.remove("oculto");
+
+
+            // Mostrar según selección
+
+            if (medio.value === "efectivo") {
+
+                detalleEfectivo.classList.remove("oculto");
+
+            }
+
+            else if (medio.value === "transferencia") {
+
+                detalleTransferencia.classList.remove("oculto");
+
+            }
+
+            else if (medio.value === "mercadopagoqr") {
+
+                detalleMercadoPago.classList.remove("oculto");
+
+            }
+
+        });
+
+    });
+
+
+    // --------------------------------------------------------
+    // COPIAR ALIAS
+    // --------------------------------------------------------
+
+    const btnCopiarAlias =
+        document.getElementById("btnCopiarAlias");
+
+    const aliasTransferencia =
+        document.getElementById("aliasTransferencia");
+
+    const mensajeAlias =
+        document.getElementById("mensajeAlias");
+
+
+    if (btnCopiarAlias) {
+
+        btnCopiarAlias.addEventListener("click", async () => {
+
+            const alias =
+                aliasTransferencia.textContent.trim();
+
+            try {
+
+                await navigator.clipboard.writeText(alias);
+
+                btnCopiarAlias.textContent = "✓ Copiado";
+
+                mensajeAlias.textContent =
+                    "Alias copiado. Podés pegarlo en Mercado Pago o tu banco.";
+
+                setTimeout(() => {
+
+                    btnCopiarAlias.textContent =
+                        "📋 Copiar";
+
+                    mensajeAlias.textContent =
+                        "Copiá el alias y realizá la transferencia antes de recibir el pedido.";
+
+                }, 2500);
+
+            } catch (error) {
+
+                // Fallback para navegadores que no permiten
+                // navigator.clipboard
+
+                const textarea =
+                    document.createElement("textarea");
+
+                textarea.value = alias;
+
+                document.body.appendChild(textarea);
+
+                textarea.select();
+
+                document.execCommand("copy");
+
+                textarea.remove();
+
+                btnCopiarAlias.textContent =
+                    "✓ Copiado";
+
+                setTimeout(() => {
+
+                    btnCopiarAlias.textContent =
+                        "📋 Copiar";
+
+                }, 2500);
+
+            }
+
+        });
+
+    }
+
+});
 /* ============================================================
    EVENTOS
 ============================================================ */
