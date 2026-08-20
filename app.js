@@ -2041,7 +2041,298 @@ function cerrarCarrito() {
 
 }
 
+/* ============================================================
+   MEDIOS DE PAGO
+============================================================ */
 
+function seleccionarMedioPago(
+    medio
+) {
+
+    medioPagoSeleccionado =
+        medio;
+
+
+    const btnEfectivo =
+        document.getElementById(
+            "btnPagoEfectivo"
+        );
+
+    const btnTransferencia =
+        document.getElementById(
+            "btnPagoTransferencia"
+        );
+
+    const btnQR =
+        document.getElementById(
+            "btnPagoQR"
+        );
+
+
+    const opcionEfectivo =
+        document.getElementById(
+            "opcionEfectivo"
+        );
+
+    const opcionTransferencia =
+        document.getElementById(
+            "opcionTransferencia"
+        );
+
+    const opcionQR =
+        document.getElementById(
+            "opcionQR"
+        );
+
+
+    /* ========================================================
+       QUITAR ACTIVOS
+    ======================================================== */
+
+    if (btnEfectivo) {
+
+        btnEfectivo.classList.remove(
+            "activo"
+        );
+
+    }
+
+
+    if (btnTransferencia) {
+
+        btnTransferencia.classList.remove(
+            "activo"
+        );
+
+    }
+
+
+    if (btnQR) {
+
+        btnQR.classList.remove(
+            "activo"
+        );
+
+    }
+
+
+    /* ========================================================
+       OCULTAR OPCIONES
+    ======================================================== */
+
+    if (opcionEfectivo) {
+
+        opcionEfectivo.classList.add(
+            "oculto"
+        );
+
+    }
+
+
+    if (opcionTransferencia) {
+
+        opcionTransferencia.classList.add(
+            "oculto"
+        );
+
+    }
+
+
+    if (opcionQR) {
+
+        opcionQR.classList.add(
+            "oculto"
+        );
+
+    }
+
+
+    /* ========================================================
+       MOSTRAR SELECCIONADO
+    ======================================================== */
+
+    if (
+        medio ===
+        "Efectivo"
+    ) {
+
+        if (btnEfectivo) {
+
+            btnEfectivo.classList.add(
+                "activo"
+            );
+
+        }
+
+
+        if (opcionEfectivo) {
+
+            opcionEfectivo.classList.remove(
+                "oculto"
+            );
+
+        }
+
+    }
+
+
+    if (
+        medio ===
+        "Transferencia"
+    ) {
+
+        if (btnTransferencia) {
+
+            btnTransferencia.classList.add(
+                "activo"
+            );
+
+        }
+
+
+        if (opcionTransferencia) {
+
+            opcionTransferencia.classList.remove(
+                "oculto"
+            );
+
+        }
+
+    }
+
+
+    if (
+        medio ===
+        "Mercado Pago QR"
+    ) {
+
+        if (btnQR) {
+
+            btnQR.classList.add(
+                "activo"
+            );
+
+        }
+
+
+        if (opcionQR) {
+
+            opcionQR.classList.remove(
+                "oculto"
+            );
+
+        }
+
+    }
+
+}
+
+
+/* ============================================================
+   COPIAR ALIAS
+============================================================ */
+
+async function copiarAlias() {
+
+    const alias =
+        "donelio.pizza";
+
+
+    const mensaje =
+        document.getElementById(
+            "mensajeAlias"
+        );
+
+
+    try {
+
+        await navigator.clipboard.writeText(
+            alias
+        );
+
+
+        if (mensaje) {
+
+            mensaje.textContent =
+                "✓ Alias copiado correctamente.";
+
+            setTimeout(
+                () => {
+
+                    mensaje.textContent =
+                        "";
+
+                },
+                3000
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Error copiando alias:",
+            error
+        );
+
+
+        /* ====================================================
+           FALLBACK PARA NAVEGADORES QUE NO PERMITAN
+           navigator.clipboard
+        ==================================================== */
+
+        const texto =
+            document.createElement(
+                "textarea"
+            );
+
+
+        texto.value =
+            alias;
+
+
+        document.body.appendChild(
+            texto
+        );
+
+
+        texto.select();
+
+
+        try {
+
+            document.execCommand(
+                "copy"
+            );
+
+
+            if (mensaje) {
+
+                mensaje.textContent =
+                    "✓ Alias copiado correctamente.";
+
+            }
+
+        } catch {
+
+            if (mensaje) {
+
+                mensaje.textContent =
+                    "No se pudo copiar automáticamente. Alias: " +
+                    alias;
+
+            }
+
+        }
+
+
+        document.body.removeChild(
+            texto
+        );
+
+    }
+
+}
 /* ============================================================
    DATOS CLIENTE
 ============================================================ */
