@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -18,7 +19,7 @@
 
     <link
         rel="stylesheet"
-        href="style.css?v=2"
+        href="./style.css?v=3"
     >
 </head>
 
@@ -321,29 +322,124 @@
                 placeholder="Localidad"
             >
 
+            
             <div class="medio-pago">
-
+            
                 <h3>Medio de pago</h3>
-
-                <div class="medio-pago-seleccionado">
-
-                    💵 EFECTIVO
-
+            
+                <div class="medios-pago-botones">
+            
+                    <button
+                        id="btnPagoEfectivo"
+                        class="boton-medio-pago activo"
+                        type="button"
+                    >
+                        💵 Efectivo
+                    </button>
+            
+                    <button
+                        id="btnPagoTransferencia"
+                        class="boton-medio-pago"
+                        type="button"
+                    >
+                        🏦 Transferencia
+                    </button>
+            
+                    <button
+                        id="btnPagoQR"
+                        class="boton-medio-pago"
+                        type="button"
+                    >
+                        📱 Mercado Pago QR
+                    </button>
+            
                 </div>
-
+            
+            
+                <!-- EFECTIVO -->
+            
+                <div
+                    id="opcionEfectivo"
+                    class="opcion-pago"
+                >
+            
+                    <label>
+                        ¿Con cuánto pagás?
+                    </label>
+            
+                    <input
+                        id="montoEfectivo"
+                        type="number"
+                        min="0"
+                        step="1"
+                        placeholder="Ej: 30000"
+                    >
+            
+                </div>
+            
+            
+                <!-- TRANSFERENCIA -->
+            
+                <div
+                    id="opcionTransferencia"
+                    class="opcion-pago oculto"
+                >
+            
+                    <p>
+                        Transferí el total del pedido al siguiente alias:
+                    </p>
+            
+                    <div class="alias-transferencia">
+            
+                        <strong id="aliasTransferencia">
+                            donelio.pizza
+                        </strong>
+            
+                        <button
+                            id="btnCopiarAlias"
+                            type="button"
+                            class="boton-copiar"
+                        >
+                            📋 COPIAR ALIAS
+                        </button>
+            
+                    </div>
+            
+                    <p
+                        id="mensajeAlias"
+                        class="mensaje-alias"
+                    ></p>
+            
+                </div>
+            
+            
+                <!-- MERCADO PAGO QR -->
+            
+                <div
+                    id="opcionQR"
+                    class="opcion-pago oculto"
+                >
+            
+                    <p class="aviso-qr">
+            
+                        📱 <strong>Mercado Pago QR</strong>
+            
+                        <br><br>
+            
+                        No necesitás pagar ahora.
+            
+                        <br><br>
+            
+                        <strong>
+                            Te llevaremos el posnet a la puerta de tu casa
+                            para que puedas realizar el pago con Mercado Pago QR.
+                        </strong>
+            
+                    </p>
+            
+                </div>
+            
             </div>
-
-            <label>
-                ¿Con cuánto pagás?
-            </label>
-
-            <input
-                id="montoEfectivo"
-                type="number"
-                min="0"
-                step="1"
-                placeholder="Ej: 30000"
-            >
 
             <div class="confirmacion-total">
 
@@ -418,7 +514,7 @@
 
 
     <script
-        src="app.js?v=2"
+        src="./app.js?v=3"
         defer
     ></script>
 
