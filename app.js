@@ -2600,7 +2600,7 @@ async function enviarPedido() {
         },
 
         medio_pago:
-            "EFECTIVO",
+            medioPagoSeleccionado,
 
         monto_efectivo:
             montoEfectivo,
