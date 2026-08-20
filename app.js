@@ -34,7 +34,10 @@ let productoCompuestoActual = null;
 
 let cantidadesCompuesto = {};
 
-let medioPagoSeleccionado = "Efectivo";
+/* MEDIO DE PAGO ACTUAL */
+let medioPagoSeleccionado = "EFECTIVO";
+
+
 /* ============================================================
    INICIO
 ============================================================ */
@@ -58,6 +61,8 @@ document.addEventListener(
         }
 
         configurarEventos();
+
+        configurarMediosPago();
 
         cargarProductos();
 
@@ -162,88 +167,7 @@ function configurarEventos() {
     /* ========================================================
        CLIENTE
     ======================================================== */
-    /* ========================================================
-       MEDIOS DE PAGO
-    ======================================================== */
 
-    const btnPagoEfectivo =
-        document.getElementById(
-            "btnPagoEfectivo"
-        );
-
-    const btnPagoTransferencia =
-        document.getElementById(
-            "btnPagoTransferencia"
-        );
-
-    const btnPagoQR =
-        document.getElementById(
-            "btnPagoQR"
-        );
-
-
-    if (btnPagoEfectivo) {
-
-        btnPagoEfectivo.addEventListener(
-            "click",
-            () => {
-
-                seleccionarMedioPago(
-                    "Efectivo"
-                );
-
-            }
-        );
-
-    }
-
-
-    if (btnPagoTransferencia) {
-
-        btnPagoTransferencia.addEventListener(
-            "click",
-            () => {
-
-                seleccionarMedioPago(
-                    "Transferencia"
-                );
-
-            }
-        );
-
-    }
-
-
-    if (btnPagoQR) {
-
-        btnPagoQR.addEventListener(
-            "click",
-            () => {
-
-                seleccionarMedioPago(
-                    "Mercado Pago QR"
-                );
-
-            }
-        );
-
-    }
-
-
-    const btnCopiarAlias =
-        document.getElementById(
-            "btnCopiarAlias"
-        );
-
-
-    if (btnCopiarAlias) {
-
-        btnCopiarAlias.addEventListener(
-            "click",
-            copiarAlias
-        );
-
-    }
     const cerrarClienteBtn =
         document.getElementById(
             "cerrarCliente"
@@ -401,6 +325,347 @@ function configurarEventos() {
 
         }
     );
+
+}
+
+
+/* ============================================================
+   MEDIOS DE PAGO
+============================================================ */
+
+function configurarMediosPago() {
+
+    const btnEfectivo =
+        document.getElementById(
+            "btnPagoEfectivo"
+        );
+
+    const btnTransferencia =
+        document.getElementById(
+            "btnPagoTransferencia"
+        );
+
+    const btnQR =
+        document.getElementById(
+            "btnPagoQR"
+        );
+
+
+    if (btnEfectivo) {
+
+        btnEfectivo.addEventListener(
+            "click",
+            () => {
+
+                seleccionarMedioPago(
+                    "EFECTIVO"
+                );
+
+            }
+        );
+
+    }
+
+
+    if (btnTransferencia) {
+
+        btnTransferencia.addEventListener(
+            "click",
+            () => {
+
+                seleccionarMedioPago(
+                    "TRANSFERENCIA"
+                );
+
+            }
+        );
+
+    }
+
+
+    if (btnQR) {
+
+        btnQR.addEventListener(
+            "click",
+            () => {
+
+                seleccionarMedioPago(
+                    "MERCADO_PAGO_QR"
+                );
+
+            }
+        );
+
+    }
+
+
+    /* ========================================================
+       COPIAR ALIAS
+    ======================================================== */
+
+    const btnCopiarAlias =
+        document.getElementById(
+            "btnCopiarAlias"
+        );
+
+    if (btnCopiarAlias) {
+
+        btnCopiarAlias.addEventListener(
+            "click",
+            copiarAlias
+        );
+
+    }
+
+
+    /* ========================================================
+       ESTADO INICIAL
+    ======================================================== */
+
+    seleccionarMedioPago(
+        "EFECTIVO"
+    );
+
+}
+
+
+/* ============================================================
+   SELECCIONAR MEDIO DE PAGO
+============================================================ */
+
+function seleccionarMedioPago(
+    medio
+) {
+
+    medioPagoSeleccionado =
+        medio;
+
+
+    const btnEfectivo =
+        document.getElementById(
+            "btnPagoEfectivo"
+        );
+
+    const btnTransferencia =
+        document.getElementById(
+            "btnPagoTransferencia"
+        );
+
+    const btnQR =
+        document.getElementById(
+            "btnPagoQR"
+        );
+
+
+    const opcionEfectivo =
+        document.getElementById(
+            "opcionEfectivo"
+        );
+
+    const opcionTransferencia =
+        document.getElementById(
+            "opcionTransferencia"
+        );
+
+    const opcionQR =
+        document.getElementById(
+            "opcionQR"
+        );
+
+
+    /* ========================================================
+       QUITAR ACTIVO
+    ======================================================== */
+
+    [
+        btnEfectivo,
+        btnTransferencia,
+        btnQR
+    ].forEach(
+        boton => {
+
+            if (boton) {
+
+                boton.classList.remove(
+                    "activo"
+                );
+
+            }
+
+        }
+    );
+
+
+    /* ========================================================
+       OCULTAR OPCIONES
+    ======================================================== */
+
+    [
+        opcionEfectivo,
+        opcionTransferencia,
+        opcionQR
+    ].forEach(
+        opcion => {
+
+            if (opcion) {
+
+                opcion.classList.add(
+                    "oculto"
+                );
+
+            }
+
+        }
+    );
+
+
+    /* ========================================================
+       MOSTRAR SELECCIONADO
+    ======================================================== */
+
+    if (
+        medio ===
+        "EFECTIVO"
+    ) {
+
+        if (btnEfectivo) {
+
+            btnEfectivo.classList.add(
+                "activo"
+            );
+
+        }
+
+        if (opcionEfectivo) {
+
+            opcionEfectivo.classList.remove(
+                "oculto"
+            );
+
+        }
+
+    }
+
+
+    if (
+        medio ===
+        "TRANSFERENCIA"
+    ) {
+
+        if (btnTransferencia) {
+
+            btnTransferencia.classList.add(
+                "activo"
+            );
+
+        }
+
+        if (opcionTransferencia) {
+
+            opcionTransferencia.classList.remove(
+                "oculto"
+            );
+
+        }
+
+    }
+
+
+    if (
+        medio ===
+        "MERCADO_PAGO_QR"
+    ) {
+
+        if (btnQR) {
+
+            btnQR.classList.add(
+                "activo"
+            );
+
+        }
+
+        if (opcionQR) {
+
+            opcionQR.classList.remove(
+                "oculto"
+            );
+
+        }
+
+    }
+
+}
+
+
+/* ============================================================
+   COPIAR ALIAS
+============================================================ */
+
+async function copiarAlias() {
+
+    const elemento =
+        document.getElementById(
+            "aliasTransferencia"
+        );
+
+    const mensaje =
+        document.getElementById(
+            "mensajeAlias"
+        );
+
+
+    if (!elemento) {
+
+        return;
+
+    }
+
+
+    const alias =
+        elemento.textContent.trim();
+
+
+    try {
+
+        await navigator.clipboard.writeText(
+            alias
+        );
+
+
+        if (mensaje) {
+
+            mensaje.textContent =
+                "✓ Alias copiado correctamente.";
+
+            setTimeout(
+                () => {
+
+                    mensaje.textContent =
+                        "";
+
+                },
+                3000
+            );
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Error copiando alias:",
+            error
+        );
+
+
+        if (mensaje) {
+
+            mensaje.textContent =
+                "No se pudo copiar el alias. Copialo manualmente.";
+
+        }
+
+    }
 
 }
 
@@ -859,13 +1124,13 @@ function mostrarProductos() {
                 "producto-boton";
 
 
-
-           boton.textContent =
+            boton.textContent =
                 Number(
                     producto.cant_min || 0
                 ) > 0
                     ? "Elegir opciones"
                     : "Agregar";
+
 
             boton.addEventListener(
                 "click",
@@ -961,6 +1226,7 @@ function agregarProducto(
             producto.cant_min || 0
         ) > 0;
 
+
     if (
         esCompuesto
     ) {
@@ -977,18 +1243,23 @@ function agregarProducto(
             );
 
             return;
+
         }
+
 
         abrirCompuesto(
             producto
         );
 
         return;
+
     }
+
 
     agregarSimple(
         producto
     );
+
 }
 
 
@@ -2041,298 +2312,7 @@ function cerrarCarrito() {
 
 }
 
-/* ============================================================
-   MEDIOS DE PAGO
-============================================================ */
 
-function seleccionarMedioPago(
-    medio
-) {
-
-    medioPagoSeleccionado =
-        medio;
-
-
-    const btnEfectivo =
-        document.getElementById(
-            "btnPagoEfectivo"
-        );
-
-    const btnTransferencia =
-        document.getElementById(
-            "btnPagoTransferencia"
-        );
-
-    const btnQR =
-        document.getElementById(
-            "btnPagoQR"
-        );
-
-
-    const opcionEfectivo =
-        document.getElementById(
-            "opcionEfectivo"
-        );
-
-    const opcionTransferencia =
-        document.getElementById(
-            "opcionTransferencia"
-        );
-
-    const opcionQR =
-        document.getElementById(
-            "opcionQR"
-        );
-
-
-    /* ========================================================
-       QUITAR ACTIVOS
-    ======================================================== */
-
-    if (btnEfectivo) {
-
-        btnEfectivo.classList.remove(
-            "activo"
-        );
-
-    }
-
-
-    if (btnTransferencia) {
-
-        btnTransferencia.classList.remove(
-            "activo"
-        );
-
-    }
-
-
-    if (btnQR) {
-
-        btnQR.classList.remove(
-            "activo"
-        );
-
-    }
-
-
-    /* ========================================================
-       OCULTAR OPCIONES
-    ======================================================== */
-
-    if (opcionEfectivo) {
-
-        opcionEfectivo.classList.add(
-            "oculto"
-        );
-
-    }
-
-
-    if (opcionTransferencia) {
-
-        opcionTransferencia.classList.add(
-            "oculto"
-        );
-
-    }
-
-
-    if (opcionQR) {
-
-        opcionQR.classList.add(
-            "oculto"
-        );
-
-    }
-
-
-    /* ========================================================
-       MOSTRAR SELECCIONADO
-    ======================================================== */
-
-    if (
-        medio ===
-        "Efectivo"
-    ) {
-
-        if (btnEfectivo) {
-
-            btnEfectivo.classList.add(
-                "activo"
-            );
-
-        }
-
-
-        if (opcionEfectivo) {
-
-            opcionEfectivo.classList.remove(
-                "oculto"
-            );
-
-        }
-
-    }
-
-
-    if (
-        medio ===
-        "Transferencia"
-    ) {
-
-        if (btnTransferencia) {
-
-            btnTransferencia.classList.add(
-                "activo"
-            );
-
-        }
-
-
-        if (opcionTransferencia) {
-
-            opcionTransferencia.classList.remove(
-                "oculto"
-            );
-
-        }
-
-    }
-
-
-    if (
-        medio ===
-        "Mercado Pago QR"
-    ) {
-
-        if (btnQR) {
-
-            btnQR.classList.add(
-                "activo"
-            );
-
-        }
-
-
-        if (opcionQR) {
-
-            opcionQR.classList.remove(
-                "oculto"
-            );
-
-        }
-
-    }
-
-}
-
-
-/* ============================================================
-   COPIAR ALIAS
-============================================================ */
-
-async function copiarAlias() {
-
-    const alias =
-        "donelio.pizza";
-
-
-    const mensaje =
-        document.getElementById(
-            "mensajeAlias"
-        );
-
-
-    try {
-
-        await navigator.clipboard.writeText(
-            alias
-        );
-
-
-        if (mensaje) {
-
-            mensaje.textContent =
-                "✓ Alias copiado correctamente.";
-
-            setTimeout(
-                () => {
-
-                    mensaje.textContent =
-                        "";
-
-                },
-                3000
-            );
-
-        }
-
-    } catch (error) {
-
-        console.error(
-            "Error copiando alias:",
-            error
-        );
-
-
-        /* ====================================================
-           FALLBACK PARA NAVEGADORES QUE NO PERMITAN
-           navigator.clipboard
-        ==================================================== */
-
-        const texto =
-            document.createElement(
-                "textarea"
-            );
-
-
-        texto.value =
-            alias;
-
-
-        document.body.appendChild(
-            texto
-        );
-
-
-        texto.select();
-
-
-        try {
-
-            document.execCommand(
-                "copy"
-            );
-
-
-            if (mensaje) {
-
-                mensaje.textContent =
-                    "✓ Alias copiado correctamente.";
-
-            }
-
-        } catch {
-
-            if (mensaje) {
-
-                mensaje.textContent =
-                    "No se pudo copiar automáticamente. Alias: " +
-                    alias;
-
-            }
-
-        }
-
-
-        document.body.removeChild(
-            texto
-        );
-
-    }
-
-}
 /* ============================================================
    DATOS CLIENTE
 ============================================================ */
@@ -2371,6 +2351,15 @@ function abrirDatosCliente() {
             );
 
     }
+
+
+    /* ========================================================
+       REINICIAR MEDIO DE PAGO EN EFECTIVO
+    ======================================================== */
+
+    seleccionarMedioPago(
+        "EFECTIVO"
+    );
 
 
     const modal =
@@ -2462,7 +2451,7 @@ async function enviarPedido() {
 
 
     /* ========================================================
-       VALIDACIONES
+       VALIDACIONES CLIENTE
     ======================================================== */
 
     if (!nombre) {
@@ -2520,20 +2509,29 @@ async function enviarPedido() {
     }
 
 
-      if (
-          medioPagoSeleccionado ===
-          "Efectivo" &&
-          montoEfectivo > 0 &&
-          montoEfectivo < total
-      ) {
-      
-          mostrarMensaje(
-              "El efectivo informado es menor al total."
-          );
-      
-          return;
-      
-      }
+    /* ========================================================
+       VALIDACIÓN EFECTIVO
+    ======================================================== */
+
+    if (
+        medioPagoSeleccionado ===
+        "EFECTIVO"
+    ) {
+
+        if (
+            montoEfectivo > 0 &&
+            montoEfectivo < total
+        ) {
+
+            mostrarMensaje(
+                "El efectivo informado es menor al total."
+            );
+
+            return;
+
+        }
+
+    }
 
 
     /* ========================================================
@@ -2578,49 +2576,46 @@ async function enviarPedido() {
        PEDIDO
     ======================================================== */
 
-      const pedido = {
-      
-          nombre:
-              nombre,
-      
-          telefono:
-              telefono,
-      
-          cliente: {
-      
-              nombre:
-                  nombre,
-      
-              telefono:
-                  telefono,
-      
-              calle:
-                  calle,
-      
-              altura:
-                  altura,
-      
-              localidad:
-                  localidad
-      
-          },
-      
-          medio_pago:
-              medioPagoSeleccionado,
-      
-          monto_efectivo:
-              montoEfectivo,
-      
-          subtotal:
-              total,
-      
-          total:
-              total,
-      
-          items:
-              items
-      
-      };
+    const pedido = {
+
+        cliente: {
+
+            nombre:
+                nombre,
+
+            telefono:
+                telefono,
+
+            calle:
+                calle,
+
+            altura:
+                altura,
+
+            localidad:
+                localidad
+
+        },
+
+        medio_pago:
+            medioPagoSeleccionado,
+
+        monto_efectivo:
+            medioPagoSeleccionado ===
+            "EFECTIVO"
+                ? montoEfectivo
+                : 0,
+
+        subtotal:
+            total,
+
+        total:
+            total,
+
+        items:
+            items
+
+    };
 
 
     console.log(
@@ -2996,6 +2991,15 @@ function limpiarFormulario() {
             }
 
         }
+    );
+
+
+    /* ========================================================
+       VOLVER A EFECTIVO
+    ======================================================== */
+
+    seleccionarMedioPago(
+        "EFECTIVO"
     );
 
 }
