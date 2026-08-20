@@ -948,3 +948,39 @@ main {
 #cerrarImagen:hover {
     background: white;
 }
+/* ============================================================
+   MODAL CLIENTE - MEJOR USO DEL ESPACIO
+============================================================ */
+
+#modalCliente .modal-contenido {
+    max-height: 92vh;
+
+    padding-bottom: 25px;
+}
+
+
+/* En celulares */
+
+@media (max-width: 600px) {
+
+    #modalCliente {
+        align-items: flex-start;
+
+        padding: 10px;
+    }
+
+    #modalCliente .modal-contenido {
+        max-height: calc(100vh - 20px);
+
+        margin-top: 5px;
+
+        padding: 20px 16px 22px;
+    }
+
+    #btnEnviarPedido {
+        min-height: 50px;
+
+        font-size: 16px;
+    }
+
+}
