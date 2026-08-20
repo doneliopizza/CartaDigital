@@ -2576,46 +2576,60 @@ async function enviarPedido() {
        PEDIDO
     ======================================================== */
 
-    const pedido = {
-
-        cliente: {
-
-            nombre:
-                nombre,
-
-            telefono:
-                telefono,
-
-            calle:
-                calle,
-
-            altura:
-                altura,
-
-            localidad:
-                localidad
-
-        },
-
-        medio_pago:
-            medioPagoSeleccionado,
-
-        monto_efectivo:
-            medioPagoSeleccionado ===
-            "EFECTIVO"
-                ? montoEfectivo
-                : 0,
-
-        subtotal:
-            total,
-
-        total:
-            total,
-
-        items:
-            items
-
-    };
+      const pedido = {
+      
+          cliente: {
+      
+              nombre:
+                  nombre,
+      
+              telefono:
+                  telefono,
+      
+              calle:
+                  calle,
+      
+              altura:
+                  altura,
+      
+              localidad:
+                  localidad
+      
+          },
+      
+          /*
+           * Estos campos permiten que la API/POS
+           * conserve los datos del cliente.
+           */
+      
+          nombre:
+              nombre,
+      
+          telefono:
+              telefono,
+      
+          direccion_entrega:
+              `${calle} ${altura} - ${localidad}`,
+      
+          observaciones:
+              `Cliente: ${nombre} | Teléfono: ${telefono}`,
+      
+          medio_pago:
+              medioPagoSeleccionado,
+      
+          monto_efectivo:
+              montoEfectivo,
+      
+          subtotal:
+              total,
+      
+          total:
+              total,
+      
+          items:
+              items
+      
+      };
 
 
     console.log(
