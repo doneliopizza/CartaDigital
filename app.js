@@ -2520,18 +2520,20 @@ async function enviarPedido() {
     }
 
 
-    if (
-        montoEfectivo > 0 &&
-        montoEfectivo < total
-    ) {
-
-        mostrarMensaje(
-            "El efectivo informado es menor al total."
-        );
-
-        return;
-
-    }
+      if (
+          medioPagoSeleccionado ===
+          "Efectivo" &&
+          montoEfectivo > 0 &&
+          montoEfectivo < total
+      ) {
+      
+          mostrarMensaje(
+              "El efectivo informado es menor al total."
+          );
+      
+          return;
+      
+      }
 
 
     /* ========================================================
