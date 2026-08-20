@@ -325,94 +325,166 @@
             
                 <h3>Medio de pago</h3>
             
-                <div
-                    id="mediosPago"
-                    class="medios-pago"
-                >
+                <div class="medios-pago">
             
                     <label class="medio-opcion">
-            
                         <input
                             type="radio"
                             name="medio-pago"
                             value="efectivo"
                         >
             
-                        💵 Efectivo
+                        <div class="medio-icono">💵</div>
+            
+                        <div class="medio-info">
+                            <strong>Efectivo</strong>
+                            <span>Pagás al recibir</span>
+                        </div>
             
                     </label>
             
             
                     <label class="medio-opcion">
-            
                         <input
                             type="radio"
                             name="medio-pago"
                             value="transferencia"
                         >
             
-                        🏦 Transferencia
+                        <div class="medio-icono">🏦</div>
+            
+                        <div class="medio-info">
+                            <strong>Transferencia</strong>
+                            <span>Transferí antes de recibir</span>
+                        </div>
             
                     </label>
             
             
                     <label class="medio-opcion">
-            
                         <input
                             type="radio"
                             name="medio-pago"
                             value="mercadopagoqr"
                         >
             
-                        MercadoPagoQR
+                        <div class="medio-icono">📱</div>
+            
+                        <div class="medio-info">
+                            <strong>Mercado Pago QR</strong>
+                            <span>Pagás con nuestro POS al recibir</span>
+                        </div>
             
                     </label>
             
                 </div>
             
             
+                <!-- DETALLE DEL MEDIO DE PAGO -->
+            
                 <div
                     id="detalle-pago"
-                    class="detalle-pago"
-                ></div>
+                    class="detalle-pago oculto"
+                >
+            
+                    <!-- EFECTIVO -->
+            
+                    <div
+                        id="detalle-efectivo"
+                        class="detalle-medio oculto"
+                    >
+            
+                        <label>
+                            ¿Con cuánto pagás?
+                        </label>
+            
+                        <input
+                            id="montoEfectivo"
+                            type="number"
+                            min="0"
+                            step="1"
+                            placeholder="Ej: 30000"
+                        >
+            
+                        <small>
+                            Te indicaremos el vuelto al recibir el pedido.
+                        </small>
+            
+                    </div>
+            
+            
+                    <!-- TRANSFERENCIA -->
+            
+                    <div
+                        id="detalle-transferencia"
+                        class="detalle-medio oculto"
+                    >
+            
+                        <div class="transferencia-box">
+            
+                            <span class="transferencia-titulo">
+                                Alias
+                            </span>
+            
+                            <div class="alias-container">
+            
+                                <strong id="aliasTransferencia">
+                                    donelio.pizza
+                                </strong>
+            
+                                <button
+                                    type="button"
+                                    id="btnCopiarAlias"
+                                    class="boton-copiar"
+                                >
+                                    📋 Copiar
+                                </button>
+            
+                            </div>
+            
+                            <small id="mensajeAlias">
+                                Copiá el alias y realizá la transferencia antes de recibir el pedido.
+                            </small>
+            
+                        </div>
+            
+                    </div>
+            
+            
+                    <!-- MERCADO PAGO -->
+            
+                    <div
+                        id="detalle-mercadopagoqr"
+                        class="detalle-medio oculto"
+                    >
+            
+                        <div class="mercadopago-box">
+            
+                            <div class="mp-icono">
+                                📱
+                            </div>
+            
+                            <div>
+            
+                                <strong>
+                                    Pagás al recibir
+                                </strong>
+            
+                                <p>
+                                    No necesitás pagar ahora.
+                                    Te llevaremos el POS de Mercado Pago
+                                    hasta tu puerta y podrás pagar ahí mismo.
+                                </p>
+            
+                            </div>
+            
+                        </div>
+            
+                    </div>
+            
+                </div>
             
             </div>
-
-            <label>
-                ¿Con cuánto pagás?
-            </label>
-
-            <input
-                id="montoEfectivo"
-                type="number"
-                min="0"
-                step="1"
-                placeholder="Ej: 30000"
-            >
-
-            <div class="confirmacion-total">
-
-                Total:
-
-                <strong id="totalConfirmacion">
-                    $0
-                </strong>
-
-            </div>
-
-            <button
-                id="btnEnviarPedido"
-                class="boton-principal"
-                type="button"
-            >
-                ENVIAR PEDIDO
-            </button>
-
-            <div
-                id="mensajePedido"
-                class="mensaje-pedido"
-            ></div>
-
         </div>
 
     </div>
