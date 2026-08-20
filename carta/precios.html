@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Volante Don Elio - Precios POS</title>
+
+<style>
+    :root{
+        --red:#b91517;
+        --red-dark:#9d1113;
+        --green:#126b2c;
+        --green-dark:#075b25;
+        --cream:#fffdf7;
+        --orange:#df7210;
+        --ink:#181818;
+        --paper:#fffdf8;
+    }
+
+    *{box-sizing:border-box}
+
+    html,body{
+        margin:0;
+        padding:0;
+        background:#ddd;
+        font-family:Arial, Helvetica, sans-serif;
+        color:var(--ink);
+    }
+
+    body{
+        display:flex;
+        justify-content:center;
+        padding:20px;
+    }
+
+    .flyer{
+        width:210mm;
+        min-height:315mm;
+        background:
+            radial-gradient(circle at 15% 8%, rgba(185,21,23,.035), transparent 24%),
+            radial-gradient(circle at 85% 32%, rgba(18,107,44,.035), transparent 25%),
+            var(--paper);
+        padding:7mm 7mm 5mm;
+        box-shadow:0 5px 30px rgba(0,0,0,.25);
+        overflow:hidden;
+        position:relative;
+    }
+
+    .top{
+        display:grid;
+        grid-template-columns:31% 49% 20%;
+        align-items:center;
+        gap:4mm;
+        margin-bottom:3mm;
+    }
+
+    .logo{
+        width:100%;
+        max-height:42mm;
+        object-fit:contain;
+    }
+
+    .contacts{
+        text-align:center;
+        font-weight:900;
+        line-height:1;
+    }
+
+    .phone{
+        color:var(--red);
+        font-size:10mm;
+        letter-spacing:.2mm;
+        white-space:nowrap;
+    }
+
+    .whatsapp{
+        color:var(--green);
+        font-size:8mm;
+        margin-top:2mm;
+        white-space:nowrap;
+    }
+
+    .delivery{
+        text-align:center;
+        font-weight:900;
+        font-size:6mm;
+        line-height:1;
+    }
+
+    .delivery-icon{
+        font-size:16mm;
+        display:block;
+        margin-bottom:1mm;
+    }
+
+    .month{
+        margin-top:2mm;
+        background:var(--red);
+        color:#fff;
+        padding:2mm 1mm;
+        transform:skew(-8deg);
+        font-size:4.6mm;
+    }
+
+    .hours{
+        background:#101010;
+        color:#fff;
+        padding:2.5mm 4mm;
+        text-align:center;
+        font-weight:900;
+        font-size:4.2mm;
+        margin:1mm 0 4mm;
+        border-radius:1mm;
+    }
+
+    .main{
+        display:grid;
+        grid-template-columns:49% 51%;
+        gap:4mm;
+    }
+
+    .section{
+        border:1.1mm solid currentColor;
+        border-radius:5mm;
+        padding:3mm 3mm 2.5mm;
+        position:relative;
+    }
+
+    .section.red{color:var(--red)}
+    .section.green{color:var(--green)}
+    .section.orange{color:var(--orange)}
+
+    .section-title{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        gap:3mm;
+        color:#fff;
+        font-weight:900;
+        font-style:italic;
+        font-size:6.5mm;
+        padding:2mm 4mm;
+        margin:-1mm 7mm 3mm;
+        border-radius:1mm;
+    }
+
+    .red .section-title{background:var(--red)}
+    .green .section-title{background:var(--green)}
+    .orange .section-title{background:var(--orange)}
+
+    .pizza-list{
+        color:var(--ink);
+    }
+
+    .pizza-row{
+        display:grid;
+        grid-template-columns:7mm 1fr auto;
+        align-items:end;
+        gap:1mm;
+        min-height:7.1mm;
+        font-weight:800;
+        font-size:3.65mm;
+        line-height:1;
+    }
+
+    .pizza-row .dots{
+        overflow:hidden;
+        white-space:nowrap;
+        color:#222;
+        letter-spacing:1mm;
+        transform:translateY(-.4mm);
+    }
+
+    .pizza-row .price{
+        color:var(--red);
+        white-space:nowrap;
+        font-size:3.9mm;
+    }
+
+    .right{
+        display:flex;
+        flex-direction:column;
+        gap:4mm;
+    }
+
+    .promos{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:3mm;
+        color:var(--ink);
+    }
+
+    .promo{
+        border:0.7mm solid #8db79a;
+        border-radius:4mm;
+        min-height:32mm;
+        padding:3mm 2.5mm 2.5mm 12mm;
+        position:relative;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        text-align:center;
+    }
+
+    .promo-number{
+        position:absolute;
+        left:2mm;
+        top:50%;
+        transform:translateY(-50%);
+        width:9mm;
+        height:9mm;
+        border-radius:50%;
+        background:var(--green);
+        color:#fff;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:5mm;
+        font-weight:900;
+    }
+
+    .promo-name{
+        font-weight:900;
+        font-style:italic;
+        font-size:3.7mm;
+        line-height:1.15;
+    }
+
+    .promo-price{
+        color:var(--green);
+        font-size:6.4mm;
+        font-weight:900;
+        margin-top:2mm;
+    }
+
+    .empanadas{
+        min-height:60mm;
+    }
+
+    .emp-content{
+        display:grid;
+        grid-template-columns:50% 50%;
+        align-items:center;
+        gap:2mm;
+    }
+
+    .emp-illustration{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        font-size:22mm;
+        filter:drop-shadow(0 2px 2px rgba(0,0,0,.18));
+    }
+
+    .emp-prices{
+        border-left:.5mm solid var(--orange);
+        padding-left:3mm;
+        color:var(--ink);
+        font-weight:900;
+        font-size:4.2mm;
+        line-height:1.55;
+    }
+
+    .emp-prices strong{
+        font-size:5.2mm;
+    }
+
+    .flavors{
+        margin-top:2mm;
+        text-align:center;
+        color:var(--ink);
+        font-size:3.35mm;
+        font-weight:900;
+        line-height:1.55;
+    }
+
+    .flavors-title{
+        display:inline-block;
+        background:var(--red);
+        color:#fff;
+        padding:1mm 6mm;
+        border-radius:2mm;
+        margin-bottom:1mm;
+        font-size:3.8mm;
+    }
+
+    .bottom-note{
+        margin-top:4mm;
+        border:1mm dashed var(--red);
+        border-radius:5mm;
+        text-align:center;
+        padding:2.5mm 3mm;
+        color:var(--red);
+    }
+
+    .bottom-note .big{
+        font-size:5mm;
+        font-weight:900;
+        font-style:italic;
+    }
+
+    .bottom-note .small{
+        color:var(--green);
+        font-size:3.5mm;
+        font-weight:900;
+        font-style:italic;
+        margin-top:1mm;
+    }
+
+    .footer{
+        margin-top:4mm;
+        border:0.5mm solid #aaa;
+        border-radius:3mm;
+        min-height:29mm;
+        display:grid;
+        grid-template-columns:20% 43% 37%;
+        align-items:center;
+        padding:2mm;
+        gap:2mm;
+    }
+
+    .coupon{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:1mm;
+        color:#fff;
+        background:var(--green);
+        border-radius:3mm;
+        padding:3mm 1mm;
+        font-weight:900;
+        text-align:center;
+        font-size:3.2mm;
+        line-height:1.1;
+    }
+
+    .coupon-code{
+        color:var(--green);
+        font-size:5mm;
+        font-weight:900;
+    }
+
+    .coupon-desc{
+        color:var(--red);
+        font-size:3.4mm;
+        font-weight:900;
+        margin-top:1mm;
+    }
+
+    .web{
+        text-align:center;
+        border-left:.4mm solid #bbb;
+        border-right:.4mm solid #bbb;
+        padding:2mm;
+    }
+
+    .web-label{
+        font-size:3.2mm;
+        font-weight:900;
+    }
+
+    .web-url{
+        color:var(--red);
+        font-size:4.4mm;
+        font-weight:900;
+        margin-top:1mm;
+    }
+
+    .web-sub{
+        color:var(--green);
+        font-size:3.2mm;
+        font-weight:900;
+        margin-top:1mm;
+    }
+
+    .payments{
+        text-align:center;
+        font-size:3.3mm;
+        font-weight:900;
+        line-height:1.25;
+    }
+
+    .mp{
+        color:#1584d1;
+        font-size:4.5mm;
+        font-weight:900;
+        margin:1mm 0;
+    }
+
+    .rappi{
+        color:#f4511e;
+        font-size:4mm;
+        font-weight:900;
+    }
+
+    .loading{
+        text-align:center;
+        padding:20mm 5mm;
+        font-size:6mm;
+        color:var(--green);
+        font-weight:900;
+    }
+
+    .error{
+        color:var(--red);
+        text-align:center;
+        padding:10mm;
+        font-weight:900;
+    }
+
+    @media print{
+        html,body{
+            background:#fff;
+        }
+        body{
+            padding:0;
+        }
+        .flyer{
+            box-shadow:none;
+            width:210mm;
+            min-height:315mm;
+        }
+    }
+
+    @media(max-width:800px){
+        body{padding:0}
+        .flyer{
+            width:100vw;
+            min-height:auto;
+            padding:4vw;
+        }
+        .phone{font-size:6vw}
+        .whatsapp{font-size:5vw}
+        .pizza-row{font-size:2.8vw}
+        .pizza-row .price{font-size:3vw}
+        .section-title{font-size:5vw}
+    }
+</style>
+</head>
+
+<body>
+
+<div class="flyer" id="flyer">
+
+    <div id="loading" class="loading">
+        Cargando precios actualizados...
+    </div>
+
+    <div id="contenido" style="display:none">
+
+        <header class="top">
+            <img
+                class="logo"
+                src="https://raw.githubusercontent.com/doneliopizza/CartaDigital/main/fotos/logo.png"
+                alt="Don Elio Pizzería"
+            >
+
+            <div class="contacts">
+                <div class="phone">☎ 4258-5841</div>
+                <div class="whatsapp">◉ 11-7066-7389</div>
+            </div>
+
+            <div class="delivery">
+                <span class="delivery-icon">🛵</span>
+                DELIVERY
+                <div class="month">AGOSTO 2026</div>
+            </div>
+        </header>
+
+        <div class="hours">
+            🕐 HORARIO: DE 19:00 A 23:00HS
+            &nbsp;&nbsp; (MARTES CERRADO)
+        </div>
+
+        <main class="main">
+
+            <section class="section red">
+                <div class="section-title">★ PIZZAS ★</div>
+                <div id="pizza-list" class="pizza-list"></div>
+            </section>
+
+            <div class="right">
+
+                <section class="section green">
+                    <div class="section-title">NUESTRAS PROMOS</div>
+                    <div id="promos" class="promos"></div>
+                </section>
+
+                <section class="section orange empanadas">
+                    <div class="section-title">EMPANADAS ROTISERAS</div>
+
+                    <div class="emp-content">
+                        <div class="emp-illustration">🥟🥟🥟</div>
+
+                        <div class="emp-prices">
+                            <div id="emp-unit">Cargando...</div>
+                            <div id="emp-half">Cargando...</div>
+                            <div id="emp-dozen">Cargando...</div>
+                        </div>
+                    </div>
+
+                    <div class="flavors">
+                        <div class="flavors-title">SABORES</div>
+                        <br>
+                        JAMÓN Y QUESO – POLLO – CARNE<br>
+                        CEBOLLA – QUESO – VERDURA – HUMITA<br>
+                        CAPRESE – ROQUEFORT – CARNE FRITA
+                    </div>
+                </section>
+
+            </div>
+        </main>
+
+        <div class="bottom-note">
+            <div class="big">PEDIDOS ELABORADOS EN EL MOMENTO</div>
+            <div class="small">
+                PEDIR CON ANTICIPACIÓN PARA EVITAR POSIBLES DEMORAS
+            </div>
+        </div>
+
+        <footer class="footer">
+
+            <div>
+                <div class="coupon">
+                    🏷️<br>
+                    CUPÓN<br>
+                    BIENVENIDA
+                </div>
+            </div>
+
+            <div class="web">
+                <div class="web-label">PEDÍ DESDE NUESTRA APP O WEB</div>
+                <div class="web-url">www.doneliopizzeria.com.ar</div>
+                <div class="coupon-code">“SOYNUEVO”</div>
+                <div class="coupon-desc">OBTENÉS $3.000 OFF EN TU PRIMER PEDIDO</div>
+            </div>
+
+            <div class="payments">
+                <div>ACEPTAMOS</div>
+                <div class="mp">MERCADO PAGO</div>
+                <div>ENCONTRANOS TAMBIÉN EN</div>
+                <div class="rappi">Rappi</div>
+            </div>
+
+        </footer>
+
+    </div>
+</div>
+
+<script>
+"use strict";
+
+/*
+============================================================
+CONFIGURACIÓN
+============================================================
+*/
+
+const API_URL = "https://cartadigitalapi.onrender.com";
+const URL_PRODUCTOS = API_URL + "/productos";
+
+
+/*
+============================================================
+UTILIDADES
+============================================================
+*/
+
+function normalizar(texto) {
+    return String(texto || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function dinero(valor) {
+    return "$" + Number(valor || 0).toLocaleString("es-AR", {
+        maximumFractionDigits: 0
+    });
+}
+
+function buscarProducto(productos, nombre) {
+    const objetivo = normalizar(nombre);
+
+    return productos.find(p =>
+        normalizar(p.nombre) === objetivo
+    );
+}
+
+function buscarProductoContiene(productos, texto) {
+    const objetivo = normalizar(texto);
+
+    return productos.find(p =>
+        normalizar(p.nombre).includes(objetivo)
+    );
+}
+
+function precio(productos, nombre, fallback = 0) {
+    const producto = buscarProducto(productos, nombre);
+
+    return producto
+        ? dinero(producto.precio)
+        : dinero(fallback);
+}
+
+
+/*
+============================================================
+PIZZAS
+
+Los nombres se buscan directamente contra el nombre
+que devuelve /productos.
+
+Si un nombre del POS es diferente, cambiar solamente
+el campo "nombre".
+============================================================
+*/
+
+const pizzas = [
+    {n:1, nombre:"Muzzarella", fallback:17000},
+    {n:2, nombre:"Doble Muzza", fallback:23000},
+    {n:3, nombre:"Jamón", fallback:20000},
+    {n:4, nombre:"Jamón y Morrón", fallback:24000},
+    {n:5, nombre:"Napolitana", fallback:20000},
+    {n:6, nombre:"Napolitana con Jamón", fallback:24000},
+    {n:7, nombre:"Calabresa", fallback:22000},
+    {n:8, nombre:"Fugazzeta", fallback:20000},
+    {n:9, nombre:"Primavera", fallback:24000},
+    {n:10, nombre:"Pollo Al Verdeo", fallback:28000},
+    {n:11, nombre:"Huevos Fritos", fallback:23000},
+    {n:12, nombre:"Parissins", fallback:28000},
+    {n:13, nombre:"Fugazzeta Rellena", fallback:26000},
+    {n:14, nombre:"Roquefort", fallback:23000},
+    {n:15, nombre:"Palmitos", fallback:24000},
+    {n:16, nombre:"Palmitos c/ jamón", fallback:27000},
+    {n:17, nombre:"Caprese", fallback:24000},
+    {n:18, nombre:"Provolone", fallback:23000},
+    {n:19, nombre:"Provolone y Jamón", fallback:25000},
+    {n:20, nombre:"Espinaca y S. Blanca", fallback:24000},
+    {n:21, nombre:"4 Quesos", fallback:26000},
+    {n:22, nombre:"Choclo", fallback:21000},
+    {n:23, nombre:"Calzone Napolitano", fallback:19000},
+    {n:24, nombre:"Faina Entero", fallback:10000},
+    {n:25, nombre:"Panceta y Cheddar", fallback:25000},
+    {n:26, nombre:"Jamón y Ananá", fallback:28000},
+    {n:27, nombre:"Alemana", fallback:25000}
+];
+
+
+/*
+============================================================
+PROMOS
+
+Acá se intenta encontrar el producto por nombre.
+
+Si tus promos tienen nombres diferentes en el POS,
+podemos ajustar estas 6 búsquedas con los nombres reales.
+============================================================
+*/
+
+const promos = [
+    {
+        n:1,
+        nombres:["3 gde de muzzarella","3 grandes de muzzarella"],
+        fallback:43000
+    },
+    {
+        n:2,
+        nombres:["1 muzzarella + 1 napolitana"],
+        fallback:34000
+    },
+    {
+        n:3,
+        nombres:["1 muzzarella + 6 empanadas"],
+        fallback:34000
+    },
+    {
+        n:4,
+        nombres:["1 muzzarella + 1 fugazzeta"],
+        fallback:34000
+    },
+    {
+        n:5,
+        nombres:["1 muzzarella + 1 de jamón"],
+        fallback:34000
+    },
+    {
+        n:6,
+        nombres:["2 grande de muzzarella","2 grandes de muzzarella"],
+        fallback:31000
+    }
+];
+
+
+/*
+============================================================
+RENDER PIZZAS
+============================================================
+*/
+
+function renderPizzas(productos) {
+
+    const contenedor =
+        document.getElementById("pizza-list");
+
+    contenedor.innerHTML = "";
+
+    pizzas.forEach(item => {
+
+        const producto =
+            buscarProducto(productos, item.nombre);
+
+        const valor =
+            producto
+                ? producto.precio
+                : item.fallback;
+
+        const row =
+            document.createElement("div");
+
+        row.className = "pizza-row";
+
+        row.innerHTML = `
+            <span>${item.n}.</span>
+            <span class="dots">
+                ${item.nombre}
+                ........................................
+            </span>
+            <span class="price">
+                ${dinero(valor)}
+            </span>
+        `;
+
+        contenedor.appendChild(row);
+    });
+}
+
+
+/*
+============================================================
+RENDER PROMOS
+============================================================
+*/
+
+function renderPromos(productos) {
+
+    const contenedor =
+        document.getElementById("promos");
+
+    contenedor.innerHTML = "";
+
+    promos.forEach(item => {
+
+        let producto = null;
+
+        for (const nombre of item.nombres) {
+            producto =
+                buscarProducto(productos, nombre);
+
+            if (producto) break;
+        }
+
+        const valor =
+            producto
+                ? producto.precio
+                : item.fallback;
+
+        const nombreMostrar =
+            item.nombres[0]
+                .toUpperCase();
+
+        const card =
+            document.createElement("div");
+
+        card.className = "promo";
+
+        card.innerHTML = `
+            <div class="promo-number">${item.n}</div>
+            <div class="promo-name">
+                ${nombreMostrar}
+            </div>
+            <div class="promo-price">
+                ${dinero(valor)}
+            </div>
+        `;
+
+        contenedor.appendChild(card);
+    });
+}
+
+
+/*
+============================================================
+EMPANADAS
+
+Busca precios por nombre. Si en el POS están como:
+"Empanada"
+"Media docena"
+"Docena"
+
+se pueden ajustar acá.
+============================================================
+*/
+
+function renderEmpanadas(productos) {
+
+    let unit =
+        buscarProductoContiene(productos, "empanada");
+
+    const precioUnit =
+        unit
+            ? unit.precio
+            : 3300;
+
+    document.getElementById("emp-unit").innerHTML =
+        `<strong>${dinero(precioUnit)} c/u</strong>`;
+
+    document.getElementById("emp-half").innerHTML =
+        `${dinero(precioUnit * 6)} 1/2 doc`;
+
+    document.getElementById("emp-dozen").innerHTML =
+        `${dinero(precioUnit * 12)} doc`;
+}
+
+
+/*
+============================================================
+CARGAR API
+============================================================
+*/
+
+async function cargarPrecios() {
+
+    try {
+
+        const respuesta =
+            await fetch(
+                URL_PRODUCTOS + "?v=" + Date.now()
+            );
+
+        if (!respuesta.ok) {
+            throw new Error(
+                "HTTP " + respuesta.status
+            );
+        }
+
+        const productos =
+            await respuesta.json();
+
+        renderPizzas(productos);
+        renderPromos(productos);
+        renderEmpanadas(productos);
+
+        document.getElementById("loading")
+            .style.display = "none";
+
+        document.getElementById("contenido")
+            .style.display = "block";
+
+    } catch (error) {
+
+        console.error(
+            "Error cargando precios:",
+            error
+        );
+
+        document.getElementById("loading")
+            .innerHTML = `
+                <div class="error">
+                    No se pudieron cargar los precios
+                    desde el POS.<br><br>
+                    ${error.message}
+                </div>
+            `;
+    }
+}
+
+cargarPrecios();
+</script>
+
+</body>
+</html>
