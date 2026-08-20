@@ -5,7 +5,7 @@
 ============================================================ */
 
 const API_URL =
-    "https://cartadigitalapi.onrender.com";
+    "https://api.doneliopizzeria.com.ar/";
 
 const URL_GITHUB =
     "https://raw.githubusercontent.com/doneliopizza/CartaDigital/main";
