@@ -783,17 +783,55 @@ main {
    BOTÓN ENVIAR PEDIDO
 ============================================================ */
 
+/* ============================================================
+   BOTÓN ENVIAR PEDIDO
+============================================================ */
+
 #btnEnviarPedido {
     display: block;
 
     width: 100%;
 
-    margin-top: 20px;
+    margin-top: 16px;
 
-    min-height: 48px;
+    padding: 11px 16px;
+
+    min-height: 44px;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: #e53935;
+    color: #fff;
+
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: bold;
+
+    line-height: 1.2;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    box-shadow: none;
 
     position: relative;
     z-index: 5;
+
+    cursor: pointer;
+}
+
+#btnEnviarPedido:hover {
+    background: #d32f2f;
+}
+
+#btnEnviarPedido:active {
+    transform: scale(0.99);
+}
+
+#btnEnviarPedido:disabled {
+    opacity: 0.7;
+    cursor: wait;
 }
 
 
