@@ -2578,43 +2578,49 @@ async function enviarPedido() {
        PEDIDO
     ======================================================== */
 
-    const pedido = {
-
-        cliente: {
-
-            nombre:
-                nombre,
-
-            telefono:
-                telefono,
-
-            calle:
-                calle,
-
-            altura:
-                altura,
-
-            localidad:
-                localidad
-
-        },
-
-        medio_pago:
-            medioPagoSeleccionado,
-
-        monto_efectivo:
-            montoEfectivo,
-
-        subtotal:
-            total,
-
-        total:
-            total,
-
-        items:
-            items
-
-    };
+      const pedido = {
+      
+          nombre:
+              nombre,
+      
+          telefono:
+              telefono,
+      
+          cliente: {
+      
+              nombre:
+                  nombre,
+      
+              telefono:
+                  telefono,
+      
+              calle:
+                  calle,
+      
+              altura:
+                  altura,
+      
+              localidad:
+                  localidad
+      
+          },
+      
+          medio_pago:
+              medioPagoSeleccionado,
+      
+          monto_efectivo:
+              montoEfectivo,
+      
+          subtotal:
+              total,
+      
+          total:
+              total,
+      
+          items:
+              items
+      
+      };
 
 
     console.log(
