@@ -2192,6 +2192,9 @@ function cerrarCliente() {
 /* ============================================================
    ENVIAR PEDIDO
 ============================================================ */
+/* ============================================================
+   ENVIAR PEDIDO
+============================================================ */
 
 async function enviarPedido() {
 
@@ -2225,12 +2228,63 @@ async function enviarPedido() {
         );
 
 
-    const montoEfectivo =
-        Number(
-            obtenerValor(
-                "montoEfectivo"
-            ) || 0
+    /* ========================================================
+       MEDIO DE PAGO
+    ======================================================== */
+
+    const medioSeleccionado =
+        document.querySelector(
+            'input[name="medio-pago"]:checked'
         );
+
+
+    if (!medioSeleccionado) {
+
+        mostrarMensaje(
+            "Seleccioná un medio de pago."
+        );
+
+        return;
+
+    }
+
+
+    const medioPago =
+        medioSeleccionado.value;
+
+
+    /* ========================================================
+       EFECTIVO
+    ======================================================== */
+
+    let montoEfectivo = 0;
+
+
+    if (
+        medioPago === "efectivo"
+    ) {
+
+        montoEfectivo =
+            Number(
+                obtenerValor(
+                    "montoEfectivo"
+                ) || 0
+            );
+
+
+        if (
+            montoEfectivo <= 0
+        ) {
+
+            mostrarMensaje(
+                "Indicá con cuánto vas a pagar."
+            );
+
+            return;
+
+        }
+
+    }
 
 
     const total =
@@ -2238,7 +2292,7 @@ async function enviarPedido() {
 
 
     /* ========================================================
-       VALIDACIONES
+       VALIDACIONES CLIENTE
     ======================================================== */
 
     if (!nombre) {
@@ -2296,8 +2350,12 @@ async function enviarPedido() {
     }
 
 
+    /* ========================================================
+       VALIDACIÓN EFECTIVO
+    ======================================================== */
+
     if (
-        montoEfectivo > 0 &&
+        medioPago === "efectivo" &&
         montoEfectivo < total
     ) {
 
@@ -2349,6 +2407,41 @@ async function enviarPedido() {
 
 
     /* ========================================================
+       NOMBRE DEL MEDIO DE PAGO PARA LA API
+    ======================================================== */
+
+    let medioPagoAPI;
+
+
+    if (
+        medioPago === "efectivo"
+    ) {
+
+        medioPagoAPI =
+            "EFECTIVO";
+
+    }
+
+    else if (
+        medioPago === "transferencia"
+    ) {
+
+        medioPagoAPI =
+            "TRANSFERENCIA";
+
+    }
+
+    else if (
+        medioPago === "mercadopagoqr"
+    ) {
+
+        medioPagoAPI =
+            "MERCADOPAGOQR";
+
+    }
+
+
+    /* ========================================================
        PEDIDO
     ======================================================== */
 
@@ -2374,7 +2467,7 @@ async function enviarPedido() {
         },
 
         medio_pago:
-            "EFECTIVO",
+            medioPagoAPI,
 
         monto_efectivo:
             montoEfectivo,
@@ -2411,6 +2504,10 @@ async function enviarPedido() {
     );
 
 
+    /* ========================================================
+       BOTÓN
+    ======================================================== */
+
     const boton =
         document.getElementById(
             "btnEnviarPedido"
@@ -2421,7 +2518,6 @@ async function enviarPedido() {
 
         boton.disabled =
             true;
-
 
         boton.textContent =
             "ENVIANDO...";
@@ -2468,7 +2564,9 @@ async function enviarPedido() {
             datos =
                 await respuesta.json();
 
-        } catch {
+        }
+
+        catch {
 
             datos = {};
 
@@ -2492,7 +2590,7 @@ async function enviarPedido() {
 
 
         /* ====================================================
-           DATOS DEVUELTOS POR LA API
+           DATOS DEVUELTOS
         ==================================================== */
 
         const idPedido =
@@ -2512,7 +2610,7 @@ async function enviarPedido() {
 
 
         /* ====================================================
-           CERRAR DATOS CLIENTE
+           CERRAR CLIENTE
         ==================================================== */
 
         cerrarCliente();
@@ -2529,7 +2627,7 @@ async function enviarPedido() {
 
 
         /* ====================================================
-           MOSTRAR NÚMERO PEDIDO
+           NÚMERO PEDIDO
         ==================================================== */
 
         const numeroPedido =
@@ -2546,6 +2644,75 @@ async function enviarPedido() {
 
         }
 
+
+        /* ====================================================
+           SEGUIMIENTO
+        ==================================================== */
+
+        crearLinkSeguimiento(
+            seguimientoUrl,
+            numeroPedido
+        );
+
+
+        /* ====================================================
+           MODAL ÉXITO
+        ==================================================== */
+
+        const modalExito =
+            document.getElementById(
+                "modalExito"
+            );
+
+
+        if (modalExito) {
+
+            modalExito.classList.remove(
+                "oculto"
+            );
+
+        }
+
+
+        /* ====================================================
+           LIMPIAR FORMULARIO
+        ==================================================== */
+
+        limpiarFormulario();
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "ERROR ENVIANDO PEDIDO:",
+            error
+        );
+
+
+        mostrarMensaje(
+            error.message ||
+            "No se pudo enviar el pedido. Intentá nuevamente."
+        );
+
+    }
+
+    finally {
+
+        if (boton) {
+
+            boton.disabled =
+                false;
+
+            boton.textContent =
+                "ENVIAR PEDIDO";
+
+        }
+
+    }
+
+}
 
         /* ====================================================
            LINK DE SEGUIMIENTO
