@@ -5,7 +5,7 @@
 ============================================================ */
 
 const API_URL =
-    "https://api.doneliopizzeria.com.ar"
+    "https://api.doneliopizzeria.com.ar";
 
 const URL_GITHUB =
     "https://raw.githubusercontent.com/doneliopizza/CartaDigital/main";
@@ -64,155 +64,7 @@ document.addEventListener(
     }
 );
 
-// ============================================================
-// MEDIOS DE PAGO
-// ============================================================
 
-document.addEventListener("DOMContentLoaded", () => {
-
-    const mediosPago = document.querySelectorAll(
-        'input[name="medio-pago"]'
-    );
-
-    const detallePago = document.getElementById(
-        "detalle-pago"
-    );
-
-    const detalleEfectivo = document.getElementById(
-        "detalle-efectivo"
-    );
-
-    const detalleTransferencia = document.getElementById(
-        "detalle-transferencia"
-    );
-
-    const detalleMercadoPago = document.getElementById(
-        "detalle-mercadopagoqr"
-    );
-
-
-    // --------------------------------------------------------
-    // CAMBIO DE MEDIO DE PAGO
-    // --------------------------------------------------------
-
-    mediosPago.forEach(medio => {
-
-        medio.addEventListener("change", () => {
-
-            // Ocultar todo
-
-            detalleEfectivo.classList.add("oculto");
-
-            detalleTransferencia.classList.add("oculto");
-
-            detalleMercadoPago.classList.add("oculto");
-
-
-            // Mostrar contenedor
-
-            detallePago.classList.remove("oculto");
-
-
-            // Mostrar según selección
-
-            if (medio.value === "efectivo") {
-
-                detalleEfectivo.classList.remove("oculto");
-
-            }
-
-            else if (medio.value === "transferencia") {
-
-                detalleTransferencia.classList.remove("oculto");
-
-            }
-
-            else if (medio.value === "mercadopagoqr") {
-
-                detalleMercadoPago.classList.remove("oculto");
-
-            }
-
-        });
-
-    });
-
-
-    // --------------------------------------------------------
-    // COPIAR ALIAS
-    // --------------------------------------------------------
-
-    const btnCopiarAlias =
-        document.getElementById("btnCopiarAlias");
-
-    const aliasTransferencia =
-        document.getElementById("aliasTransferencia");
-
-    const mensajeAlias =
-        document.getElementById("mensajeAlias");
-
-
-    if (btnCopiarAlias) {
-
-        btnCopiarAlias.addEventListener("click", async () => {
-
-            const alias =
-                aliasTransferencia.textContent.trim();
-
-            try {
-
-                await navigator.clipboard.writeText(alias);
-
-                btnCopiarAlias.textContent = "✓ Copiado";
-
-                mensajeAlias.textContent =
-                    "Alias copiado. Podés pegarlo en Mercado Pago o tu banco.";
-
-                setTimeout(() => {
-
-                    btnCopiarAlias.textContent =
-                        "📋 Copiar";
-
-                    mensajeAlias.textContent =
-                        "Copiá el alias y realizá la transferencia antes de recibir el pedido.";
-
-                }, 2500);
-
-            } catch (error) {
-
-                // Fallback para navegadores que no permiten
-                // navigator.clipboard
-
-                const textarea =
-                    document.createElement("textarea");
-
-                textarea.value = alias;
-
-                document.body.appendChild(textarea);
-
-                textarea.select();
-
-                document.execCommand("copy");
-
-                textarea.remove();
-
-                btnCopiarAlias.textContent =
-                    "✓ Copiado";
-
-                setTimeout(() => {
-
-                    btnCopiarAlias.textContent =
-                        "📋 Copiar";
-
-                }, 2500);
-
-            }
-
-        });
-
-    }
-
-});
 /* ============================================================
    EVENTOS
 ============================================================ */
@@ -2192,9 +2044,6 @@ function cerrarCliente() {
 /* ============================================================
    ENVIAR PEDIDO
 ============================================================ */
-/* ============================================================
-   ENVIAR PEDIDO
-============================================================ */
 
 async function enviarPedido() {
 
@@ -2228,63 +2077,12 @@ async function enviarPedido() {
         );
 
 
-    /* ========================================================
-       MEDIO DE PAGO
-    ======================================================== */
-
-    const medioSeleccionado =
-        document.querySelector(
-            'input[name="medio-pago"]:checked'
+    const montoEfectivo =
+        Number(
+            obtenerValor(
+                "montoEfectivo"
+            ) || 0
         );
-
-
-    if (!medioSeleccionado) {
-
-        mostrarMensaje(
-            "Seleccioná un medio de pago."
-        );
-
-        return;
-
-    }
-
-
-    const medioPago =
-        medioSeleccionado.value;
-
-
-    /* ========================================================
-       EFECTIVO
-    ======================================================== */
-
-    let montoEfectivo = 0;
-
-
-    if (
-        medioPago === "efectivo"
-    ) {
-
-        montoEfectivo =
-            Number(
-                obtenerValor(
-                    "montoEfectivo"
-                ) || 0
-            );
-
-
-        if (
-            montoEfectivo <= 0
-        ) {
-
-            mostrarMensaje(
-                "Indicá con cuánto vas a pagar."
-            );
-
-            return;
-
-        }
-
-    }
 
 
     const total =
@@ -2292,7 +2090,7 @@ async function enviarPedido() {
 
 
     /* ========================================================
-       VALIDACIONES CLIENTE
+       VALIDACIONES
     ======================================================== */
 
     if (!nombre) {
@@ -2350,12 +2148,8 @@ async function enviarPedido() {
     }
 
 
-    /* ========================================================
-       VALIDACIÓN EFECTIVO
-    ======================================================== */
-
     if (
-        medioPago === "efectivo" &&
+        montoEfectivo > 0 &&
         montoEfectivo < total
     ) {
 
@@ -2407,41 +2201,6 @@ async function enviarPedido() {
 
 
     /* ========================================================
-       NOMBRE DEL MEDIO DE PAGO PARA LA API
-    ======================================================== */
-
-    let medioPagoAPI;
-
-
-    if (
-        medioPago === "efectivo"
-    ) {
-
-        medioPagoAPI =
-            "EFECTIVO";
-
-    }
-
-    else if (
-        medioPago === "transferencia"
-    ) {
-
-        medioPagoAPI =
-            "TRANSFERENCIA";
-
-    }
-
-    else if (
-        medioPago === "mercadopagoqr"
-    ) {
-
-        medioPagoAPI =
-            "MERCADOPAGOQR";
-
-    }
-
-
-    /* ========================================================
        PEDIDO
     ======================================================== */
 
@@ -2467,7 +2226,7 @@ async function enviarPedido() {
         },
 
         medio_pago:
-            medioPagoAPI,
+            "EFECTIVO",
 
         monto_efectivo:
             montoEfectivo,
@@ -2504,10 +2263,6 @@ async function enviarPedido() {
     );
 
 
-    /* ========================================================
-       BOTÓN
-    ======================================================== */
-
     const boton =
         document.getElementById(
             "btnEnviarPedido"
@@ -2518,6 +2273,7 @@ async function enviarPedido() {
 
         boton.disabled =
             true;
+
 
         boton.textContent =
             "ENVIANDO...";
@@ -2564,9 +2320,7 @@ async function enviarPedido() {
             datos =
                 await respuesta.json();
 
-        }
-
-        catch {
+        } catch {
 
             datos = {};
 
@@ -2590,7 +2344,7 @@ async function enviarPedido() {
 
 
         /* ====================================================
-           DATOS DEVUELTOS
+           DATOS DEVUELTOS POR LA API
         ==================================================== */
 
         const idPedido =
@@ -2610,7 +2364,7 @@ async function enviarPedido() {
 
 
         /* ====================================================
-           CERRAR CLIENTE
+           CERRAR DATOS CLIENTE
         ==================================================== */
 
         cerrarCliente();
@@ -2627,7 +2381,7 @@ async function enviarPedido() {
 
 
         /* ====================================================
-           NÚMERO PEDIDO
+           MOSTRAR NÚMERO PEDIDO
         ==================================================== */
 
         const numeroPedido =
@@ -2644,75 +2398,6 @@ async function enviarPedido() {
 
         }
 
-
-        /* ====================================================
-           SEGUIMIENTO
-        ==================================================== */
-
-        crearLinkSeguimiento(
-            seguimientoUrl,
-            numeroPedido
-        );
-
-
-        /* ====================================================
-           MODAL ÉXITO
-        ==================================================== */
-
-        const modalExito =
-            document.getElementById(
-                "modalExito"
-            );
-
-
-        if (modalExito) {
-
-            modalExito.classList.remove(
-                "oculto"
-            );
-
-        }
-
-
-        /* ====================================================
-           LIMPIAR FORMULARIO
-        ==================================================== */
-
-        limpiarFormulario();
-
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "ERROR ENVIANDO PEDIDO:",
-            error
-        );
-
-
-        mostrarMensaje(
-            error.message ||
-            "No se pudo enviar el pedido. Intentá nuevamente."
-        );
-
-    }
-
-    finally {
-
-        if (boton) {
-
-            boton.disabled =
-                false;
-
-            boton.textContent =
-                "ENVIAR PEDIDO";
-
-        }
-
-    }
-
-}
 
         /* ====================================================
            LINK DE SEGUIMIENTO
