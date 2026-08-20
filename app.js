@@ -162,7 +162,88 @@ function configurarEventos() {
     /* ========================================================
        CLIENTE
     ======================================================== */
+    /* ========================================================
+       MEDIOS DE PAGO
+    ======================================================== */
 
+    const btnPagoEfectivo =
+        document.getElementById(
+            "btnPagoEfectivo"
+        );
+
+    const btnPagoTransferencia =
+        document.getElementById(
+            "btnPagoTransferencia"
+        );
+
+    const btnPagoQR =
+        document.getElementById(
+            "btnPagoQR"
+        );
+
+
+    if (btnPagoEfectivo) {
+
+        btnPagoEfectivo.addEventListener(
+            "click",
+            () => {
+
+                seleccionarMedioPago(
+                    "Efectivo"
+                );
+
+            }
+        );
+
+    }
+
+
+    if (btnPagoTransferencia) {
+
+        btnPagoTransferencia.addEventListener(
+            "click",
+            () => {
+
+                seleccionarMedioPago(
+                    "Transferencia"
+                );
+
+            }
+        );
+
+    }
+
+
+    if (btnPagoQR) {
+
+        btnPagoQR.addEventListener(
+            "click",
+            () => {
+
+                seleccionarMedioPago(
+                    "Mercado Pago QR"
+                );
+
+            }
+        );
+
+    }
+
+
+    const btnCopiarAlias =
+        document.getElementById(
+            "btnCopiarAlias"
+        );
+
+
+    if (btnCopiarAlias) {
+
+        btnCopiarAlias.addEventListener(
+            "click",
+            copiarAlias
+        );
+
+    }
     const cerrarClienteBtn =
         document.getElementById(
             "cerrarCliente"
