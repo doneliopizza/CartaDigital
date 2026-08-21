@@ -374,7 +374,7 @@ function configurarMediosPago() {
             () => {
 
                 seleccionarMedioPago(
-                    "TRANSFERENCIA"
+                    "transferencia"
                 );
 
             }
@@ -390,7 +390,7 @@ function configurarMediosPago() {
             () => {
 
                 seleccionarMedioPago(
-                    "MERCADO_PAGO_QR"
+                    "Mercado Pago QR"
                 );
 
             }
