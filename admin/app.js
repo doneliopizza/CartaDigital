@@ -6,7 +6,7 @@
 ============================================================ */
 
 const API_URL =
-    "https://cartadigitalapi.onrender.com";
+    "https://api.doneliopizzeria.com.ar";
 
 const URL_PEDIDOS =
     API_URL + "/pedidos/activos";
@@ -684,7 +684,7 @@ function mostrarPedidos(pedidos) {
 
 
         if (
-            ![1,2,3,4]
+            ![1,2,3]
                 .includes(estado)
         ) {
 
