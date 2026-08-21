@@ -28,14 +28,9 @@ const ESTADOS = {
 
     3: {
         nombre: "Enviar delivery"
-    },
-
-    4: {
-        nombre: "Finalizado"
     }
 
 };
-
 
 /* ============================================================
    ELEMENTOS
@@ -235,6 +230,64 @@ function crearPedidoHTML(pedido) {
         pedido.detalle || [];
 
 
+    /* ========================================================
+       CALCULAR MINUTOS TRANSCURRIDOS
+    ======================================================== */
+
+    let minutosTranscurridos = 0;
+
+    if (pedido.fecha_inicio) {
+
+        const fechaCreacion =
+            new Date(
+                pedido.fecha_inicio
+            );
+
+        if (
+            !Number.isNaN(
+                fechaCreacion.getTime()
+            )
+        ) {
+
+            minutosTranscurridos =
+                Math.floor(
+                    (
+                        Date.now() -
+                        fechaCreacion.getTime()
+                    ) / 60000
+                );
+
+            if (minutosTranscurridos < 0) {
+                minutosTranscurridos = 0;
+            }
+
+        }
+
+    }
+
+
+    /* ========================================================
+       DETERMINAR COLOR SEGÚN TIEMPO
+    ======================================================== */
+
+    let claseTiempo = "pedido-verde";
+
+    if (minutosTranscurridos >= 40) {
+
+        claseTiempo = "pedido-rojo";
+
+    }
+    else if (minutosTranscurridos >= 20) {
+
+        claseTiempo = "pedido-naranja";
+
+    }
+
+
+    /* ========================================================
+       PRODUCTOS
+    ======================================================== */
+
     let productosHTML = "";
 
 
@@ -248,6 +301,7 @@ function crearPedidoHTML(pedido) {
         const nombre =
             item.nombre_producto ||
             `Producto #${item.producto_id}`;
+
 
         productosHTML += `
 
@@ -283,10 +337,14 @@ function crearPedidoHTML(pedido) {
     }
 
 
+    /* ========================================================
+       TARJETA
+    ======================================================== */
+
     return `
 
         <article
-            class="pedido"
+            class="pedido ${claseTiempo}"
             data-id="${pedido.id}"
         >
 
@@ -341,11 +399,8 @@ function crearPedidoHTML(pedido) {
                     "No informado"
                 )}
 
-                ${
-                    pedido.fecha_inicio
-                    ? ` · 🕐 ${fecha(pedido.fecha_inicio)}`
-                    : ""
-                }
+                · ⏱️
+                ${minutosTranscurridos} min
 
             </div>
 
