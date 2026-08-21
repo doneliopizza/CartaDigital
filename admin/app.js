@@ -660,15 +660,14 @@ function mostrarPedidos(pedidos) {
     columna1.innerHTML = "";
     columna2.innerHTML = "";
     columna3.innerHTML = "";
-    columna4.innerHTML = "";
+
 
 
     const contadores = {
 
         1: 0,
         2: 0,
-        3: 0,
-        4: 0
+        3: 0
 
     };
 
@@ -714,8 +713,7 @@ function mostrarPedidos(pedidos) {
         if (estado === 3)
             columna = columna3;
 
-        if (estado === 4)
-            columna = columna4;
+
 
 
         columna.insertAdjacentHTML(
@@ -754,9 +752,7 @@ function mostrarPedidos(pedidos) {
         columna3
     );
 
-    mostrarVacio(
-        columna4
-    );
+
 
 
     document.getElementById(
@@ -774,17 +770,13 @@ function mostrarPedidos(pedidos) {
     ).textContent =
         contadores[3];
 
-    document.getElementById(
-        "contador4"
-    ).textContent =
-        contadores[4];
+
 
 
     cantidadPedidos.textContent =
         contadores[1] +
         contadores[2] +
-        contadores[3] +
-        contadores[4];
+        contadores[3] 
 
 }
 
