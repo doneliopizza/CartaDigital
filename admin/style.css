@@ -643,18 +643,58 @@ body {
 
 }
 
+
 /* ============================================================
    COLOR PEDIDOS SEGÚN TIEMPO
 ============================================================ */
 
 .pedido-verde {
+
     background-color: #2e7d32 !important;
+
 }
 
 .pedido-naranja {
+
     background-color: #ef8f00 !important;
+
 }
 
 .pedido-rojo {
+
     background-color: #d32f2f !important;
+
+}
+
+
+/* ============================================================
+   TEXTO BLANCO EN PEDIDOS CON COLOR
+============================================================ */
+
+.pedido-verde .direccion,
+.pedido-verde .pago,
+.pedido-naranja .direccion,
+.pedido-naranja .pago,
+.pedido-rojo .direccion,
+.pedido-rojo .pago {
+
+    color: white;
+
+}
+
+
+/* ============================================================
+   SEPARADORES EN PEDIDOS CON COLOR
+============================================================ */
+
+.pedido-verde .productos,
+.pedido-verde .pago,
+.pedido-naranja .productos,
+.pedido-naranja .pago,
+.pedido-rojo .productos,
+.pedido-rojo .pago {
+
+    border-color:
+        rgba(255,255,255,.35);
+
 }
