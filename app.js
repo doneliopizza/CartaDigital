@@ -918,6 +918,10 @@ function marcarRubroActivo(
    MOSTRAR PRODUCTOS
 ============================================================ */
 
+/* ============================================================
+   MOSTRAR PRODUCTOS
+============================================================ */
+
 function mostrarProductos() {
 
     const contenedor =
@@ -950,70 +954,104 @@ function mostrarProductos() {
     contenedor.innerHTML = "";
 
 
-const filtrados =
-    productos
-        .filter(
-            producto => {
+    const filtrados =
+        productos
+            .filter(
+                producto => {
 
-                if (
-                    rubroActivo !== null &&
-                    Number(
-                        producto.rubro_id
-                    ) !==
-                    Number(
-                        rubroActivo
-                    )
-                ) {
+                    if (
+                        rubroActivo !== null &&
+                        Number(
+                            producto.rubro_id
+                        ) !==
+                        Number(
+                            rubroActivo
+                        )
+                    ) {
 
-                    return false;
+                        return false;
+
+                    }
+
+
+                    if (
+                        texto &&
+                        !String(
+                            producto.nombre
+                        )
+                        .toLowerCase()
+                        .includes(
+                            texto
+                        )
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    return true;
 
                 }
+            )
+            .sort(
+                (
+                    a,
+                    b
+                ) => {
+
+                    /* =============================================
+                       PRIMERO: RUBRO
+                    ============================================= */
+
+                    const rubroA =
+                        String(
+                            a.rubro || ""
+                        );
+
+                    const rubroB =
+                        String(
+                            b.rubro || ""
+                        );
 
 
-                if (
-                    texto &&
-                    !String(
-                        producto.nombre
-                    )
-                    .toLowerCase()
-                    .includes(
-                        texto
-                    )
-                ) {
-
-                    return false;
-
-                }
+                    const comparacionRubro =
+                        rubroA.localeCompare(
+                            rubroB,
+                            "es",
+                            {
+                                sensitivity:
+                                    "base"
+                            }
+                        );
 
 
-                return true;
+                    if (
+                        comparacionRubro !== 0
+                    ) {
 
-            }
-        )
-        .sort(
-            (
-                a,
-                b
-            ) => {
+                        return comparacionRubro;
 
-                /* =================================================
-                   PRIMERO: RUBRO
-                ================================================= */
-
-                const rubroA =
-                    String(
-                        a.rubro || ""
-                    ).toLowerCase();
-
-                const rubroB =
-                    String(
-                        b.rubro || ""
-                    ).toLowerCase();
+                    }
 
 
-                const comparacionRubro =
-                    rubroA.localeCompare(
-                        rubroB,
+                    /* =============================================
+                       SEGUNDO: NOMBRE
+                    ============================================= */
+
+                    const nombreA =
+                        String(
+                            a.nombre || ""
+                        );
+
+                    const nombreB =
+                        String(
+                            b.nombre || ""
+                        );
+
+
+                    return nombreA.localeCompare(
+                        nombreB,
                         "es",
                         {
                             sensitivity:
@@ -1021,46 +1059,196 @@ const filtrados =
                         }
                     );
 
-
-                if (
-                    comparacionRubro !== 0
-                ) {
-
-                    return comparacionRubro;
-
                 }
+            );
 
 
-                /* =================================================
-                   SEGUNDO: NOMBRE
-                ================================================= */
+    if (!filtrados.length) {
 
-                const nombreA =
-                    String(
-                        a.nombre || ""
-                    ).toLowerCase();
+        contenedor.innerHTML = `
+            <p>
+                No se encontraron productos.
+            </p>
+        `;
 
-                const nombreB =
-                    String(
-                        b.nombre || ""
-                    ).toLowerCase();
+        return;
+
+    }
 
 
-                return nombreA.localeCompare(
-                    nombreB,
-                    "es",
-                    {
-                        sensitivity:
-                            "base"
-                    }
+    filtrados.forEach(
+        producto => {
+
+            const tarjeta =
+                document.createElement(
+                    "article"
                 );
 
-            }
-        );
-/* ============================================================
-   IMAGEN
-============================================================ */
 
+            tarjeta.className =
+                "producto";
+
+
+            /* =================================================
+               IMAGEN
+            ================================================= */
+
+            const imagen =
+                document.createElement(
+                    "img"
+                );
+
+
+            imagen.className =
+                "producto-imagen";
+
+
+            imagen.alt =
+                producto.nombre;
+
+
+            imagen.src =
+                obtenerImagen(
+                    producto
+                );
+
+
+            imagen.onerror = () => {
+
+                imagen.onerror =
+                    null;
+
+
+                imagen.src =
+                    URL_LOGO;
+
+            };
+
+
+            imagen.addEventListener(
+                "click",
+                event => {
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+                    abrirVisor(
+                        imagen.src,
+                        producto.nombre
+                    );
+
+                }
+            );
+
+
+            /* =================================================
+               INFORMACIÓN
+            ================================================= */
+
+            const info =
+                document.createElement(
+                    "div"
+                );
+
+
+            info.className =
+                "producto-info";
+
+
+            const nombre =
+                document.createElement(
+                    "div"
+                );
+
+
+            nombre.className =
+                "producto-nombre";
+
+
+            nombre.textContent =
+                producto.nombre;
+
+
+            const precio =
+                document.createElement(
+                    "div"
+                );
+
+
+            precio.className =
+                "producto-precio";
+
+
+            precio.textContent =
+                formatearPrecio(
+                    producto.precio
+                );
+
+
+            const boton =
+                document.createElement(
+                    "button"
+                );
+
+
+            boton.className =
+                "producto-boton";
+
+
+            boton.textContent =
+                Number(
+                    producto.cant_min || 0
+                ) > 0
+                    ? "Elegir opciones"
+                    : "Agregar";
+
+
+            boton.addEventListener(
+                "click",
+                () => {
+
+                    agregarProducto(
+                        producto
+                    );
+
+                }
+            );
+
+
+            info.appendChild(
+                nombre
+            );
+
+
+            info.appendChild(
+                precio
+            );
+
+
+            info.appendChild(
+                boton
+            );
+
+
+            tarjeta.appendChild(
+                imagen
+            );
+
+
+            tarjeta.appendChild(
+                info
+            );
+
+
+            contenedor.appendChild(
+                tarjeta
+            );
+
+        }
+    );
+
+}
 function obtenerImagen(
     producto
 ) {
