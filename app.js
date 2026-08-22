@@ -999,57 +999,46 @@ function mostrarProductos() {
                     a,
                     b
                 ) => {
-
-                    /* =============================================
-                       PRIMERO: RUBRO
-                    ============================================= */
-
+            
+                    /* =================================================
+                       PRIMERO: RUBRO 1 → 2 → 3
+                    ================================================= */
+            
                     const rubroA =
-                        String(
-                            a.rubro || ""
+                        Number(
+                            a.rubro_id
                         );
-
+            
                     const rubroB =
-                        String(
-                            b.rubro || ""
+                        Number(
+                            b.rubro_id
                         );
-
-
-                    const comparacionRubro =
-                        rubroA.localeCompare(
-                            rubroB,
-                            "es",
-                            {
-                                sensitivity:
-                                    "base"
-                            }
-                        );
-
-
+            
+            
                     if (
-                        comparacionRubro !== 0
+                        rubroA !== rubroB
                     ) {
-
-                        return comparacionRubro;
-
+            
+                        return rubroA - rubroB;
+            
                     }
-
-
-                    /* =============================================
+            
+            
+                    /* =================================================
                        SEGUNDO: NOMBRE
-                    ============================================= */
-
+                    ================================================= */
+            
                     const nombreA =
                         String(
                             a.nombre || ""
                         );
-
+            
                     const nombreB =
                         String(
                             b.nombre || ""
                         );
-
-
+            
+            
                     return nombreA.localeCompare(
                         nombreB,
                         "es",
@@ -1058,11 +1047,9 @@ function mostrarProductos() {
                                 "base"
                         }
                     );
-
+            
                 }
-            );
-
-
+            )
     if (!filtrados.length) {
 
         contenedor.innerHTML = `
