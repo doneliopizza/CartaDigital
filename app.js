@@ -744,6 +744,10 @@ async function cargarProductos() {
    RUBROS
 ============================================================ */
 
+/* ============================================================
+   RUBROS
+============================================================ */
+
 function generarRubros() {
 
     const contenedor =
@@ -765,21 +769,25 @@ function generarRubros() {
     const rubros = {};
 
 
+    /* ========================================================
+       ARMAR RUBROS
+    ======================================================== */
+
     productos.forEach(
         producto => {
 
-            if (
-                !rubros[
+            const id =
+                Number(
                     producto.rubro_id
-                ]
-            ) {
+                );
 
-                rubros[
-                    producto.rubro_id
-                ] = {
+
+            if (!rubros[id]) {
+
+                rubros[id] = {
 
                     id:
-                        producto.rubro_id,
+                        id,
 
                     nombre:
                         producto.rubro
@@ -790,6 +798,25 @@ function generarRubros() {
 
         }
     );
+
+
+    /* ========================================================
+       ORDENAR RUBROS
+       1 = PIZZAS
+       2 = EMPANADAS
+       3 = PROMOS
+    ======================================================== */
+
+    const rubrosOrdenados =
+        Object.values(rubros)
+            .sort(
+                (
+                    a,
+                    b
+                ) =>
+                    Number(a.id) -
+                    Number(b.id)
+            );
 
 
     /* ========================================================
@@ -838,7 +865,7 @@ function generarRubros() {
        RUBROS
     ======================================================== */
 
-    Object.values(rubros).forEach(
+    rubrosOrdenados.forEach(
         rubro => {
 
             const boton =
@@ -882,8 +909,6 @@ function generarRubros() {
     );
 
 }
-
-
 /* ============================================================
    RUBRO ACTIVO
 ============================================================ */
