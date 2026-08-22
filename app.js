@@ -950,8 +950,9 @@ function mostrarProductos() {
     contenedor.innerHTML = "";
 
 
-    const filtrados =
-        productos.filter(
+const filtrados =
+    productos
+        .filter(
             producto => {
 
                 if (
@@ -988,197 +989,74 @@ function mostrarProductos() {
                 return true;
 
             }
+        )
+        .sort(
+            (
+                a,
+                b
+            ) => {
+
+                /* =================================================
+                   PRIMERO: RUBRO
+                ================================================= */
+
+                const rubroA =
+                    String(
+                        a.rubro || ""
+                    ).toLowerCase();
+
+                const rubroB =
+                    String(
+                        b.rubro || ""
+                    ).toLowerCase();
+
+
+                const comparacionRubro =
+                    rubroA.localeCompare(
+                        rubroB,
+                        "es",
+                        {
+                            sensitivity:
+                                "base"
+                        }
+                    );
+
+
+                if (
+                    comparacionRubro !== 0
+                ) {
+
+                    return comparacionRubro;
+
+                }
+
+
+                /* =================================================
+                   SEGUNDO: NOMBRE
+                ================================================= */
+
+                const nombreA =
+                    String(
+                        a.nombre || ""
+                    ).toLowerCase();
+
+                const nombreB =
+                    String(
+                        b.nombre || ""
+                    ).toLowerCase();
+
+
+                return nombreA.localeCompare(
+                    nombreB,
+                    "es",
+                    {
+                        sensitivity:
+                            "base"
+                    }
+                );
+
+            }
         );
-
-
-    if (!filtrados.length) {
-
-        contenedor.innerHTML = `
-            <p>
-                No se encontraron productos.
-            </p>
-        `;
-
-        return;
-
-    }
-
-
-    filtrados.forEach(
-        producto => {
-
-            const tarjeta =
-                document.createElement(
-                    "article"
-                );
-
-
-            tarjeta.className =
-                "producto";
-
-
-            /* =================================================
-               IMAGEN
-            ================================================= */
-
-            const imagen =
-                document.createElement(
-                    "img"
-                );
-
-
-            imagen.className =
-                "producto-imagen";
-
-
-            imagen.alt =
-                producto.nombre;
-
-
-            imagen.src =
-                obtenerImagen(
-                    producto
-                );
-
-
-            imagen.onerror = () => {
-
-                imagen.onerror =
-                    null;
-
-
-                imagen.src =
-                    URL_LOGO;
-
-            };
-
-
-            imagen.addEventListener(
-                "click",
-                event => {
-
-                    event.preventDefault();
-
-                    event.stopPropagation();
-
-                    abrirVisor(
-                        imagen.src,
-                        producto.nombre
-                    );
-
-                }
-            );
-
-
-            /* =================================================
-               INFORMACIÓN
-            ================================================= */
-
-            const info =
-                document.createElement(
-                    "div"
-                );
-
-
-            info.className =
-                "producto-info";
-
-
-            const nombre =
-                document.createElement(
-                    "div"
-                );
-
-
-            nombre.className =
-                "producto-nombre";
-
-
-            nombre.textContent =
-                producto.nombre;
-
-
-            const precio =
-                document.createElement(
-                    "div"
-                );
-
-
-            precio.className =
-                "producto-precio";
-
-
-            precio.textContent =
-                formatearPrecio(
-                    producto.precio
-                );
-
-
-            const boton =
-                document.createElement(
-                    "button"
-                );
-
-
-            boton.className =
-                "producto-boton";
-
-
-            boton.textContent =
-                Number(
-                    producto.cant_min || 0
-                ) > 0
-                    ? "Elegir opciones"
-                    : "Agregar";
-
-
-            boton.addEventListener(
-                "click",
-                () => {
-
-                    agregarProducto(
-                        producto
-                    );
-
-                }
-            );
-
-
-            info.appendChild(
-                nombre
-            );
-
-
-            info.appendChild(
-                precio
-            );
-
-
-            info.appendChild(
-                boton
-            );
-
-
-            tarjeta.appendChild(
-                imagen
-            );
-
-
-            tarjeta.appendChild(
-                info
-            );
-
-
-            contenedor.appendChild(
-                tarjeta
-            );
-
-        }
-    );
-
-}
-
-
 /* ============================================================
    IMAGEN
 ============================================================ */
