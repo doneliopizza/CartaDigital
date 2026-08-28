@@ -69,7 +69,7 @@ document.addEventListener(
 "DOMContentLoaded",
 () => {
 
-```
+
     const logo =
         document.getElementById("logo");
 
@@ -89,7 +89,7 @@ document.addEventListener(
     cargarProductos();
 
 }
-```
+
 
 );
 
@@ -99,7 +99,7 @@ EVENTOS
 
 function configurarEventos() {
 
-```
+
 /* ========================================================
    BUSCAR
 ======================================================== */
@@ -348,7 +348,7 @@ document.addEventListener(
 
     }
 );
-```
+
 
 }
 
@@ -358,7 +358,7 @@ MEDIOS DE PAGO
 
 function configurarMediosPago() {
 
-```
+
 const btnEfectivo =
     document.getElementById(
         "btnPagoEfectivo"
@@ -441,7 +441,7 @@ if (btnCopiarAlias) {
 seleccionarMedioPago(
     "EFECTIVO"
 );
-```
+
 
 }
 
@@ -453,7 +453,7 @@ function seleccionarMedioPago(
 medio
 ) {
 
-```
+
 medioPagoSeleccionado =
     medio;
 
@@ -614,7 +614,7 @@ if (
     }
 
 }
-```
+
 
 }
 
@@ -624,7 +624,7 @@ COPIAR ALIAS
 
 async function copiarAlias() {
 
-```
+
 const elemento =
     document.getElementById(
         "aliasTransferencia"
@@ -685,7 +685,7 @@ try {
     }
 
 }
-```
+
 
 }
 
@@ -695,7 +695,7 @@ PRODUCTOS
 
 async function cargarProductos() {
 
-```
+
 try {
 
     console.log(
@@ -815,7 +815,7 @@ try {
     }
 
 }
-```
+
 
 }
 
@@ -825,7 +825,7 @@ RUBROS
 
 function generarRubros() {
 
-```
+
 const contenedor =
     document.getElementById(
         "rubros"
@@ -981,7 +981,7 @@ rubrosOrdenados.forEach(
 
     }
 );
-```
+
 
 }
 
@@ -993,7 +993,7 @@ function marcarRubroActivo(
 botonSeleccionado
 ) {
 
-```
+
 document
     .querySelectorAll(
         ".boton-rubro"
@@ -1012,7 +1012,7 @@ document
 botonSeleccionado.classList.add(
     "activo"
 );
-```
+
 
 }
 
@@ -1022,7 +1022,7 @@ MOSTRAR PRODUCTOS
 
 function mostrarProductos() {
 
-```
+
 const contenedor =
     document.getElementById(
         "productos"
@@ -1356,7 +1356,7 @@ filtrados.forEach(
 
     }
 );
-```
+
 
 }
 
@@ -1368,7 +1368,7 @@ function obtenerImagen(
 producto
 ) {
 
-```
+
 /*
  * Nueva API:
  *
@@ -1439,7 +1439,7 @@ return (
     "?v=" +
     Date.now()
 );
-```
+
 
 }
 
@@ -1451,13 +1451,13 @@ function esProductoCompuesto(
 producto
 ) {
 
-```
+
 return (
     producto.es_compuesto === true ||
     producto.tipo_producto ===
         "COMPUESTO"
 );
-```
+
 
 }
 
@@ -1469,7 +1469,7 @@ async function agregarProducto(
 producto
 ) {
 
-```
+
 if (
     esProductoCompuesto(
         producto
@@ -1488,7 +1488,7 @@ if (
 agregarSimple(
     producto
 );
-```
+
 
 }
 
@@ -1500,7 +1500,7 @@ function agregarSimple(
 producto
 ) {
 
-```
+
 const existente =
     carrito.find(
         item =>
@@ -1557,7 +1557,7 @@ if (existente) {
 
 
 actualizarCarritoUI();
-```
+
 
 }
 
@@ -1569,7 +1569,7 @@ async function cargarGruposProducto(
 productoId
 ) {
 
-```
+
 const url =
     API_URL +
     "/productos/" +
@@ -1628,7 +1628,7 @@ if (!respuesta.ok) {
 
 
 return await respuesta.json();
-```
+
 
 }
 
@@ -1640,7 +1640,7 @@ async function abrirCompuesto(
 producto
 ) {
 
-```
+
 try {
 
     productoCompuestoActual =
@@ -1784,7 +1784,7 @@ try {
     );
 
 }
-```
+
 
 }
 
@@ -1796,7 +1796,7 @@ function generarTextoReglasGrupos(
 grupos
 ) {
 
-```
+
 if (
     !Array.isArray(
         grupos
@@ -1871,7 +1871,7 @@ return grupos
     .join(
         " | "
     );
-```
+
 
 }
 
@@ -1881,7 +1881,7 @@ MOSTRAR GRUPOS
 
 function mostrarGruposCompuesto() {
 
-```
+
 const contenedor =
     document.getElementById(
         "opcionesCompuesto"
@@ -1992,7 +1992,7 @@ grupos.forEach(
 
     }
 );
-```
+
 
 }
 
@@ -2005,7 +2005,7 @@ grupo,
 opcion
 ) {
 
-```
+
 const fila =
     document.createElement(
         "div"
@@ -2157,7 +2157,7 @@ fila.appendChild(
 
 
 return fila;
-```
+
 
 }
 
@@ -2170,7 +2170,7 @@ grupoId,
 opcionId
 ) {
 
-```
+
 return Number(
     seleccionesGrupos?.[
         grupoId
@@ -2178,7 +2178,7 @@ return Number(
         opcionId
     ] || 0
 );
-```
+
 
 }
 
@@ -2190,7 +2190,7 @@ function obtenerTotalGrupo(
 grupoId
 ) {
 
-```
+
 const opciones =
     seleccionesGrupos?.[
         grupoId
@@ -2210,7 +2210,7 @@ return Object.values(
         ),
     0
 );
-```
+
 
 }
 
@@ -2224,7 +2224,7 @@ opcion,
 cambio
 ) {
 
-```
+
 const actual =
     obtenerCantidadOpcion(
         grupo.id,
@@ -2328,7 +2328,7 @@ seleccionesGrupos[
     opcion.id
 ] =
     nuevo;
-```
+
 
 }
 
@@ -2338,7 +2338,7 @@ VALIDAR GRUPOS
 
 function validarGruposCompuesto() {
 
-```
+
 const grupos =
     productoCompuestoActual
         ?.grupos || [];
@@ -2450,7 +2450,7 @@ for (
 
 
 return true;
-```
+
 
 }
 
@@ -2460,7 +2460,7 @@ CONFIRMAR COMPUESTO
 
 function confirmarCompuesto() {
 
-```
+
 const producto =
     productoCompuestoActual;
 
@@ -2616,7 +2616,7 @@ carrito.push({
 cerrarCompuesto();
 
 actualizarCarritoUI();
-```
+
 
 }
 
@@ -2626,7 +2626,7 @@ CERRAR COMPUESTO
 
 function cerrarCompuesto() {
 
-```
+
 const modal =
     document.getElementById(
         "modalCompuesto"
@@ -2648,7 +2648,7 @@ productoCompuestoActual =
 
 seleccionesGrupos =
     {};
-```
+
 
 }
 
@@ -2658,7 +2658,7 @@ CARRITO
 
 function actualizarCarritoUI() {
 
-```
+
 const cantidad =
     carrito.reduce(
         (
@@ -2686,7 +2686,7 @@ if (cantidadCarrito) {
 
 
 renderizarCarrito();
-```
+
 
 }
 
@@ -2696,7 +2696,7 @@ SUBTOTAL
 
 function calcularSubtotal() {
 
-```
+
 return carrito.reduce(
     (
         total,
@@ -2709,7 +2709,7 @@ return carrito.reduce(
         ),
     0
 );
-```
+
 
 }
 
@@ -2719,7 +2719,7 @@ RENDERIZAR CARRITO
 
 function renderizarCarrito() {
 
-```
+
 const contenedor =
     document.getElementById(
         "listaCarrito"
@@ -3002,7 +3002,7 @@ if (totalElemento) {
         );
 
 }
-```
+
 
 }
 
@@ -3012,7 +3012,7 @@ ABRIR CARRITO
 
 function abrirCarrito() {
 
-```
+
 renderizarCarrito();
 
 
@@ -3029,7 +3029,7 @@ if (modal) {
     );
 
 }
-```
+
 
 }
 
@@ -3039,7 +3039,7 @@ CERRAR CARRITO
 
 function cerrarCarrito() {
 
-```
+
 const modal =
     document.getElementById(
         "modalCarrito"
@@ -3053,7 +3053,7 @@ if (modal) {
     );
 
 }
-```
+
 
 }
 
@@ -3063,7 +3063,7 @@ DATOS CLIENTE
 
 function abrirDatosCliente() {
 
-```
+
 if (
     !carrito.length
 ) {
@@ -3118,7 +3118,7 @@ if (modal) {
     );
 
 }
-```
+
 
 }
 
@@ -3128,7 +3128,7 @@ CERRAR CLIENTE
 
 function cerrarCliente() {
 
-```
+
 const modal =
     document.getElementById(
         "modalCliente"
@@ -3142,7 +3142,7 @@ if (modal) {
     );
 
 }
-```
+
 
 }
 
@@ -3152,7 +3152,7 @@ ENVIAR PEDIDO POR WHATSAPP
 
 function enviarPedido() {
 
-```
+
 const nombre =
     obtenerValor(
         "clienteNombre"
@@ -3324,7 +3324,7 @@ window.open(
  * WhatsApp pasa a ser el canal
  * donde la pizzería recibe el pedido.
  */
-```
+
 
 }
 
@@ -3336,7 +3336,7 @@ function construirMensajeWhatsApp(
 datos
 ) {
 
-```
+
 const lineas = [];
 
 
@@ -3470,7 +3470,7 @@ if (
 return lineas.join(
     "\n"
 );
-```
+
 
 }
 
@@ -3482,7 +3482,7 @@ function obtenerNombreMedioPago(
 medio
 ) {
 
-```
+
 if (
     medio ===
     "TRANSFERENCIA"
@@ -3504,7 +3504,7 @@ if (
 
 
 return "Efectivo";
-```
+
 
 }
 
@@ -3516,7 +3516,7 @@ function obtenerValor(
 id
 ) {
 
-```
+
 const elemento =
     document.getElementById(
         id
@@ -3534,7 +3534,7 @@ return String(
     elemento.value ||
     ""
 ).trim();
-```
+
 
 }
 
@@ -3544,7 +3544,7 @@ LIMPIAR FORMULARIO
 
 function limpiarFormulario() {
 
-```
+
 [
     "clienteNombre",
     "clienteTelefono",
@@ -3576,7 +3576,7 @@ function limpiarFormulario() {
 seleccionarMedioPago(
     "EFECTIVO"
 );
-```
+
 
 }
 
@@ -3588,7 +3588,7 @@ function mostrarMensaje(
 texto
 ) {
 
-```
+
 const mensaje =
     document.getElementById(
         "mensajePedido"
@@ -3619,7 +3619,7 @@ setTimeout(
     },
     4000
 );
-```
+
 
 }
 
@@ -3632,7 +3632,7 @@ src,
 alt
 ) {
 
-```
+
 const visor =
     document.getElementById(
         "visorImagen"
@@ -3670,7 +3670,7 @@ visor.classList.remove(
 document.body.classList.add(
     "visor-abierto"
 );
-```
+
 
 }
 
@@ -3680,7 +3680,7 @@ CERRAR VISOR
 
 function cerrarVisor() {
 
-```
+
 const visor =
     document.getElementById(
         "visorImagen"
@@ -3719,7 +3719,7 @@ if (imagen) {
         "";
 
 }
-```
+
 
 }
 
@@ -3731,7 +3731,7 @@ function formatearPrecio(
 valor
 ) {
 
-```
+
 return new Intl.NumberFormat(
     "es-AR",
     {
