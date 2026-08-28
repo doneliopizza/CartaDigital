@@ -3751,6 +3751,6 @@ return new Intl.NumberFormat(
         valor || 0
     )
 );
-```
+
 
 }
