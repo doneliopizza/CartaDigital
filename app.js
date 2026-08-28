@@ -1,27 +1,34 @@
 "use strict";
 
 /* ============================================================
-   CONFIGURACIÓN
+CONFIGURACIÓN
 ============================================================ */
 
 const API_URL =
-    "https://api.doneliopizzeria.com.ar";
+"https://lightpos-api.doneliopizzeria.com.ar";
 
 const URL_GITHUB =
-    "https://raw.githubusercontent.com/doneliopizza/CartaDigital/main";
+"https://raw.githubusercontent.com/doneliopizza/CartaDigital/main";
 
 const URL_PRODUCTOS =
-    API_URL + "/productos";
+API_URL + "/productos/";
 
 const URL_FOTOS =
-    URL_GITHUB + "/fotos/";
+URL_GITHUB + "/fotos/";
 
 const URL_LOGO =
-    URL_FOTOS + "logo.png";
+URL_FOTOS + "logo.png";
 
+/*
+
+* WhatsApp de la pizzería.
+* Se usa solamente para generar el mensaje.
+  */
+  const WHATSAPP =
+  "54117067389";
 
 /* ============================================================
-   ESTADO
+ESTADO
 ============================================================ */
 
 let productos = [];
@@ -30,898 +37,1170 @@ let rubroActivo = null;
 
 let carrito = [];
 
-let productoCompuestoActual = null;
+/*
 
-let gruposCompuestoActual = [];
+* Producto compuesto actualmente abierto.
+  */
+  let productoCompuestoActual = null;
 
-let seleccionesCompuesto = {};
+/*
 
-let medioPagoSeleccionado = "EFECTIVO";
+* Estructura:
 
+{
+grupo_id: {
+opcion_id: cantidad
+}
+}
+*/
+let seleccionesGrupos = {};
+
+/*
+
+* Medio de pago actual.
+  */
+  let medioPagoSeleccionado = "EFECTIVO";
 
 /* ============================================================
-   INICIO
+INICIO
 ============================================================ */
 
 document.addEventListener(
-    "DOMContentLoaded",
-    () => {
+"DOMContentLoaded",
+() => {
 
-        const logo =
-            document.getElementById("logo");
+```
+    const logo =
+        document.getElementById("logo");
 
-        if (logo) {
+    if (logo) {
 
-            logo.src =
-                URL_LOGO +
-                "?v=" +
-                Date.now();
+        logo.src =
+            URL_LOGO +
+            "?v=" +
+            Date.now();
+
+    }
+
+    configurarEventos();
+
+    configurarMediosPago();
+
+    cargarProductos();
+
+}
+```
+
+);
+
+/* ============================================================
+EVENTOS
+============================================================ */
+
+function configurarEventos() {
+
+```
+/* ========================================================
+   BUSCAR
+======================================================== */
+
+const buscarProducto =
+    document.getElementById(
+        "buscarProducto"
+    );
+
+if (buscarProducto) {
+
+    buscarProducto.addEventListener(
+        "input",
+        mostrarProductos
+    );
+
+}
+
+
+/* ========================================================
+   CARRITO
+======================================================== */
+
+const btnCarrito =
+    document.getElementById(
+        "btnCarrito"
+    );
+
+if (btnCarrito) {
+
+    btnCarrito.addEventListener(
+        "click",
+        abrirCarrito
+    );
+
+}
+
+
+const cerrarCarritoBtn =
+    document.getElementById(
+        "cerrarCarrito"
+    );
+
+if (cerrarCarritoBtn) {
+
+    cerrarCarritoBtn.addEventListener(
+        "click",
+        cerrarCarrito
+    );
+
+}
+
+
+/* ========================================================
+   COMPUESTO
+======================================================== */
+
+const cerrarCompuestoBtn =
+    document.getElementById(
+        "cerrarCompuesto"
+    );
+
+if (cerrarCompuestoBtn) {
+
+    cerrarCompuestoBtn.addEventListener(
+        "click",
+        cerrarCompuesto
+    );
+
+}
+
+
+const confirmarCompuestoBtn =
+    document.getElementById(
+        "confirmarCompuesto"
+    );
+
+if (confirmarCompuestoBtn) {
+
+    confirmarCompuestoBtn.addEventListener(
+        "click",
+        confirmarCompuesto
+    );
+
+}
+
+
+/* ========================================================
+   CLIENTE
+======================================================== */
+
+const cerrarClienteBtn =
+    document.getElementById(
+        "cerrarCliente"
+    );
+
+if (cerrarClienteBtn) {
+
+    cerrarClienteBtn.addEventListener(
+        "click",
+        cerrarCliente
+    );
+
+}
+
+
+const continuarPedidoBtn =
+    document.getElementById(
+        "btnContinuarPedido"
+    );
+
+if (continuarPedidoBtn) {
+
+    continuarPedidoBtn.addEventListener(
+        "click",
+        abrirDatosCliente
+    );
+
+}
+
+
+const enviarPedidoBtn =
+    document.getElementById(
+        "btnEnviarPedido"
+    );
+
+if (enviarPedidoBtn) {
+
+    enviarPedidoBtn.addEventListener(
+        "click",
+        enviarPedido
+    );
+
+}
+
+
+/* ========================================================
+   ÉXITO
+======================================================== */
+
+const cerrarExitoBtn =
+    document.getElementById(
+        "cerrarExito"
+    );
+
+if (cerrarExitoBtn) {
+
+    cerrarExitoBtn.addEventListener(
+        "click",
+        () => {
+
+            const modal =
+                document.getElementById(
+                    "modalExito"
+                );
+
+            if (modal) {
+
+                modal.classList.add(
+                    "oculto"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* ========================================================
+   VISOR
+======================================================== */
+
+const cerrarImagen =
+    document.getElementById(
+        "cerrarImagen"
+    );
+
+if (cerrarImagen) {
+
+    cerrarImagen.addEventListener(
+        "click",
+        event => {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            cerrarVisor();
+
+        }
+    );
+
+}
+
+
+const visorImagen =
+    document.getElementById(
+        "visorImagen"
+    );
+
+if (visorImagen) {
+
+    visorImagen.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target ===
+                visorImagen
+            ) {
+
+                cerrarVisor();
+
+            }
+
+        }
+    );
+
+}
+
+
+/* ========================================================
+   ESCAPE
+======================================================== */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key ===
+            "Escape"
+        ) {
+
+            cerrarVisor();
+
+            cerrarCompuesto();
+
+            cerrarCarrito();
+
+            cerrarCliente();
 
         }
 
-        configurarEventos();
+    }
+);
+```
 
-        configurarMediosPago();
+}
 
-        cargarProductos();
+/* ============================================================
+MEDIOS DE PAGO
+============================================================ */
+
+function configurarMediosPago() {
+
+```
+const btnEfectivo =
+    document.getElementById(
+        "btnPagoEfectivo"
+    );
+
+const btnTransferencia =
+    document.getElementById(
+        "btnPagoTransferencia"
+    );
+
+const btnQR =
+    document.getElementById(
+        "btnPagoQR"
+    );
+
+
+if (btnEfectivo) {
+
+    btnEfectivo.addEventListener(
+        "click",
+        () => {
+
+            seleccionarMedioPago(
+                "EFECTIVO"
+            );
+
+        }
+    );
+
+}
+
+
+if (btnTransferencia) {
+
+    btnTransferencia.addEventListener(
+        "click",
+        () => {
+
+            seleccionarMedioPago(
+                "TRANSFERENCIA"
+            );
+
+        }
+    );
+
+}
+
+
+if (btnQR) {
+
+    btnQR.addEventListener(
+        "click",
+        () => {
+
+            seleccionarMedioPago(
+                "MERCADO_PAGO_QR"
+            );
+
+        }
+    );
+
+}
+
+
+const btnCopiarAlias =
+    document.getElementById(
+        "btnCopiarAlias"
+    );
+
+if (btnCopiarAlias) {
+
+    btnCopiarAlias.addEventListener(
+        "click",
+        copiarAlias
+    );
+
+}
+
+
+seleccionarMedioPago(
+    "EFECTIVO"
+);
+```
+
+}
+
+/* ============================================================
+SELECCIONAR MEDIO DE PAGO
+============================================================ */
+
+function seleccionarMedioPago(
+medio
+) {
+
+```
+medioPagoSeleccionado =
+    medio;
+
+
+const botones = [
+    document.getElementById(
+        "btnPagoEfectivo"
+    ),
+    document.getElementById(
+        "btnPagoTransferencia"
+    ),
+    document.getElementById(
+        "btnPagoQR"
+    )
+];
+
+
+const opciones = [
+    document.getElementById(
+        "opcionEfectivo"
+    ),
+    document.getElementById(
+        "opcionTransferencia"
+    ),
+    document.getElementById(
+        "opcionQR"
+    )
+];
+
+
+botones.forEach(
+    boton => {
+
+        if (boton) {
+
+            boton.classList.remove(
+                "activo"
+            );
+
+        }
 
     }
 );
 
 
-/* ============================================================
-   EVENTOS
-============================================================ */
+opciones.forEach(
+    opcion => {
 
-function configurarEventos() {
+        if (opcion) {
 
-    const buscarProducto =
-        document.getElementById("buscarProducto");
-
-    if (buscarProducto) {
-
-        buscarProducto.addEventListener(
-            "input",
-            mostrarProductos
-        );
-
-    }
-
-
-    const btnCarrito =
-        document.getElementById("btnCarrito");
-
-    if (btnCarrito) {
-
-        btnCarrito.addEventListener(
-            "click",
-            abrirCarrito
-        );
-
-    }
-
-
-    const cerrarCarritoBtn =
-        document.getElementById("cerrarCarrito");
-
-    if (cerrarCarritoBtn) {
-
-        cerrarCarritoBtn.addEventListener(
-            "click",
-            cerrarCarrito
-        );
-
-    }
-
-
-    const cerrarCompuestoBtn =
-        document.getElementById("cerrarCompuesto");
-
-    if (cerrarCompuestoBtn) {
-
-        cerrarCompuestoBtn.addEventListener(
-            "click",
-            cerrarCompuesto
-        );
-
-    }
-
-
-    const confirmarCompuestoBtn =
-        document.getElementById("confirmarCompuesto");
-
-    if (confirmarCompuestoBtn) {
-
-        confirmarCompuestoBtn.addEventListener(
-            "click",
-            confirmarCompuesto
-        );
-
-    }
-
-
-    const cerrarClienteBtn =
-        document.getElementById("cerrarCliente");
-
-    if (cerrarClienteBtn) {
-
-        cerrarClienteBtn.addEventListener(
-            "click",
-            cerrarCliente
-        );
-
-    }
-
-
-    const continuarPedidoBtn =
-        document.getElementById("btnContinuarPedido");
-
-    if (continuarPedidoBtn) {
-
-        continuarPedidoBtn.addEventListener(
-            "click",
-            abrirDatosCliente
-        );
-
-    }
-
-
-    const enviarPedidoBtn =
-        document.getElementById("btnEnviarPedido");
-
-    if (enviarPedidoBtn) {
-
-        enviarPedidoBtn.addEventListener(
-            "click",
-            enviarPedido
-        );
-
-    }
-
-
-    const cerrarExitoBtn =
-        document.getElementById("cerrarExito");
-
-    if (cerrarExitoBtn) {
-
-        cerrarExitoBtn.addEventListener(
-            "click",
-            () => {
-
-                const modal =
-                    document.getElementById("modalExito");
-
-                if (modal) {
-
-                    modal.classList.add("oculto");
-
-                }
-
-            }
-        );
-
-    }
-
-
-    const cerrarImagen =
-        document.getElementById("cerrarImagen");
-
-    if (cerrarImagen) {
-
-        cerrarImagen.addEventListener(
-            "click",
-            function (event) {
-
-                event.preventDefault();
-
-                event.stopPropagation();
-
-                cerrarVisor();
-
-            }
-        );
-
-    }
-
-
-    const visorImagen =
-        document.getElementById("visorImagen");
-
-    if (visorImagen) {
-
-        visorImagen.addEventListener(
-            "click",
-            function (event) {
-
-                if (
-                    event.target ===
-                    visorImagen
-                ) {
-
-                    cerrarVisor();
-
-                }
-
-            }
-        );
-
-    }
-
-
-    document.addEventListener(
-        "keydown",
-        event => {
-
-            if (event.key === "Escape") {
-
-                cerrarVisor();
-
-                cerrarCompuesto();
-
-                cerrarCarrito();
-
-                cerrarCliente();
-
-            }
-
-        }
-    );
-
-}
-
-
-/* ============================================================
-   MEDIOS DE PAGO
-============================================================ */
-
-function configurarMediosPago() {
-
-    const btnEfectivo =
-        document.getElementById("btnPagoEfectivo");
-
-    const btnTransferencia =
-        document.getElementById("btnPagoTransferencia");
-
-    const btnQR =
-        document.getElementById("btnPagoQR");
-
-
-    if (btnEfectivo) {
-
-        btnEfectivo.addEventListener(
-            "click",
-            () => {
-
-                seleccionarMedioPago("EFECTIVO");
-
-            }
-        );
-
-    }
-
-
-    if (btnTransferencia) {
-
-        btnTransferencia.addEventListener(
-            "click",
-            () => {
-
-                seleccionarMedioPago("TRANSFERENCIA");
-
-            }
-        );
-
-    }
-
-
-    if (btnQR) {
-
-        btnQR.addEventListener(
-            "click",
-            () => {
-
-                seleccionarMedioPago("MERCADO_PAGO_QR");
-
-            }
-        );
-
-    }
-
-
-    const btnCopiarAlias =
-        document.getElementById("btnCopiarAlias");
-
-    if (btnCopiarAlias) {
-
-        btnCopiarAlias.addEventListener(
-            "click",
-            copiarAlias
-        );
-
-    }
-
-
-    seleccionarMedioPago("EFECTIVO");
-
-}
-
-
-/* ============================================================
-   SELECCIONAR MEDIO DE PAGO
-============================================================ */
-
-function seleccionarMedioPago(medio) {
-
-    medioPagoSeleccionado =
-        medio;
-
-
-    const btnEfectivo =
-        document.getElementById("btnPagoEfectivo");
-
-    const btnTransferencia =
-        document.getElementById("btnPagoTransferencia");
-
-    const btnQR =
-        document.getElementById("btnPagoQR");
-
-
-    const opcionEfectivo =
-        document.getElementById("opcionEfectivo");
-
-    const opcionTransferencia =
-        document.getElementById("opcionTransferencia");
-
-    const opcionQR =
-        document.getElementById("opcionQR");
-
-
-    [
-        btnEfectivo,
-        btnTransferencia,
-        btnQR
-    ].forEach(
-        boton => {
-
-            if (boton) {
-
-                boton.classList.remove("activo");
-
-            }
-
-        }
-    );
-
-
-    [
-        opcionEfectivo,
-        opcionTransferencia,
-        opcionQR
-    ].forEach(
-        opcion => {
-
-            if (opcion) {
-
-                opcion.classList.add("oculto");
-
-            }
-
-        }
-    );
-
-
-    if (medio === "EFECTIVO") {
-
-        if (btnEfectivo) {
-
-            btnEfectivo.classList.add("activo");
-
-        }
-
-        if (opcionEfectivo) {
-
-            opcionEfectivo.classList.remove("oculto");
+            opcion.classList.add(
+                "oculto"
+            );
 
         }
 
     }
+);
 
 
-    if (medio === "TRANSFERENCIA") {
+if (
+    medio ===
+    "EFECTIVO"
+) {
 
-        if (btnTransferencia) {
+    const boton =
+        document.getElementById(
+            "btnPagoEfectivo"
+        );
 
-            btnTransferencia.classList.add("activo");
+    const opcion =
+        document.getElementById(
+            "opcionEfectivo"
+        );
 
-        }
+    if (boton) {
 
-        if (opcionTransferencia) {
-
-            opcionTransferencia.classList.remove("oculto");
-
-        }
+        boton.classList.add(
+            "activo"
+        );
 
     }
 
+    if (opcion) {
 
-    if (medio === "MERCADO_PAGO_QR") {
-
-        if (btnQR) {
-
-            btnQR.classList.add("activo");
-
-        }
-
-        if (opcionQR) {
-
-            opcionQR.classList.remove("oculto");
-
-        }
+        opcion.classList.remove(
+            "oculto"
+        );
 
     }
 
 }
 
 
+if (
+    medio ===
+    "TRANSFERENCIA"
+) {
+
+    const boton =
+        document.getElementById(
+            "btnPagoTransferencia"
+        );
+
+    const opcion =
+        document.getElementById(
+            "opcionTransferencia"
+        );
+
+    if (boton) {
+
+        boton.classList.add(
+            "activo"
+        );
+
+    }
+
+    if (opcion) {
+
+        opcion.classList.remove(
+            "oculto"
+        );
+
+    }
+
+}
+
+
+if (
+    medio ===
+    "MERCADO_PAGO_QR"
+) {
+
+    const boton =
+        document.getElementById(
+            "btnPagoQR"
+        );
+
+    const opcion =
+        document.getElementById(
+            "opcionQR"
+        );
+
+    if (boton) {
+
+        boton.classList.add(
+            "activo"
+        );
+
+    }
+
+    if (opcion) {
+
+        opcion.classList.remove(
+            "oculto"
+        );
+
+    }
+
+}
+```
+
+}
+
 /* ============================================================
-   COPIAR ALIAS
+COPIAR ALIAS
 ============================================================ */
 
 async function copiarAlias() {
 
-    const elemento =
-        document.getElementById("aliasTransferencia");
+```
+const elemento =
+    document.getElementById(
+        "aliasTransferencia"
+    );
 
-    const mensaje =
-        document.getElementById("mensajeAlias");
-
-
-    if (!elemento) {
-
-        return;
-
-    }
+const mensaje =
+    document.getElementById(
+        "mensajeAlias"
+    );
 
 
-    const alias =
-        elemento.textContent.trim();
+if (!elemento) {
 
-
-    try {
-
-        await navigator.clipboard.writeText(alias);
-
-        if (mensaje) {
-
-            mensaje.textContent =
-                "✓ Alias copiado correctamente.";
-
-            setTimeout(
-                () => {
-
-                    mensaje.textContent = "";
-
-                },
-                3000
-            );
-
-        }
-
-    } catch (error) {
-
-        console.error(
-            "Error copiando alias:",
-            error
-        );
-
-        if (mensaje) {
-
-            mensaje.textContent =
-                "No se pudo copiar el alias. Copialo manualmente.";
-
-        }
-
-    }
+    return;
 
 }
 
 
+const alias =
+    elemento.textContent.trim();
+
+
+try {
+
+    await navigator.clipboard.writeText(
+        alias
+    );
+
+    if (mensaje) {
+
+        mensaje.textContent =
+            "✓ Alias copiado correctamente.";
+
+        setTimeout(
+            () => {
+
+                mensaje.textContent =
+                    "";
+
+            },
+            3000
+        );
+
+    }
+
+} catch (error) {
+
+    console.error(
+        "Error copiando alias:",
+        error
+    );
+
+    if (mensaje) {
+
+        mensaje.textContent =
+            "No se pudo copiar el alias.";
+
+    }
+
+}
+```
+
+}
+
 /* ============================================================
-   PRODUCTOS
+PRODUCTOS
 ============================================================ */
 
 async function cargarProductos() {
 
-    try {
+```
+try {
 
-        const respuesta =
-            await fetch(
-                URL_PRODUCTOS +
-                "?v=" +
-                Date.now()
-            );
-
-
-        if (!respuesta.ok) {
-
-            throw new Error(
-                "HTTP " +
-                respuesta.status
-            );
-
-        }
+    console.log(
+        "Cargando productos desde:",
+        URL_PRODUCTOS
+    );
 
 
-        const datos =
-            await respuesta.json();
-
-
-        /*
-         * La API puede devolver directamente
-         * un array o un objeto con "productos".
-         */
-
-        if (Array.isArray(datos)) {
-
-            productos = datos;
-
-        } else if (
-            datos &&
-            Array.isArray(datos.productos)
-        ) {
-
-            productos =
-                datos.productos;
-
-        } else {
-
-            productos = [];
-
-        }
-
-
-        console.log(
-            "Productos recibidos desde LightPOS API:",
-            productos
+    const respuesta =
+        await fetch(
+            URL_PRODUCTOS +
+            "?v=" +
+            Date.now(),
+            {
+                method: "GET",
+                cache: "no-store"
+            }
         );
 
 
-        generarRubros();
+    if (!respuesta.ok) {
 
-        mostrarProductos();
+        throw new Error(
+            "HTTP " +
+            respuesta.status
+        );
+
+    }
 
 
-    } catch (error) {
+    const datos =
+        await respuesta.json();
 
-        console.error(
-            "Error cargando productos:",
-            error
+
+    /*
+     * Permitimos tanto:
+     *
+     * [
+     *   {...}
+     * ]
+     *
+     * como:
+     *
+     * {
+     *   productos: [...]
+     * }
+     */
+
+    if (Array.isArray(datos)) {
+
+        productos =
+            datos;
+
+    } else if (
+        Array.isArray(
+            datos.productos
+        )
+    ) {
+
+        productos =
+            datos.productos;
+
+    } else {
+
+        throw new Error(
+            "Formato de productos inválido."
+        );
+
+    }
+
+
+    /*
+     * Carta pública:
+     * solamente productos activos.
+     */
+
+    productos =
+        productos.filter(
+            producto =>
+                producto.activo !== false
         );
 
 
-        const contenedor =
-            document.getElementById("productos");
+    console.log(
+        "Productos recibidos:",
+        productos
+    );
 
 
-        if (contenedor) {
+    generarRubros();
 
-            contenedor.innerHTML = `
-                <div class="mensaje-pedido">
-                    No se pudo cargar la carta.
-                </div>
-            `;
+    mostrarProductos();
 
-        }
+
+} catch (error) {
+
+    console.error(
+        "Error cargando productos:",
+        error
+    );
+
+
+    const contenedor =
+        document.getElementById(
+            "productos"
+        );
+
+
+    if (contenedor) {
+
+        contenedor.innerHTML = `
+            <div class="mensaje-pedido">
+                No se pudo cargar la carta.
+            </div>
+        `;
 
     }
 
 }
+```
 
+}
 
 /* ============================================================
-   RUBROS
+RUBROS
 ============================================================ */
 
 function generarRubros() {
 
-    const contenedor =
-        document.getElementById("rubros");
-
-
-    if (!contenedor) {
-
-        return;
-
-    }
-
-
-    contenedor.innerHTML = "";
-
-
-    const rubros = {};
-
-
-    productos.forEach(
-        producto => {
-
-            const id =
-                Number(producto.rubro_id);
-
-
-            if (!rubros[id]) {
-
-                rubros[id] = {
-
-                    id:
-                        id,
-
-                    nombre:
-                        producto.rubro
-
-                };
-
-            }
-
-        }
+```
+const contenedor =
+    document.getElementById(
+        "rubros"
     );
 
 
-    const rubrosOrdenados =
-        Object.values(rubros)
-            .sort(
-                (a, b) =>
-                    Number(a.id) -
-                    Number(b.id)
-            );
+if (!contenedor) {
 
-
-    const botonTodos =
-        document.createElement("button");
-
-
-    botonTodos.className =
-        "boton-rubro activo";
-
-
-    botonTodos.textContent =
-        "Todos";
-
-
-    botonTodos.addEventListener(
-        "click",
-        () => {
-
-            rubroActivo =
-                null;
-
-            marcarRubroActivo(
-                botonTodos
-            );
-
-            mostrarProductos();
-
-        }
-    );
-
-
-    contenedor.appendChild(
-        botonTodos
-    );
-
-
-    rubrosOrdenados.forEach(
-        rubro => {
-
-            const boton =
-                document.createElement("button");
-
-
-            boton.className =
-                "boton-rubro";
-
-
-            boton.textContent =
-                rubro.nombre;
-
-
-            boton.addEventListener(
-                "click",
-                () => {
-
-                    rubroActivo =
-                        rubro.id;
-
-                    marcarRubroActivo(
-                        boton
-                    );
-
-                    mostrarProductos();
-
-                }
-            );
-
-
-            contenedor.appendChild(
-                boton
-            );
-
-        }
-    );
+    return;
 
 }
 
 
+contenedor.innerHTML =
+    "";
+
+
+const rubros =
+    {};
+
+
+productos.forEach(
+    producto => {
+
+        if (
+            producto.rubro_id === null ||
+            producto.rubro_id === undefined
+        ) {
+
+            return;
+
+        }
+
+
+        const id =
+            Number(
+                producto.rubro_id
+            );
+
+
+        if (!rubros[id]) {
+
+            rubros[id] = {
+
+                id:
+                    id,
+
+                nombre:
+                    producto.rubro ||
+                    "Sin rubro"
+
+            };
+
+        }
+
+    }
+);
+
+
+const rubrosOrdenados =
+    Object.values(
+        rubros
+    ).sort(
+        (
+            a,
+            b
+        ) =>
+            a.id - b.id
+    );
+
+
+/* ========================================================
+   TODOS
+======================================================== */
+
+const botonTodos =
+    document.createElement(
+        "button"
+    );
+
+
+botonTodos.className =
+    "boton-rubro activo";
+
+
+botonTodos.textContent =
+    "Todos";
+
+
+botonTodos.addEventListener(
+    "click",
+    () => {
+
+        rubroActivo =
+            null;
+
+        marcarRubroActivo(
+            botonTodos
+        );
+
+        mostrarProductos();
+
+    }
+);
+
+
+contenedor.appendChild(
+    botonTodos
+);
+
+
+/* ========================================================
+   RUBROS
+======================================================== */
+
+rubrosOrdenados.forEach(
+    rubro => {
+
+        const boton =
+            document.createElement(
+                "button"
+            );
+
+
+        boton.className =
+            "boton-rubro";
+
+
+        boton.textContent =
+            rubro.nombre;
+
+
+        boton.addEventListener(
+            "click",
+            () => {
+
+                rubroActivo =
+                    rubro.id;
+
+                marcarRubroActivo(
+                    boton
+                );
+
+                mostrarProductos();
+
+            }
+        );
+
+
+        contenedor.appendChild(
+            boton
+        );
+
+    }
+);
+```
+
+}
+
 /* ============================================================
-   RUBRO ACTIVO
+RUBRO ACTIVO
 ============================================================ */
 
 function marcarRubroActivo(
-    botonSeleccionado
+botonSeleccionado
 ) {
 
-    document
-        .querySelectorAll(".boton-rubro")
-        .forEach(
-            boton => {
+```
+document
+    .querySelectorAll(
+        ".boton-rubro"
+    )
+    .forEach(
+        boton => {
 
-                boton.classList.remove(
-                    "activo"
+            boton.classList.remove(
+                "activo"
+            );
+
+        }
+    );
+
+
+botonSeleccionado.classList.add(
+    "activo"
+);
+```
+
+}
+
+/* ============================================================
+MOSTRAR PRODUCTOS
+============================================================ */
+
+function mostrarProductos() {
+
+```
+const contenedor =
+    document.getElementById(
+        "productos"
+    );
+
+
+if (!contenedor) {
+
+    return;
+
+}
+
+
+const campoBusqueda =
+    document.getElementById(
+        "buscarProducto"
+    );
+
+
+const texto =
+    campoBusqueda
+        ? campoBusqueda.value
+            .trim()
+            .toLowerCase()
+        : "";
+
+
+contenedor.innerHTML =
+    "";
+
+
+const filtrados =
+    productos
+        .filter(
+            producto => {
+
+                if (
+                    rubroActivo !== null &&
+                    Number(
+                        producto.rubro_id
+                    ) !==
+                    Number(
+                        rubroActivo
+                    )
+                ) {
+
+                    return false;
+
+                }
+
+
+                if (
+                    texto &&
+                    !String(
+                        producto.nombre ||
+                        ""
+                    )
+                    .toLowerCase()
+                    .includes(
+                        texto
+                    )
+                ) {
+
+                    return false;
+
+                }
+
+
+                return true;
+
+            }
+        )
+        .sort(
+            (
+                a,
+                b
+            ) => {
+
+                const rubroA =
+                    Number(
+                        a.rubro_id || 0
+                    );
+
+                const rubroB =
+                    Number(
+                        b.rubro_id || 0
+                    );
+
+
+                if (
+                    rubroA !==
+                    rubroB
+                ) {
+
+                    return (
+                        rubroA -
+                        rubroB
+                    );
+
+                }
+
+
+                return String(
+                    a.nombre ||
+                    ""
+                ).localeCompare(
+                    String(
+                        b.nombre ||
+                        ""
+                    ),
+                    "es",
+                    {
+                        sensitivity:
+                            "base"
+                    }
                 );
 
             }
         );
 
 
-    botonSeleccionado.classList.add(
-        "activo"
-    );
+if (
+    !filtrados.length
+) {
+
+    contenedor.innerHTML = `
+        <p>
+            No se encontraron productos.
+        </p>
+    `;
+
+    return;
 
 }
 
 
-/* ============================================================
-   MOSTRAR PRODUCTOS
-============================================================ */
+filtrados.forEach(
+    producto => {
 
-function mostrarProductos() {
-
-    const contenedor =
-        document.getElementById("productos");
-
-
-    if (!contenedor) {
-
-        return;
-
-    }
-
-
-    const campoBusqueda =
-        document.getElementById("buscarProducto");
-
-
-    const texto =
-        campoBusqueda
-            ? campoBusqueda.value
-                .trim()
-                .toLowerCase()
-            : "";
-
-
-    contenedor.innerHTML = "";
-
-
-    const filtrados =
-        productos
-            .filter(
-                producto => {
-
-                    if (
-                        rubroActivo !== null &&
-                        Number(producto.rubro_id) !==
-                        Number(rubroActivo)
-                    ) {
-
-                        return false;
-
-                    }
-
-
-                    if (
-                        texto &&
-                        !String(producto.nombre)
-                            .toLowerCase()
-                            .includes(texto)
-                    ) {
-
-                        return false;
-
-                    }
-
-
-                    return true;
-
-                }
-            )
-            .sort(
-                (a, b) => {
-
-                    const rubroA =
-                        Number(a.rubro_id);
-
-                    const rubroB =
-                        Number(b.rubro_id);
-
-
-                    if (
-                        rubroA !== rubroB
-                    ) {
-
-                        return rubroA - rubroB;
-
-                    }
-
-
-                    return String(
-                        a.nombre || ""
-                    ).localeCompare(
-                        String(
-                            b.nombre || ""
-                        ),
-                        "es",
-                        {
-                            sensitivity:
-                                "base"
-                        }
-                    );
-
-                }
+        const tarjeta =
+            document.createElement(
+                "article"
             );
 
 
-    if (!filtrados.length) {
-
-        contenedor.innerHTML = `
-            <p>
-                No se encontraron productos.
-            </p>
-        `;
-
-        return;
-
-    }
+        tarjeta.className =
+            "producto";
 
 
-    filtrados.forEach(
-        producto => {
+        /* =================================================
+           IMAGEN
+        ================================================= */
 
-            const tarjeta =
-                document.createElement("article");
-
-
-            tarjeta.className =
-                "producto";
-
-
-            const imagen =
-                document.createElement("img");
+        const imagen =
+            document.createElement(
+                "img"
+            );
 
 
-            imagen.className =
-                "producto-imagen";
+        imagen.className =
+            "producto-imagen";
 
 
-            imagen.alt =
-                producto.nombre;
+        imagen.alt =
+            producto.nombre;
 
 
-            imagen.src =
-                obtenerImagen(producto);
+        imagen.src =
+            obtenerImagen(
+                producto
+            );
 
 
-            imagen.onerror = () => {
+        imagen.onerror =
+            () => {
 
-                imagen.onerror = null;
+                imagen.onerror =
+                    null;
 
                 imagen.src =
                     URL_LOGO;
@@ -929,201 +1208,225 @@ function mostrarProductos() {
             };
 
 
-            imagen.addEventListener(
-                "click",
-                event => {
+        imagen.addEventListener(
+            "click",
+            event => {
 
-                    event.preventDefault();
+                event.preventDefault();
 
-                    event.stopPropagation();
+                event.stopPropagation();
 
-                    abrirVisor(
-                        imagen.src,
-                        producto.nombre
-                    );
-
-                }
-            );
-
-
-            const info =
-                document.createElement("div");
-
-
-            info.className =
-                "producto-info";
-
-
-            const nombre =
-                document.createElement("div");
-
-
-            nombre.className =
-                "producto-nombre";
-
-
-            nombre.textContent =
-                producto.nombre;
-
-
-            const precio =
-                document.createElement("div");
-
-
-            precio.className =
-                "producto-precio";
-
-
-            precio.textContent =
-                formatearPrecio(
-                    producto.precio
+                abrirVisor(
+                    imagen.src,
+                    producto.nombre
                 );
 
-
-            const boton =
-                document.createElement("button");
-
-
-            boton.className =
-                "producto-boton";
+            }
+        );
 
 
-            /*
-             * Ya no usamos solamente cant_min
-             * para determinar si es compuesto.
-             *
-             * tipo_producto es la fuente principal.
-             * Dejamos cant_min como compatibilidad
-             * con productos viejos.
-             */
+        /* =================================================
+           INFO
+        ================================================= */
 
-            const esCompuesto =
-                esProductoCompuesto(producto);
-
-
-            boton.textContent =
-                esCompuesto
-                    ? "Elegir opciones"
-                    : "Agregar";
-
-
-            boton.addEventListener(
-                "click",
-                () => {
-
-                    agregarProducto(
-                        producto
-                    );
-
-                }
+        const info =
+            document.createElement(
+                "div"
             );
 
 
-            info.appendChild(nombre);
+        info.className =
+            "producto-info";
 
-            info.appendChild(precio);
 
-            info.appendChild(boton);
+        const nombre =
+            document.createElement(
+                "div"
+            );
 
-            tarjeta.appendChild(imagen);
 
-            tarjeta.appendChild(info);
+        nombre.className =
+            "producto-nombre";
 
-            contenedor.appendChild(tarjeta);
+
+        nombre.textContent =
+            producto.nombre;
+
+
+        const descripcion =
+            document.createElement(
+                "div"
+            );
+
+
+        descripcion.className =
+            "producto-descripcion";
+
+
+        descripcion.textContent =
+            producto.descripcion ||
+            "";
+
+
+        const precio =
+            document.createElement(
+                "div"
+            );
+
+
+        precio.className =
+            "producto-precio";
+
+
+        precio.textContent =
+            formatearPrecio(
+                producto.precio
+            );
+
+
+        const boton =
+            document.createElement(
+                "button"
+            );
+
+
+        boton.className =
+            "producto-boton";
+
+
+        boton.textContent =
+            esProductoCompuesto(
+                producto
+            )
+                ? "Elegir opciones"
+                : "Agregar";
+
+
+        boton.addEventListener(
+            "click",
+            () => {
+
+                agregarProducto(
+                    producto
+                );
+
+            }
+        );
+
+
+        info.appendChild(
+            nombre
+        );
+
+
+        if (
+            producto.descripcion
+        ) {
+
+            info.appendChild(
+                descripcion
+            );
 
         }
-    );
+
+
+        info.appendChild(
+            precio
+        );
+
+
+        info.appendChild(
+            boton
+        );
+
+
+        tarjeta.appendChild(
+            imagen
+        );
+
+
+        tarjeta.appendChild(
+            info
+        );
+
+
+        contenedor.appendChild(
+            tarjeta
+        );
+
+    }
+);
+```
 
 }
 
-
 /* ============================================================
-   DETECTAR PRODUCTO COMPUESTO
+IMAGEN
 ============================================================ */
 
-function esProductoCompuesto(producto) {
+function obtenerImagen(
+producto
+) {
 
-    const tipo =
+```
+/*
+ * Nueva API:
+ *
+ * imagen_url
+ */
+
+if (
+    producto.imagen_url &&
+    String(
+        producto.imagen_url
+    ).trim() !== ""
+) {
+
+    const url =
         String(
-            producto.tipo_producto || ""
-        ).toUpperCase();
+            producto.imagen_url
+        ).trim();
 
 
     /*
-     * Compatibilidad con distintos valores
-     * que pueda tener la API.
+     * Si la API ya devuelve
+     * una URL completa.
      */
 
     if (
-        tipo === "COMPUESTO" ||
-        tipo === "COMBO" ||
-        tipo === "VARIEDAD" ||
-        tipo === "PRODUCTO_COMPUESTO"
-    ) {
-
-        return true;
-
-    }
-
-
-    /*
-     * Compatibilidad con la estructura anterior.
-     */
-
-    if (
-        Number(producto.cant_min || 0) > 0
-    ) {
-
-        return true;
-
-    }
-
-
-    /*
-     * Si la API ya trae grupos,
-     * también lo consideramos compuesto.
-     */
-
-    if (
-        Array.isArray(producto.grupos) &&
-        producto.grupos.length > 0
-    ) {
-
-        return true;
-
-    }
-
-
-    return false;
-
-}
-
-
-/* ============================================================
-   IMAGEN
-============================================================ */
-
-function obtenerImagen(producto) {
-
-    if (
-        producto.url &&
-        String(producto.url).trim() !== ""
+        url.startsWith(
+            "http://"
+        ) ||
+        url.startsWith(
+            "https://"
+        )
     ) {
 
         return (
-            URL_FOTOS +
-            encodeURIComponent(
-                String(producto.url).trim()
+            url +
+            (
+                url.includes("?")
+                    ? "&"
+                    : "?"
             ) +
-            "?v=" +
+            "v=" +
             Date.now()
         );
 
     }
 
 
+    /*
+     * Si devuelve solamente
+     * el nombre del archivo,
+     * lo buscamos en GitHub.
+     */
+
     return (
-        URL_LOGO +
+        URL_FOTOS +
+        encodeURIComponent(
+            url
+        ) +
         "?v=" +
         Date.now()
     );
@@ -1131,158 +1434,221 @@ function obtenerImagen(producto) {
 }
 
 
+return (
+    URL_LOGO +
+    "?v=" +
+    Date.now()
+);
+```
+
+}
+
 /* ============================================================
-   AGREGAR PRODUCTO
+¿ES COMPUESTO?
+============================================================ */
+
+function esProductoCompuesto(
+producto
+) {
+
+```
+return (
+    producto.es_compuesto === true ||
+    producto.tipo_producto ===
+        "COMPUESTO"
+);
+```
+
+}
+
+/* ============================================================
+AGREGAR PRODUCTO
 ============================================================ */
 
 async function agregarProducto(
-    producto
+producto
 ) {
 
-    if (
-        esProductoCompuesto(producto)
-    ) {
+```
+if (
+    esProductoCompuesto(
+        producto
+    )
+) {
 
-        await abrirCompuesto(
-            producto
-        );
+    await abrirCompuesto(
+        producto
+    );
 
-        return;
+    return;
+
+}
+
+
+agregarSimple(
+    producto
+);
+```
+
+}
+
+/* ============================================================
+PRODUCTO SIMPLE
+============================================================ */
+
+function agregarSimple(
+producto
+) {
+
+```
+const existente =
+    carrito.find(
+        item =>
+            item.producto_id ===
+                producto.id &&
+            !item.compuesto
+    );
+
+
+if (existente) {
+
+    existente.cantidad++;
+
+    existente.subtotal =
+        existente.cantidad *
+        existente.precio;
+
+} else {
+
+    carrito.push({
+
+        key:
+            "P_" +
+            producto.id,
+
+        producto_id:
+            producto.id,
+
+        nombre:
+            producto.nombre,
+
+        precio:
+            Number(
+                producto.precio
+            ),
+
+        cantidad:
+            1,
+
+        subtotal:
+            Number(
+                producto.precio
+            ),
+
+        compuesto:
+            false,
+
+        grupos:
+            []
+
+    });
+
+}
+
+
+actualizarCarritoUI();
+```
+
+}
+
+/* ============================================================
+CARGAR GRUPOS DEL COMPUESTO
+============================================================ */
+
+async function cargarGruposProducto(
+productoId
+) {
+
+```
+const url =
+    API_URL +
+    "/productos/" +
+    encodeURIComponent(
+        productoId
+    ) +
+    "/grupos-completos?v=" +
+    Date.now();
+
+
+console.log(
+    "Cargando grupos:",
+    url
+);
+
+
+const respuesta =
+    await fetch(
+        url,
+        {
+            method: "GET",
+            cache: "no-store"
+        }
+    );
+
+
+if (!respuesta.ok) {
+
+    let detalle =
+        "No se pudieron cargar las opciones.";
+
+    try {
+
+        const datos =
+            await respuesta.json();
+
+        if (datos.detail) {
+
+            detalle =
+                datos.detail;
+
+        }
+
+    } catch {
+
+        /* Nada */
 
     }
 
 
-    agregarSimple(
-        producto
+    throw new Error(
+        detalle
     );
 
 }
 
 
-/* ============================================================
-   PRODUCTO SIMPLE
-============================================================ */
-
-function agregarSimple(
-    producto
-) {
-
-    const existente =
-        carrito.find(
-            item =>
-                item.producto_id ===
-                    producto.id &&
-                !item.compuesto
-        );
-
-
-    if (existente) {
-
-        existente.cantidad++;
-
-        existente.subtotal =
-            existente.cantidad *
-            existente.precio;
-
-    } else {
-
-        carrito.push({
-
-            key:
-                "P_" +
-                producto.id,
-
-            producto_id:
-                producto.id,
-
-            nombre:
-                producto.nombre,
-
-            precio:
-                Number(producto.precio || 0),
-
-            cantidad:
-                1,
-
-            subtotal:
-                Number(producto.precio || 0),
-
-            compuesto:
-                false
-
-        });
-
-    }
-
-
-    actualizarCarritoUI();
+return await respuesta.json();
+```
 
 }
 
-
 /* ============================================================
-   CARGAR GRUPOS DESDE LIGHTPOS API
-============================================================ */
-
-async function obtenerGruposProducto(
-    productoId
-) {
-
-    const respuesta =
-        await fetch(
-            API_URL +
-            "/productos/" +
-            encodeURIComponent(productoId) +
-            "/grupos-completos?v=" +
-            Date.now()
-        );
-
-
-    let datos = null;
-
-
-    try {
-
-        datos =
-            await respuesta.json();
-
-    } catch {
-
-        datos = null;
-
-    }
-
-
-    if (!respuesta.ok) {
-
-        throw new Error(
-            datos?.detail ||
-            "No se pudieron cargar las opciones del producto."
-        );
-
-    }
-
-
-    return datos;
-
-}
-
-
-/* ============================================================
-   ABRIR COMPUESTO
+ABRIR COMPUESTO
 ============================================================ */
 
 async function abrirCompuesto(
-    producto
+producto
 ) {
+
+```
+try {
 
     productoCompuestoActual =
         producto;
 
 
-    gruposCompuestoActual = [];
-
-    seleccionesCompuesto = {};
+    seleccionesGrupos =
+        {};
 
 
     const titulo =
@@ -1328,123 +1694,57 @@ async function abrirCompuesto(
     }
 
 
-    try {
-
-        const datos =
-            await obtenerGruposProducto(
-                producto.id
-            );
-
-
-        if (
-            !datos ||
-            !Array.isArray(datos.grupos)
-        ) {
-
-            throw new Error(
-                "La API no devolvió grupos para este producto."
-            );
-
-        }
-
-
-        gruposCompuestoActual =
-            datos.grupos
-                .filter(
-                    grupo =>
-                        grupo &&
-                        (
-                            grupo.activo === undefined ||
-                            grupo.activo === true
-                        )
-                );
-
-
-        if (
-            !gruposCompuestoActual.length
-        ) {
-
-            cerrarCompuesto();
-
-            mostrarMensaje(
-                "Este producto no tiene grupos configurados."
-            );
-
-            return;
-
-        }
-
-
-        inicializarSeleccionesCompuesto();
-
-
-        mostrarReglasGrupos();
-
-        mostrarOpcionesCompuesto();
-
-
-    } catch (error) {
-
-        console.error(
-            "Error cargando grupos del producto:",
-            error
+    const datos =
+        await cargarGruposProducto(
+            producto.id
         );
 
 
-        cerrarCompuesto();
+    /*
+     * Guardamos los grupos recibidos
+     * directamente en el producto actual.
+     */
+
+    productoCompuestoActual.grupos =
+        Array.isArray(
+            datos.grupos
+        )
+            ? datos.grupos
+            : [];
 
 
-        mostrarMensaje(
-            error.message ||
-            "No se pudieron cargar las opciones."
+    if (
+        !productoCompuestoActual.grupos.length
+    ) {
+
+        throw new Error(
+            "Este producto no tiene grupos de opciones configurados."
         );
 
     }
 
-}
 
-
-/* ============================================================
-   INICIALIZAR SELECCIONES
-============================================================ */
-
-function inicializarSeleccionesCompuesto() {
-
-    seleccionesCompuesto = {};
-
-
-    gruposCompuestoActual.forEach(
+    productoCompuestoActual.grupos.forEach(
         grupo => {
 
-            seleccionesCompuesto[
+            seleccionesGrupos[
                 grupo.id
             ] = {};
 
-
-            if (
-                !Array.isArray(
+            grupo.opciones =
+                Array.isArray(
                     grupo.opciones
                 )
-            ) {
-
-                return;
-
-            }
-
+                    ? grupo.opciones
+                    : [];
 
             grupo.opciones.forEach(
                 opcion => {
 
-                    /*
-                     * Usamos componente_id como clave.
-                     * Esto permite trabajar igual con opciones
-                     * manuales y automáticas.
-                     */
-
-                    seleccionesCompuesto[
+                    seleccionesGrupos[
                         grupo.id
                     ][
-                        opcion.componente_id
+                        opcion.id
                     ] = 0;
 
                 }
@@ -1453,47 +1753,81 @@ function inicializarSeleccionesCompuesto() {
         }
     );
 
-}
 
+    if (reglas) {
 
-/* ============================================================
-   REGLAS DE GRUPOS
-============================================================ */
-
-function mostrarReglasGrupos() {
-
-    const reglas =
-        document.getElementById(
-            "compuestoReglas"
-        );
-
-
-    if (!reglas) {
-
-        return;
+        reglas.textContent =
+            generarTextoReglasGrupos(
+                productoCompuestoActual.grupos
+            );
 
     }
 
 
-    const textos = [];
+    mostrarGruposCompuesto();
 
 
-    gruposCompuestoActual.forEach(
+} catch (error) {
+
+    console.error(
+        "Error cargando compuesto:",
+        error
+    );
+
+
+    cerrarCompuesto();
+
+
+    mostrarMensaje(
+        error.message ||
+        "No se pudieron cargar las opciones."
+    );
+
+}
+```
+
+}
+
+/* ============================================================
+TEXTO DE REGLAS
+============================================================ */
+
+function generarTextoReglasGrupos(
+grupos
+) {
+
+```
+if (
+    !Array.isArray(
+        grupos
+    ) ||
+    !grupos.length
+) {
+
+    return "";
+
+}
+
+
+return grupos
+    .map(
         grupo => {
 
             const min =
                 Number(
-                    grupo.minimo_selecciones || 0
+                    grupo.minimo_selecciones ||
+                    0
                 );
 
             const max =
                 Number(
-                    grupo.maximo_selecciones || 0
+                    grupo.maximo_selecciones ||
+                    0
                 );
 
 
             let texto =
-                grupo.nombre;
+                grupo.nombre || "";
 
 
             if (
@@ -1503,7 +1837,7 @@ function mostrarReglasGrupos() {
             ) {
 
                 texto +=
-                    `: elegí ${min}.`;
+                    ` — elegí ${min}`;
 
             } else if (
                 min &&
@@ -1511,761 +1845,675 @@ function mostrarReglasGrupos() {
             ) {
 
                 texto +=
-                    `: entre ${min} y ${max}.`;
+                    ` — entre ${min} y ${max}`;
 
-            } else if (min) {
-
-                texto +=
-                    `: al menos ${min}.`;
-
-            } else if (max) {
+            } else if (
+                min
+            ) {
 
                 texto +=
-                    `: hasta ${max}.`;
+                    ` — mínimo ${min}`;
+
+            } else if (
+                max
+            ) {
+
+                texto +=
+                    ` — máximo ${max}`;
 
             }
 
 
-            textos.push(texto);
+            return texto;
 
         }
+    )
+    .join(
+        " | "
+    );
+```
+
+}
+
+/* ============================================================
+MOSTRAR GRUPOS
+============================================================ */
+
+function mostrarGruposCompuesto() {
+
+```
+const contenedor =
+    document.getElementById(
+        "opcionesCompuesto"
     );
 
 
-    reglas.textContent =
-        textos.join(" ");
+if (!contenedor) {
+
+    return;
 
 }
 
 
-/* ============================================================
-   MOSTRAR OPCIONES COMPUESTO
-============================================================ */
+contenedor.innerHTML =
+    "";
 
-function mostrarOpcionesCompuesto() {
 
-    const contenedor =
-        document.getElementById(
-            "opcionesCompuesto"
+const grupos =
+    productoCompuestoActual
+        ?.grupos || [];
+
+
+grupos.forEach(
+    grupo => {
+
+        const bloque =
+            document.createElement(
+                "div"
+            );
+
+
+        bloque.className =
+            "grupo-compuesto";
+
+
+        const titulo =
+            document.createElement(
+                "h3"
+            );
+
+
+        titulo.textContent =
+            grupo.nombre;
+
+
+        bloque.appendChild(
+            titulo
         );
 
 
-    if (!contenedor) {
+        if (
+            grupo.descripcion
+        ) {
+
+            const descripcion =
+                document.createElement(
+                    "p"
+                );
+
+
+            descripcion.textContent =
+                grupo.descripcion;
+
+
+            bloque.appendChild(
+                descripcion
+            );
+
+        }
+
+
+        const opciones =
+            document.createElement(
+                "div"
+            );
+
+
+        opciones.className =
+            "opciones-grupo";
+
+
+        grupo.opciones.forEach(
+            opcion => {
+
+                const fila =
+                    crearFilaOpcion(
+                        grupo,
+                        opcion
+                    );
+
+
+                opciones.appendChild(
+                    fila
+                );
+
+            }
+        );
+
+
+        bloque.appendChild(
+            opciones
+        );
+
+
+        contenedor.appendChild(
+            bloque
+        );
+
+    }
+);
+```
+
+}
+
+/* ============================================================
+CREAR FILA DE OPCIÓN
+============================================================ */
+
+function crearFilaOpcion(
+grupo,
+opcion
+) {
+
+```
+const fila =
+    document.createElement(
+        "div"
+    );
+
+
+fila.className =
+    "opcion-compuesto";
+
+
+const nombre =
+    document.createElement(
+        "div"
+    );
+
+
+nombre.className =
+    "opcion-nombre";
+
+
+nombre.textContent =
+    opcion.nombre;
+
+
+const menos =
+    document.createElement(
+        "button"
+    );
+
+
+menos.type =
+    "button";
+
+menos.textContent =
+    "−";
+
+
+const cantidad =
+    document.createElement(
+        "span"
+    );
+
+
+cantidad.className =
+    "opcion-cantidad";
+
+
+cantidad.textContent =
+    obtenerCantidadOpcion(
+        grupo.id,
+        opcion.id
+    );
+
+
+const mas =
+    document.createElement(
+        "button"
+    );
+
+
+mas.type =
+    "button";
+
+mas.textContent =
+    "+";
+
+
+/*
+ * Obligatorio visual.
+ */
+
+if (
+    opcion.obligatorio
+) {
+
+    const obligatorio =
+        document.createElement(
+            "small"
+        );
+
+    obligatorio.textContent =
+        "Obligatorio";
+
+    obligatorio.className =
+        "opcion-obligatoria";
+
+    nombre.appendChild(
+        obligatorio
+    );
+
+}
+
+
+menos.addEventListener(
+    "click",
+    () => {
+
+        cambiarCantidadOpcion(
+            grupo,
+            opcion,
+            -1
+        );
+
+        cantidad.textContent =
+            obtenerCantidadOpcion(
+                grupo.id,
+                opcion.id
+            );
+
+    }
+);
+
+
+mas.addEventListener(
+    "click",
+    () => {
+
+        cambiarCantidadOpcion(
+            grupo,
+            opcion,
+            1
+        );
+
+        cantidad.textContent =
+            obtenerCantidadOpcion(
+                grupo.id,
+                opcion.id
+            );
+
+    }
+);
+
+
+fila.appendChild(
+    nombre
+);
+
+fila.appendChild(
+    menos
+);
+
+fila.appendChild(
+    cantidad
+);
+
+fila.appendChild(
+    mas
+);
+
+
+return fila;
+```
+
+}
+
+/* ============================================================
+OBTENER CANTIDAD
+============================================================ */
+
+function obtenerCantidadOpcion(
+grupoId,
+opcionId
+) {
+
+```
+return Number(
+    seleccionesGrupos?.[
+        grupoId
+    ]?.[
+        opcionId
+    ] || 0
+);
+```
+
+}
+
+/* ============================================================
+TOTAL DE UN GRUPO
+============================================================ */
+
+function obtenerTotalGrupo(
+grupoId
+) {
+
+```
+const opciones =
+    seleccionesGrupos?.[
+        grupoId
+    ] || {};
+
+
+return Object.values(
+    opciones
+).reduce(
+    (
+        total,
+        cantidad
+    ) =>
+        total +
+        Number(
+            cantidad
+        ),
+    0
+);
+```
+
+}
+
+/* ============================================================
+CAMBIAR CANTIDAD
+============================================================ */
+
+function cambiarCantidadOpcion(
+grupo,
+opcion,
+cambio
+) {
+
+```
+const actual =
+    obtenerCantidadOpcion(
+        grupo.id,
+        opcion.id
+    );
+
+
+const nuevo =
+    Math.max(
+        0,
+        actual + cambio
+    );
+
+
+/*
+ * Si estamos agregando,
+ * respetamos máximo del grupo.
+ */
+
+if (
+    cambio > 0
+) {
+
+    const maxGrupo =
+        Number(
+            grupo.maximo_selecciones ||
+            0
+        );
+
+
+    const totalActual =
+        obtenerTotalGrupo(
+            grupo.id
+        );
+
+
+    if (
+        maxGrupo &&
+        totalActual >= maxGrupo
+    ) {
+
+        mostrarMensaje(
+            `Máximo permitido en "${grupo.nombre}": ${maxGrupo}.`
+        );
 
         return;
 
     }
 
 
-    contenedor.innerHTML = "";
+    /*
+     * Máximo específico
+     * de la opción.
+     */
+
+    const maxOpcion =
+        Number(
+            opcion.maximo_cantidad ||
+            0
+        );
 
 
-    gruposCompuestoActual.forEach(
-        grupo => {
+    if (
+        maxOpcion &&
+        nuevo > maxOpcion
+    ) {
 
-            const bloque =
-                document.createElement("div");
+        mostrarMensaje(
+            `Máximo permitido para ${opcion.nombre}: ${maxOpcion}.`
+        );
 
+        return;
 
-            bloque.className =
-                "grupo-compuesto";
-
-
-            const titulo =
-                document.createElement("h3");
-
-
-            titulo.textContent =
-                grupo.nombre;
-
-
-            bloque.appendChild(
-                titulo
-            );
-
-
-            if (
-                grupo.descripcion
-            ) {
-
-                const descripcion =
-                    document.createElement("p");
-
-
-                descripcion.textContent =
-                    grupo.descripcion;
-
-
-                bloque.appendChild(
-                    descripcion
-                );
-
-            }
-
-
-            if (
-                !Array.isArray(
-                    grupo.opciones
-                ) ||
-                !grupo.opciones.length
-            ) {
-
-                const sinOpciones =
-                    document.createElement("p");
-
-
-                sinOpciones.textContent =
-                    "No hay opciones disponibles.";
-
-
-                bloque.appendChild(
-                    sinOpciones
-                );
-
-
-                contenedor.appendChild(
-                    bloque
-                );
-
-
-                return;
-
-            }
-
-
-            grupo.opciones.forEach(
-                opcion => {
-
-                    crearFilaOpcion(
-                        grupo,
-                        opcion,
-                        bloque
-                    );
-
-                }
-            );
-
-
-            contenedor.appendChild(
-                bloque
-            );
-
-        }
-    );
-
-
-    actualizarTotalOpciones();
-
-}
-
-
-/* ============================================================
-   CREAR FILA DE OPCIÓN
-============================================================ */
-
-function crearFilaOpcion(
-    grupo,
-    opcion,
-    contenedor
-) {
-
-    const fila =
-        document.createElement("div");
-
-
-    fila.className =
-        "opcion-compuesto";
-
-
-    const nombre =
-        document.createElement("div");
-
-
-    nombre.className =
-        "opcion-nombre";
-
-
-    nombre.textContent =
-        opcion.nombre;
+    }
 
 
     /*
-     * En modo MAXIMO mostramos el precio
-     * para que el cliente sepa qué está eligiendo.
+     * Si no permite repetir,
+     * máximo 1.
      */
 
     if (
-        String(grupo.modo_precio || "")
-            .toUpperCase() ===
-        "MAXIMO"
+        opcion.permite_repetir === false &&
+        nuevo > 1
     ) {
 
-        const precio =
-            document.createElement("small");
-
-
-        precio.textContent =
-            " " +
-            formatearPrecio(
-                opcion.precio
-            );
-
-
-        nombre.appendChild(
-            precio
+        mostrarMensaje(
+            `${opcion.nombre} no permite repetirse.`
         );
 
-    }
-
-
-    const menos =
-        document.createElement("button");
-
-
-    menos.type =
-        "button";
-
-
-    menos.textContent =
-        "−";
-
-
-    const cantidad =
-        document.createElement("span");
-
-
-    cantidad.className =
-        "opcion-cantidad";
-
-
-    cantidad.textContent =
-        obtenerCantidadOpcion(
-            grupo.id,
-            opcion.componente_id
-        );
-
-
-    const mas =
-        document.createElement("button");
-
-
-    mas.type =
-        "button";
-
-
-    mas.textContent =
-        "+";
-
-
-    menos.addEventListener(
-        "click",
-        () => {
-
-            const actual =
-                obtenerCantidadOpcion(
-                    grupo.id,
-                    opcion.componente_id
-                );
-
-
-            if (actual <= 0) {
-
-                return;
-
-            }
-
-
-            establecerCantidadOpcion(
-                grupo.id,
-                opcion.componente_id,
-                actual - 1
-            );
-
-
-            cantidad.textContent =
-                actual - 1;
-
-
-            actualizarTotalOpciones();
-
-        }
-    );
-
-
-    mas.addEventListener(
-        "click",
-        () => {
-
-            const actual =
-                obtenerCantidadOpcion(
-                    grupo.id,
-                    opcion.componente_id
-                );
-
-
-            const totalGrupo =
-                obtenerTotalGrupo(
-                    grupo.id
-                );
-
-
-            const maxGrupo =
-                Number(
-                    grupo.maximo_selecciones || 0
-                );
-
-
-            if (
-                maxGrupo &&
-                totalGrupo >= maxGrupo
-            ) {
-
-                mostrarMensaje(
-                    `Máximo permitido en "${grupo.nombre}": ${maxGrupo}.`
-                );
-
-                return;
-
-            }
-
-
-            const maxOpcion =
-                Number(
-                    opcion.maximo_cantidad || 0
-                );
-
-
-            /*
-             * Si maximo_cantidad = 0,
-             * lo tratamos como sin límite.
-             */
-
-            if (
-                maxOpcion &&
-                actual >= maxOpcion
-            ) {
-
-                mostrarMensaje(
-                    `Máximo permitido para ${opcion.nombre}: ${maxOpcion}.`
-                );
-
-                return;
-
-            }
-
-
-            establecerCantidadOpcion(
-                grupo.id,
-                opcion.componente_id,
-                actual + 1
-            );
-
-
-            cantidad.textContent =
-                actual + 1;
-
-
-            actualizarTotalOpciones();
-
-        }
-    );
-
-
-    fila.appendChild(
-        nombre
-    );
-
-    fila.appendChild(
-        menos
-    );
-
-    fila.appendChild(
-        cantidad
-    );
-
-    fila.appendChild(
-        mas
-    );
-
-
-    contenedor.appendChild(
-        fila
-    );
-
-}
-
-
-/* ============================================================
-   OBTENER CANTIDAD OPCIÓN
-============================================================ */
-
-function obtenerCantidadOpcion(
-    grupoId,
-    componenteId
-) {
-
-    if (
-        !seleccionesCompuesto[grupoId]
-    ) {
-
-        return 0;
-
-    }
-
-
-    return Number(
-        seleccionesCompuesto[grupoId][componenteId] || 0
-    );
-
-}
-
-
-/* ============================================================
-   ESTABLECER CANTIDAD OPCIÓN
-============================================================ */
-
-function establecerCantidadOpcion(
-    grupoId,
-    componenteId,
-    cantidad
-) {
-
-    if (
-        !seleccionesCompuesto[grupoId]
-    ) {
-
-        seleccionesCompuesto[grupoId] = {};
-
-    }
-
-
-    seleccionesCompuesto[
-        grupoId
-    ][
-        componenteId
-    ] =
-        Math.max(
-            0,
-            Number(cantidad || 0)
-        );
-
-}
-
-
-/* ============================================================
-   TOTAL DEL GRUPO
-============================================================ */
-
-function obtenerTotalGrupo(
-    grupoId
-) {
-
-    if (
-        !seleccionesCompuesto[grupoId]
-    ) {
-
-        return 0;
-
-    }
-
-
-    return Object.values(
-        seleccionesCompuesto[grupoId]
-    ).reduce(
-        (
-            total,
-            cantidad
-        ) =>
-            total +
-            Number(cantidad || 0),
-        0
-    );
-
-}
-
-
-/* ============================================================
-   TOTAL OPCIONES
-============================================================ */
-
-function obtenerTotalOpciones() {
-
-    return gruposCompuestoActual.reduce(
-        (
-            total,
-            grupo
-        ) =>
-            total +
-            obtenerTotalGrupo(
-                grupo.id
-            ),
-        0
-    );
-
-}
-
-
-/* ============================================================
-   ACTUALIZAR TOTAL OPCIONES
-============================================================ */
-
-function actualizarTotalOpciones() {
-
-    const elemento =
-        document.getElementById(
-            "totalOpciones"
-        );
-
-
-    if (elemento) {
-
-        elemento.textContent =
-            obtenerTotalOpciones();
+        return;
 
     }
 
 }
 
 
+seleccionesGrupos[
+    grupo.id
+][
+    opcion.id
+] =
+    nuevo;
+```
+
+}
+
 /* ============================================================
-   VALIDAR GRUPOS
+VALIDAR GRUPOS
 ============================================================ */
 
 function validarGruposCompuesto() {
 
-    for (
-        const grupo
-        of gruposCompuestoActual
+```
+const grupos =
+    productoCompuestoActual
+        ?.grupos || [];
+
+
+for (
+    const grupo of grupos
+) {
+
+    const total =
+        obtenerTotalGrupo(
+            grupo.id
+        );
+
+
+    const min =
+        Number(
+            grupo.minimo_selecciones ||
+            0
+        );
+
+
+    const max =
+        Number(
+            grupo.maximo_selecciones ||
+            0
+        );
+
+
+    if (
+        min &&
+        total < min
     ) {
 
-        const total =
-            obtenerTotalGrupo(
-                grupo.id
-            );
+        mostrarMensaje(
+            `En "${grupo.nombre}" debés seleccionar al menos ${min}.`
+        );
 
-
-        const min =
-            Number(
-                grupo.minimo_selecciones || 0
-            );
-
-        const max =
-            Number(
-                grupo.maximo_selecciones || 0
-            );
-
-
-        if (
-            min &&
-            total < min
-        ) {
-
-            mostrarMensaje(
-                `En "${grupo.nombre}" debés seleccionar al menos ${min}.`
-            );
-
-            return false;
-
-        }
-
-
-        if (
-            max &&
-            total > max
-        ) {
-
-            mostrarMensaje(
-                `En "${grupo.nombre}" no podés seleccionar más de ${max}.`
-            );
-
-            return false;
-
-        }
+        return false;
 
     }
 
 
-    return true;
+    if (
+        max &&
+        total > max
+    ) {
 
-}
-
-
-/* ============================================================
-   CALCULAR PRECIO DEL COMPUESTO
-============================================================ */
-
-function calcularPrecioCompuesto() {
-
-    const producto =
-        productoCompuestoActual;
-
-
-    let precioBase =
-        Number(
-            producto.precio || 0
+        mostrarMensaje(
+            `En "${grupo.nombre}" podés seleccionar como máximo ${max}.`
         );
+
+        return false;
+
+    }
 
 
     /*
-     * Por defecto el producto conserva
-     * su precio normal.
+     * Validación de opciones obligatorias.
      */
 
     for (
-        const grupo
-        of gruposCompuestoActual
+        const opcion of grupo.opciones
     ) {
 
-        const modo =
-            String(
-                grupo.modo_precio || "INCLUIDO"
-            ).toUpperCase();
-
-
         if (
-            modo !== "MAXIMO"
+            opcion.obligatorio
         ) {
 
-            continue;
+            const cantidad =
+                obtenerCantidadOpcion(
+                    grupo.id,
+                    opcion.id
+                );
+
+
+            const minimoOpcion =
+                Number(
+                    opcion.minimo_cantidad ||
+                    0
+                );
+
+
+            const minimoReal =
+                Math.max(
+                    1,
+                    minimoOpcion
+                );
+
+
+            if (
+                cantidad <
+                minimoReal
+            ) {
+
+                mostrarMensaje(
+                    `Debés seleccionar "${opcion.nombre}" en "${grupo.nombre}".`
+                );
+
+                return false;
+
+            }
 
         }
 
-
-        let precioMaximo =
-            0;
-
-
-        const selecciones =
-            seleccionesCompuesto[
-                grupo.id
-            ] || {};
-
-
-        Object.entries(
-            selecciones
-        ).forEach(
-            (
-                [
-                    componenteId,
-                    cantidad
-                ]
-            ) => {
-
-                if (
-                    Number(cantidad) <= 0
-                ) {
-
-                    return;
-
-                }
-
-
-                const opcion =
-                    grupo.opciones?.find(
-                        item =>
-                            Number(
-                                item.componente_id
-                            ) ===
-                            Number(
-                                componenteId
-                            )
-                    );
-
-
-                if (!opcion) {
-
-                    return;
-
-                }
-
-
-                precioMaximo =
-                    Math.max(
-                        precioMaximo,
-                        Number(
-                            opcion.precio || 0
-                        )
-                    );
-
-            }
-        );
-
-
-        precioBase =
-            Math.max(
-                precioBase,
-                precioMaximo
-            );
-
     }
-
-
-    return precioBase;
 
 }
 
 
+return true;
+```
+
+}
+
 /* ============================================================
-   CONSTRUIR DETALLE DEL COMPUESTO
+CONFIRMAR COMPUESTO
 ============================================================ */
 
-function construirDetalleCompuesto() {
+function confirmarCompuesto() {
 
-    const partes = [];
-
-
-    gruposCompuestoActual.forEach(
-        grupo => {
-
-            const selecciones =
-                seleccionesCompuesto[
-                    grupo.id
-                ] || {};
+```
+const producto =
+    productoCompuestoActual;
 
 
-            const opciones =
-                [];
+if (!producto) {
+
+    return;
+
+}
 
 
-            Object.entries(
-                selecciones
-            ).forEach(
-                (
-                    [
-                        componenteId,
-                        cantidad
-                    ]
-                ) => {
+if (
+    !validarGruposCompuesto()
+) {
 
-                    if (
-                        Number(cantidad) <= 0
-                    ) {
+    return;
 
-                        return;
-
-                    }
+}
 
 
-                    const opcion =
-                        grupo.opciones?.find(
-                            item =>
-                                Number(
-                                    item.componente_id
-                                ) ===
-                                Number(
-                                    componenteId
-                                )
-                        );
+const gruposSeleccionados =
+    [];
 
 
-                    if (!opcion) {
-
-                        return;
-
-                    }
+const partesNombre =
+    [];
 
 
-                    opciones.push({
+producto.grupos.forEach(
+    grupo => {
+
+        const opcionesSeleccionadas =
+            [];
+
+
+        grupo.opciones.forEach(
+            opcion => {
+
+                const cantidad =
+                    obtenerCantidadOpcion(
+                        grupo.id,
+                        opcion.id
+                    );
+
+
+                if (
+                    cantidad > 0
+                ) {
+
+                    opcionesSeleccionadas.push({
+
+                        opcion_id:
+                            opcion.id,
 
                         componente_id:
                             opcion.componente_id,
@@ -2274,1526 +2522,1235 @@ function construirDetalleCompuesto() {
                             opcion.nombre,
 
                         cantidad:
-                            Number(cantidad),
-
-                        precio:
-                            Number(
-                                opcion.precio || 0
-                            )
+                            cantidad
 
                     });
 
-                }
-            );
 
-
-            if (opciones.length) {
-
-                partes.push({
-
-                    grupo_id:
-                        grupo.id,
-
-                    grupo_nombre:
-                        grupo.nombre,
-
-                    opciones:
-                        opciones
-
-                });
-
-            }
-
-        }
-    );
-
-
-    return partes;
-
-}
-
-
-/* ============================================================
-   NOMBRE DEL COMPUESTO
-============================================================ */
-
-function construirNombreCompuesto() {
-
-    const partes = [];
-
-
-    gruposCompuestoActual.forEach(
-        grupo => {
-
-            const selecciones =
-                seleccionesCompuesto[
-                    grupo.id
-                ] || {};
-
-
-            const nombres = [];
-
-
-            Object.entries(
-                selecciones
-            ).forEach(
-                (
-                    [
-                        componenteId,
-                        cantidad
-                    ]
-                ) => {
-
-                    if (
-                        Number(cantidad) <= 0
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    const opcion =
-                        grupo.opciones?.find(
-                            item =>
-                                Number(
-                                    item.componente_id
-                                ) ===
-                                Number(
-                                    componenteId
-                                )
-                        );
-
-
-                    if (!opcion) {
-
-                        return;
-
-                    }
-
-
-                    if (
-                        Number(cantidad) === 1
-                    ) {
-
-                        nombres.push(
-                            opcion.nombre
-                        );
-
-                    } else {
-
-                        nombres.push(
-                            `${cantidad} ${opcion.nombre}`
-                        );
-
-                    }
+                    partesNombre.push(
+                        `${cantidad} ${opcion.nombre}`
+                    );
 
                 }
-            );
-
-
-            if (nombres.length) {
-
-                partes.push(
-                    `${grupo.nombre}: ${nombres.join(", ")}`
-                );
 
             }
-
-        }
-    );
-
-
-    if (!partes.length) {
-
-        return productoCompuestoActual.nombre;
-
-    }
-
-
-    return (
-        productoCompuestoActual.nombre +
-        " (" +
-        partes.join(" | ") +
-        ")"
-    );
-
-}
-
-
-/* ============================================================
-   CONFIRMAR COMPUESTO
-============================================================ */
-
-function confirmarCompuesto() {
-
-    const producto =
-        productoCompuestoActual;
-
-
-    if (!producto) {
-
-        return;
-
-    }
-
-
-    if (
-        !validarGruposCompuesto()
-    ) {
-
-        return;
-
-    }
-
-
-    const total =
-        obtenerTotalOpciones();
-
-
-    if (total === 0) {
-
-        mostrarMensaje(
-            "Seleccioná al menos una opción."
         );
 
-        return;
 
-    }
+        if (
+            opcionesSeleccionadas.length
+        ) {
 
+            gruposSeleccionados.push({
 
-    const precio =
-        calcularPrecioCompuesto();
+                grupo_id:
+                    grupo.id,
 
+                grupo_nombre:
+                    grupo.nombre,
 
-    const nombreFinal =
-        construirNombreCompuesto();
+                opciones:
+                    opcionesSeleccionadas
 
-
-    const detalle =
-        construirDetalleCompuesto();
-
-
-    carrito.push({
-
-        key:
-            "COMP_" +
-            producto.id +
-            "_" +
-            Date.now(),
-
-        producto_id:
-            producto.id,
-
-        nombre:
-            nombreFinal,
-
-        precio:
-            precio,
-
-        cantidad:
-            1,
-
-        subtotal:
-            precio,
-
-        compuesto:
-            true,
-
-        grupos:
-            detalle,
-
-        /*
-         * Compatibilidad:
-         * dejamos una representación plana
-         * de las cantidades.
-         */
-
-        hijos:
-            obtenerMapaCantidadesPlano()
-
-    });
-
-
-    cerrarCompuesto();
-
-    actualizarCarritoUI();
-
-}
-
-
-/* ============================================================
-   MAPA PLANO DE CANTIDADES
-============================================================ */
-
-function obtenerMapaCantidadesPlano() {
-
-    const resultado = {};
-
-
-    gruposCompuestoActual.forEach(
-        grupo => {
-
-            const selecciones =
-                seleccionesCompuesto[
-                    grupo.id
-                ] || {};
-
-
-            Object.entries(
-                selecciones
-            ).forEach(
-                (
-                    [
-                        componenteId,
-                        cantidad
-                    ]
-                ) => {
-
-                    if (
-                        Number(cantidad) > 0
-                    ) {
-
-                        resultado[
-                            componenteId
-                        ] =
-                            Number(cantidad);
-
-                    }
-
-                }
-            );
+            });
 
         }
+
+    }
+);
+
+
+if (
+    !gruposSeleccionados.length
+) {
+
+    mostrarMensaje(
+        "Seleccioná las opciones del producto."
     );
 
-
-    return resultado;
+    return;
 
 }
 
 
+const nombreFinal =
+    `${producto.nombre} (${partesNombre.join(", ")})`;
+
+
+carrito.push({
+
+    key:
+        "COMP_" +
+        producto.id +
+        "_" +
+        Date.now(),
+
+    producto_id:
+        producto.id,
+
+    nombre:
+        nombreFinal,
+
+    precio:
+        Number(
+            producto.precio
+        ),
+
+    cantidad:
+        1,
+
+    subtotal:
+        Number(
+            producto.precio
+        ),
+
+    compuesto:
+        true,
+
+    grupos:
+        gruposSeleccionados
+
+});
+
+
+cerrarCompuesto();
+
+actualizarCarritoUI();
+```
+
+}
+
 /* ============================================================
-   CERRAR COMPUESTO
+CERRAR COMPUESTO
 ============================================================ */
 
 function cerrarCompuesto() {
 
-    const modal =
-        document.getElementById(
-            "modalCompuesto"
-        );
+```
+const modal =
+    document.getElementById(
+        "modalCompuesto"
+    );
 
 
-    if (modal) {
+if (modal) {
 
-        modal.classList.add(
-            "oculto"
-        );
-
-    }
-
-
-    productoCompuestoActual =
-        null;
-
-
-    gruposCompuestoActual = [];
-
-    seleccionesCompuesto = {};
+    modal.classList.add(
+        "oculto"
+    );
 
 }
 
 
+productoCompuestoActual =
+    null;
+
+
+seleccionesGrupos =
+    {};
+```
+
+}
+
 /* ============================================================
-   CARRITO
+CARRITO
 ============================================================ */
 
 function actualizarCarritoUI() {
 
-    const cantidad =
-        carrito.reduce(
-            (
-                total,
-                item
-            ) =>
-                total +
-                Number(
-                    item.cantidad || 0
-                ),
-            0
-        );
-
-
-    const cantidadCarrito =
-        document.getElementById(
-            "cantidadCarrito"
-        );
-
-
-    if (cantidadCarrito) {
-
-        cantidadCarrito.textContent =
-            cantidad;
-
-    }
-
-
-    renderizarCarrito();
-
-}
-
-
-/* ============================================================
-   SUBTOTAL
-============================================================ */
-
-function calcularSubtotal() {
-
-    return carrito.reduce(
+```
+const cantidad =
+    carrito.reduce(
         (
             total,
             item
         ) =>
             total +
-            Number(
-                item.subtotal || 0
-            ),
+            item.cantidad,
         0
     );
+
+
+const cantidadCarrito =
+    document.getElementById(
+        "cantidadCarrito"
+    );
+
+
+if (cantidadCarrito) {
+
+    cantidadCarrito.textContent =
+        cantidad;
 
 }
 
 
+renderizarCarrito();
+```
+
+}
+
 /* ============================================================
-   RENDERIZAR CARRITO
+SUBTOTAL
+============================================================ */
+
+function calcularSubtotal() {
+
+```
+return carrito.reduce(
+    (
+        total,
+        item
+    ) =>
+        total +
+        Number(
+            item.subtotal ||
+            0
+        ),
+    0
+);
+```
+
+}
+
+/* ============================================================
+RENDERIZAR CARRITO
 ============================================================ */
 
 function renderizarCarrito() {
 
-    const contenedor =
-        document.getElementById(
-            "listaCarrito"
+```
+const contenedor =
+    document.getElementById(
+        "listaCarrito"
+    );
+
+
+if (!contenedor) {
+
+    return;
+
+}
+
+
+contenedor.innerHTML =
+    "";
+
+
+if (
+    !carrito.length
+) {
+
+    contenedor.innerHTML =
+        "<p>Tu pedido está vacío.</p>";
+
+}
+
+
+carrito.forEach(
+    (
+        item,
+        index
+    ) => {
+
+        const fila =
+            document.createElement(
+                "div"
+            );
+
+
+        fila.className =
+            "item-carrito";
+
+
+        const izquierda =
+            document.createElement(
+                "div"
+            );
+
+
+        const nombre =
+            document.createElement(
+                "div"
+            );
+
+
+        nombre.className =
+            "item-carrito-nombre";
+
+
+        nombre.textContent =
+            item.nombre;
+
+
+        const detalle =
+            document.createElement(
+                "div"
+            );
+
+
+        detalle.className =
+            "item-carrito-detalle";
+
+
+        detalle.textContent =
+            `${item.cantidad} x ${formatearPrecio(
+                item.precio
+            )}`;
+
+
+        izquierda.appendChild(
+            nombre
         );
 
 
-    if (!contenedor) {
-
-        return;
-
-    }
+        izquierda.appendChild(
+            detalle
+        );
 
 
-    contenedor.innerHTML = "";
-
-
-    if (!carrito.length) {
-
-        contenedor.innerHTML =
-            "<p>Tu pedido está vacío.</p>";
-
-    }
-
-
-    carrito.forEach(
-        (
-            item,
-            index
-        ) => {
-
-            const fila =
-                document.createElement("div");
-
-
-            fila.className =
-                "item-carrito";
-
-
-            const izquierda =
-                document.createElement("div");
-
-
-            const nombre =
-                document.createElement("div");
-
-
-            nombre.className =
-                "item-carrito-nombre";
-
-
-            nombre.textContent =
-                item.nombre;
-
-
-            const detalle =
-                document.createElement("div");
-
-
-            detalle.className =
-                "item-carrito-detalle";
-
-
-            detalle.textContent =
-                `${item.cantidad} x ${formatearPrecio(
-                    item.precio
-                )}`;
-
-
-            izquierda.appendChild(
-                nombre
+        const controles =
+            document.createElement(
+                "div"
             );
 
 
-            izquierda.appendChild(
-                detalle
+        controles.className =
+            "item-carrito-controles";
+
+
+        const menos =
+            document.createElement(
+                "button"
             );
 
 
-            const controles =
-                document.createElement("div");
+        menos.type =
+            "button";
+
+        menos.textContent =
+            "−";
 
 
-            controles.className =
-                "item-carrito-controles";
-
-
-            const menos =
-                document.createElement("button");
-
-
-            menos.type =
-                "button";
-
-
-            menos.textContent =
-                "−";
-
-
-            const cantidad =
-                document.createElement("span");
-
-
-            cantidad.textContent =
-                item.cantidad;
-
-
-            const mas =
-                document.createElement("button");
-
-
-            mas.type =
-                "button";
-
-
-            mas.textContent =
-                "+";
-
-
-            const eliminar =
-                document.createElement("button");
-
-
-            eliminar.type =
-                "button";
-
-
-            eliminar.textContent =
-                "×";
-
-
-            eliminar.className =
-                "eliminar-item";
-
-
-            menos.addEventListener(
-                "click",
-                () => {
-
-                    item.cantidad--;
-
-
-                    if (
-                        item.cantidad <= 0
-                    ) {
-
-                        carrito.splice(
-                            index,
-                            1
-                        );
-
-                    } else {
-
-                        item.subtotal =
-                            item.cantidad *
-                            item.precio;
-
-                    }
-
-
-                    actualizarCarritoUI();
-
-                }
+        const cantidad =
+            document.createElement(
+                "span"
             );
 
 
-            mas.addEventListener(
-                "click",
-                () => {
+        cantidad.textContent =
+            item.cantidad;
 
-                    item.cantidad++;
 
-                    item.subtotal =
-                        item.cantidad *
-                        item.precio;
-
-                    actualizarCarritoUI();
-
-                }
+        const mas =
+            document.createElement(
+                "button"
             );
 
 
-            eliminar.addEventListener(
-                "click",
-                () => {
+        mas.type =
+            "button";
+
+        mas.textContent =
+            "+";
+
+
+        const eliminar =
+            document.createElement(
+                "button"
+            );
+
+
+        eliminar.type =
+            "button";
+
+        eliminar.textContent =
+            "×";
+
+
+        eliminar.className =
+            "eliminar-item";
+
+
+        menos.addEventListener(
+            "click",
+            () => {
+
+                item.cantidad--;
+
+
+                if (
+                    item.cantidad <= 0
+                ) {
 
                     carrito.splice(
                         index,
                         1
                     );
 
-                    actualizarCarritoUI();
+                } else {
+
+                    item.subtotal =
+                        item.cantidad *
+                        item.precio;
 
                 }
-            );
 
 
-            controles.appendChild(
-                menos
-            );
+                actualizarCarritoUI();
 
-            controles.appendChild(
-                cantidad
-            );
-
-            controles.appendChild(
-                mas
-            );
-
-            controles.appendChild(
-                eliminar
-            );
+            }
+        );
 
 
-            fila.appendChild(
-                izquierda
-            );
+        mas.addEventListener(
+            "click",
+            () => {
 
-            fila.appendChild(
-                controles
-            );
+                item.cantidad++;
+
+                item.subtotal =
+                    item.cantidad *
+                    item.precio;
+
+                actualizarCarritoUI();
+
+            }
+        );
 
 
-            contenedor.appendChild(
-                fila
-            );
+        eliminar.addEventListener(
+            "click",
+            () => {
 
-        }
+                carrito.splice(
+                    index,
+                    1
+                );
+
+                actualizarCarritoUI();
+
+            }
+        );
+
+
+        controles.appendChild(
+            menos
+        );
+
+        controles.appendChild(
+            cantidad
+        );
+
+        controles.appendChild(
+            mas
+        );
+
+        controles.appendChild(
+            eliminar
+        );
+
+
+        fila.appendChild(
+            izquierda
+        );
+
+        fila.appendChild(
+            controles
+        );
+
+
+        contenedor.appendChild(
+            fila
+        );
+
+    }
+);
+
+
+const subtotal =
+    calcularSubtotal();
+
+
+const subtotalElemento =
+    document.getElementById(
+        "subtotalCarrito"
     );
 
 
-    const subtotal =
-        calcularSubtotal();
+if (subtotalElemento) {
 
-
-    const subtotalElemento =
-        document.getElementById(
-            "subtotalCarrito"
+    subtotalElemento.textContent =
+        formatearPrecio(
+            subtotal
         );
-
-
-    if (subtotalElemento) {
-
-        subtotalElemento.textContent =
-            formatearPrecio(subtotal);
-
-    }
-
-
-    const totalElemento =
-        document.getElementById(
-            "totalCarrito"
-        );
-
-
-    if (totalElemento) {
-
-        totalElemento.textContent =
-            formatearPrecio(subtotal);
-
-    }
 
 }
 
 
+const totalElemento =
+    document.getElementById(
+        "totalCarrito"
+    );
+
+
+if (totalElemento) {
+
+    totalElemento.textContent =
+        formatearPrecio(
+            subtotal
+        );
+
+}
+```
+
+}
+
 /* ============================================================
-   ABRIR CARRITO
+ABRIR CARRITO
 ============================================================ */
 
 function abrirCarrito() {
 
-    renderizarCarrito();
+```
+renderizarCarrito();
 
 
-    const modal =
-        document.getElementById(
-            "modalCarrito"
-        );
+const modal =
+    document.getElementById(
+        "modalCarrito"
+    );
 
 
-    if (modal) {
+if (modal) {
 
-        modal.classList.remove(
-            "oculto"
-        );
+    modal.classList.remove(
+        "oculto"
+    );
 
-    }
+}
+```
 
 }
 
-
 /* ============================================================
-   CERRAR CARRITO
+CERRAR CARRITO
 ============================================================ */
 
 function cerrarCarrito() {
 
-    const modal =
-        document.getElementById(
-            "modalCarrito"
-        );
+```
+const modal =
+    document.getElementById(
+        "modalCarrito"
+    );
 
 
-    if (modal) {
+if (modal) {
 
-        modal.classList.add(
-            "oculto"
-        );
+    modal.classList.add(
+        "oculto"
+    );
 
-    }
+}
+```
 
 }
 
-
 /* ============================================================
-   DATOS CLIENTE
+DATOS CLIENTE
 ============================================================ */
 
 function abrirDatosCliente() {
 
-    if (!carrito.length) {
+```
+if (
+    !carrito.length
+) {
 
-        alert(
-            "Agregá al menos un producto."
-        );
-
-        return;
-
-    }
-
-
-    cerrarCarrito();
-
-
-    const total =
-        calcularSubtotal();
-
-
-    const totalConfirmacion =
-        document.getElementById(
-            "totalConfirmacion"
-        );
-
-
-    if (totalConfirmacion) {
-
-        totalConfirmacion.textContent =
-            formatearPrecio(total);
-
-    }
-
-
-    seleccionarMedioPago(
-        "EFECTIVO"
+    alert(
+        "Agregá al menos un producto."
     );
 
-
-    const modal =
-        document.getElementById(
-            "modalCliente"
-        );
-
-
-    if (modal) {
-
-        modal.classList.remove(
-            "oculto"
-        );
-
-    }
+    return;
 
 }
 
 
+cerrarCarrito();
+
+
+const total =
+    calcularSubtotal();
+
+
+const totalConfirmacion =
+    document.getElementById(
+        "totalConfirmacion"
+    );
+
+
+if (totalConfirmacion) {
+
+    totalConfirmacion.textContent =
+        formatearPrecio(
+            total
+        );
+
+}
+
+
+seleccionarMedioPago(
+    "EFECTIVO"
+);
+
+
+const modal =
+    document.getElementById(
+        "modalCliente"
+    );
+
+
+if (modal) {
+
+    modal.classList.remove(
+        "oculto"
+    );
+
+}
+```
+
+}
+
 /* ============================================================
-   CERRAR CLIENTE
+CERRAR CLIENTE
 ============================================================ */
 
 function cerrarCliente() {
 
-    const modal =
-        document.getElementById(
-            "modalCliente"
-        );
+```
+const modal =
+    document.getElementById(
+        "modalCliente"
+    );
 
 
-    if (modal) {
+if (modal) {
 
-        modal.classList.add(
-            "oculto"
-        );
+    modal.classList.add(
+        "oculto"
+    );
 
-    }
+}
+```
+
+}
+
+/* ============================================================
+ENVIAR PEDIDO POR WHATSAPP
+============================================================ */
+
+function enviarPedido() {
+
+```
+const nombre =
+    obtenerValor(
+        "clienteNombre"
+    );
+
+
+const telefono =
+    obtenerValor(
+        "clienteTelefono"
+    );
+
+
+const calle =
+    obtenerValor(
+        "clienteCalle"
+    );
+
+
+const altura =
+    obtenerValor(
+        "clienteAltura"
+    );
+
+
+const localidad =
+    obtenerValor(
+        "clienteLocalidad"
+    );
+
+
+const montoEfectivo =
+    Number(
+        obtenerValor(
+            "montoEfectivo"
+        ) || 0
+    );
+
+
+const total =
+    calcularSubtotal();
+
+
+/* ========================================================
+   VALIDACIONES
+======================================================== */
+
+if (!nombre) {
+
+    mostrarMensaje(
+        "Ingresá tu nombre."
+    );
+
+    return;
 
 }
 
 
-/* ============================================================
-   ENVIAR PEDIDO
-============================================================ */
+if (!telefono) {
 
-async function enviarPedido() {
-
-    const nombre =
-        obtenerValor("clienteNombre");
-
-
-    const telefono =
-        obtenerValor("clienteTelefono");
-
-
-    const calle =
-        obtenerValor("clienteCalle");
-
-
-    const altura =
-        obtenerValor("clienteAltura");
-
-
-    const localidad =
-        obtenerValor("clienteLocalidad");
-
-
-    const montoEfectivo =
-        Number(
-            obtenerValor(
-                "montoEfectivo"
-            ) || 0
-        );
-
-
-    const total =
-        calcularSubtotal();
-
-
-    if (!nombre) {
-
-        mostrarMensaje(
-            "Ingresá tu nombre."
-        );
-
-        return;
-
-    }
-
-
-    if (!telefono) {
-
-        mostrarMensaje(
-            "Ingresá tu teléfono."
-        );
-
-        return;
-
-    }
-
-
-    if (!calle) {
-
-        mostrarMensaje(
-            "Ingresá la calle."
-        );
-
-        return;
-
-    }
-
-
-    if (!altura) {
-
-        mostrarMensaje(
-            "Ingresá la altura."
-        );
-
-        return;
-
-    }
-
-
-    if (!localidad) {
-
-        mostrarMensaje(
-            "Ingresá la localidad."
-        );
-
-        return;
-
-    }
-
-
-    if (
-        medioPagoSeleccionado ===
-        "EFECTIVO"
-    ) {
-
-        if (
-            montoEfectivo > 0 &&
-            montoEfectivo < total
-        ) {
-
-            mostrarMensaje(
-                "El efectivo informado es menor al total."
-            );
-
-            return;
-
-        }
-
-    }
-
-
-    /*
-     * IMPORTANTE:
-     *
-     * Los grupos se mandan completos dentro del item
-     * compuesto para que LightPOS pueda reconstruir
-     * exactamente qué eligió el cliente.
-     */
-
-    const items =
-        carrito.map(
-            item => {
-
-                const resultado = {
-
-                    producto_id:
-                        item.producto_id,
-
-                    cantidad:
-                        item.cantidad,
-
-                    precio_unitario:
-                        Number(
-                            item.precio
-                        ),
-
-                    subtotal:
-                        Number(
-                            item.subtotal
-                        ),
-
-                    compuesto:
-                        Boolean(
-                            item.compuesto
-                        ),
-
-                    hijos:
-                        item.compuesto
-                            ? item.hijos
-                            : {}
-
-                };
-
-
-                if (
-                    item.compuesto &&
-                    Array.isArray(item.grupos)
-                ) {
-
-                    resultado.grupos =
-                        item.grupos;
-
-                }
-
-
-                return resultado;
-
-            }
-        );
-
-
-    const pedido = {
-
-        cliente: {
-
-            nombre:
-                nombre,
-
-            telefono:
-                telefono,
-
-            calle:
-                calle,
-
-            altura:
-                altura,
-
-            localidad:
-                localidad
-
-        },
-
-
-        nombre:
-            nombre,
-
-        telefono:
-            telefono,
-
-        direccion_entrega:
-            `${calle} ${altura} - ${localidad}`,
-
-        observaciones:
-            `Cliente: ${nombre} | Teléfono: ${telefono}`,
-
-        medio_pago:
-            medioPagoSeleccionado,
-
-        monto_efectivo:
-            montoEfectivo,
-
-        subtotal:
-            total,
-
-        total:
-            total,
-
-        items:
-            items
-
-    };
-
-
-    console.log(
-        "================================"
+    mostrarMensaje(
+        "Ingresá tu teléfono."
     );
 
-    console.log(
-        "PEDIDO A ENVIAR A LIGHTPOS API:"
-    );
-
-    console.log(
-        pedido
-    );
-
-    console.log(
-        "================================"
-    );
-
-
-    const boton =
-        document.getElementById(
-            "btnEnviarPedido"
-        );
-
-
-    if (boton) {
-
-        boton.disabled =
-            true;
-
-        boton.textContent =
-            "ENVIANDO...";
-
-    }
-
-
-    try {
-
-        const respuesta =
-            await fetch(
-                API_URL +
-                "/pedidos",
-                {
-
-                    method:
-                        "POST",
-
-                    headers: {
-
-                        "Content-Type":
-                            "application/json"
-
-                    },
-
-                    body:
-                        JSON.stringify(
-                            pedido
-                        )
-
-                }
-            );
-
-
-        let datos;
-
-
-        try {
-
-            datos =
-                await respuesta.json();
-
-        } catch {
-
-            datos = {};
-
-        }
-
-
-        if (!respuesta.ok) {
-
-            throw new Error(
-                datos.detail ||
-                "No se pudo registrar el pedido."
-            );
-
-        }
-
-
-        console.log(
-            "PEDIDO REGISTRADO:",
-            datos
-        );
-
-
-        const idPedido =
-            datos.pedido_id ??
-            datos.id ??
-            "";
-
-
-        const numero =
-            datos.numero_pedido ??
-            idPedido;
-
-
-        const seguimientoUrl =
-            datos.seguimiento_url ??
-            "";
-
-
-        cerrarCliente();
-
-
-        carrito = [];
-
-
-        actualizarCarritoUI();
-
-
-        const numeroPedido =
-            document.getElementById(
-                "numeroPedido"
-            );
-
-
-        if (numeroPedido) {
-
-            numeroPedido.textContent =
-                "#" +
-                numero;
-
-        }
-
-
-        crearLinkSeguimiento(
-            seguimientoUrl,
-            numeroPedido
-        );
-
-
-        const modalExito =
-            document.getElementById(
-                "modalExito"
-            );
-
-
-        if (modalExito) {
-
-            modalExito.classList.remove(
-                "oculto"
-            );
-
-        }
-
-
-        limpiarFormulario();
-
-
-    } catch (error) {
-
-        console.error(
-            "ERROR ENVIANDO PEDIDO:",
-            error
-        );
-
-
-        mostrarMensaje(
-            error.message ||
-            "No se pudo enviar el pedido. Intentá nuevamente."
-        );
-
-
-    } finally {
-
-        if (boton) {
-
-            boton.disabled =
-                false;
-
-            boton.textContent =
-                "ENVIAR PEDIDO";
-
-        }
-
-    }
+    return;
 
 }
 
 
-/* ============================================================
-   LINK SEGUIMIENTO
-============================================================ */
+if (!calle) {
 
-function crearLinkSeguimiento(
-    url,
-    numeroPedidoElemento
+    mostrarMensaje(
+        "Ingresá la calle."
+    );
+
+    return;
+
+}
+
+
+if (!altura) {
+
+    mostrarMensaje(
+        "Ingresá la altura."
+    );
+
+    return;
+
+}
+
+
+if (!localidad) {
+
+    mostrarMensaje(
+        "Ingresá la localidad."
+    );
+
+    return;
+
+}
+
+
+if (
+    medioPagoSeleccionado ===
+    "EFECTIVO"
 ) {
 
-    if (!url) {
+    if (
+        montoEfectivo > 0 &&
+        montoEfectivo < total
+    ) {
 
-        console.warn(
-            "La API no devolvió seguimiento_url."
+        mostrarMensaje(
+            "El efectivo informado es menor al total."
         );
 
         return;
 
     }
 
+}
 
-    let enlace =
-        document.getElementById(
-            "linkSeguimiento"
+
+/* ========================================================
+   CONSTRUIR MENSAJE
+======================================================== */
+
+const mensaje =
+    construirMensajeWhatsApp({
+
+        nombre,
+        telefono,
+        calle,
+        altura,
+        localidad,
+        montoEfectivo,
+        total
+
+    });
+
+
+console.log(
+    "MENSAJE WHATSAPP:",
+    mensaje
+);
+
+
+/* ========================================================
+   ABRIR WHATSAPP
+======================================================== */
+
+const url =
+    "https://wa.me/" +
+    WHATSAPP +
+    "?text=" +
+    encodeURIComponent(
+        mensaje
+    );
+
+
+window.open(
+    url,
+    "_blank"
+);
+
+
+/*
+ * No guardamos nada en la API.
+ *
+ * WhatsApp pasa a ser el canal
+ * donde la pizzería recibe el pedido.
+ */
+```
+
+}
+
+/* ============================================================
+CONSTRUIR MENSAJE WHATSAPP
+============================================================ */
+
+function construirMensajeWhatsApp(
+datos
+) {
+
+```
+const lineas = [];
+
+
+lineas.push(
+    "🍕 *NUEVO PEDIDO*"
+);
+
+
+lineas.push(
+    ""
+);
+
+
+lineas.push(
+    "*CLIENTE*"
+);
+
+
+lineas.push(
+    `Nombre: ${datos.nombre}`
+);
+
+
+lineas.push(
+    `Teléfono: ${datos.telefono}`
+);
+
+
+lineas.push(
+    ""
+);
+
+
+lineas.push(
+    "*ENTREGA*"
+);
+
+
+lineas.push(
+    `Dirección: ${datos.calle} ${datos.altura}`
+);
+
+
+lineas.push(
+    `Localidad: ${datos.localidad}`
+);
+
+
+lineas.push(
+    ""
+);
+
+
+lineas.push(
+    "*PEDIDO*"
+);
+
+
+carrito.forEach(
+    item => {
+
+        lineas.push(
+            `${item.cantidad} x ${item.nombre} — ${formatearPrecio(item.subtotal)}`
+        );
+
+    }
+);
+
+
+lineas.push(
+    ""
+);
+
+
+lineas.push(
+    `*TOTAL: ${formatearPrecio(datos.total)}*`
+);
+
+
+lineas.push(
+    ""
+);
+
+
+lineas.push(
+    "*MEDIO DE PAGO*"
+);
+
+
+lineas.push(
+    obtenerNombreMedioPago(
+        medioPagoSeleccionado
+    )
+);
+
+
+if (
+    medioPagoSeleccionado ===
+    "EFECTIVO"
+) {
+
+    if (
+        datos.montoEfectivo > 0
+    ) {
+
+        lineas.push(
+            `Abona con: ${formatearPrecio(datos.montoEfectivo)}`
         );
 
 
-    if (!enlace) {
-
-        enlace =
-            document.createElement("a");
-
-
-        enlace.id =
-            "linkSeguimiento";
-
-
-        enlace.target =
-            "_blank";
-
-
-        enlace.rel =
-            "noopener noreferrer";
+        const vuelto =
+            datos.montoEfectivo -
+            datos.total;
 
 
         if (
-            numeroPedidoElemento &&
-            numeroPedidoElemento.parentNode
+            vuelto >= 0
         ) {
 
-            numeroPedidoElemento.parentNode.appendChild(
-                enlace
+            lineas.push(
+                `Vuelto: ${formatearPrecio(vuelto)}`
             );
 
         }
 
     }
 
-
-    enlace.href =
-        url;
-
-
-    enlace.textContent =
-        "📦 Ver seguimiento del pedido";
-
-
-    enlace.style.display =
-        "block";
-
-
-    enlace.style.marginTop =
-        "15px";
-
-
-    enlace.style.textAlign =
-        "center";
-
-
-    enlace.style.fontWeight =
-        "bold";
-
-
-    enlace.style.cursor =
-        "pointer";
-
 }
 
 
+return lineas.join(
+    "\n"
+);
+```
+
+}
+
 /* ============================================================
-   OBTENER VALOR INPUT
+NOMBRE MEDIO DE PAGO
 ============================================================ */
 
-function obtenerValor(id) {
+function obtenerNombreMedioPago(
+medio
+) {
 
-    const elemento =
-        document.getElementById(id);
+```
+if (
+    medio ===
+    "TRANSFERENCIA"
+) {
 
-
-    if (!elemento) {
-
-        return "";
-
-    }
-
-
-    return String(
-        elemento.value || ""
-    ).trim();
+    return "Transferencia";
 
 }
 
 
+if (
+    medio ===
+    "MERCADO_PAGO_QR"
+) {
+
+    return "Mercado Pago QR";
+
+}
+
+
+return "Efectivo";
+```
+
+}
+
 /* ============================================================
-   LIMPIAR FORMULARIO
+INPUT
+============================================================ */
+
+function obtenerValor(
+id
+) {
+
+```
+const elemento =
+    document.getElementById(
+        id
+    );
+
+
+if (!elemento) {
+
+    return "";
+
+}
+
+
+return String(
+    elemento.value ||
+    ""
+).trim();
+```
+
+}
+
+/* ============================================================
+LIMPIAR FORMULARIO
 ============================================================ */
 
 function limpiarFormulario() {
 
-    [
-        "clienteNombre",
-        "clienteTelefono",
-        "clienteCalle",
-        "clienteAltura",
-        "clienteLocalidad",
-        "montoEfectivo"
+```
+[
+    "clienteNombre",
+    "clienteTelefono",
+    "clienteCalle",
+    "clienteAltura",
+    "clienteLocalidad",
+    "montoEfectivo"
 
-    ].forEach(
-        id => {
+].forEach(
+    id => {
 
-            const elemento =
-                document.getElementById(id);
-
-
-            if (elemento) {
-
-                elemento.value =
-                    "";
-
-            }
-
-        }
-    );
+        const elemento =
+            document.getElementById(
+                id
+            );
 
 
-    seleccionarMedioPago(
-        "EFECTIVO"
-    );
+        if (elemento) {
 
-}
-
-
-/* ============================================================
-   MENSAJE
-============================================================ */
-
-function mostrarMensaje(texto) {
-
-    const mensaje =
-        document.getElementById(
-            "mensajePedido"
-        );
-
-
-    if (!mensaje) {
-
-        alert(texto);
-
-        return;
-
-    }
-
-
-    mensaje.textContent =
-        texto;
-
-
-    setTimeout(
-        () => {
-
-            mensaje.textContent =
+            elemento.value =
                 "";
 
-        },
-        4000
+        }
+
+    }
+);
+
+
+seleccionarMedioPago(
+    "EFECTIVO"
+);
+```
+
+}
+
+/* ============================================================
+MENSAJE
+============================================================ */
+
+function mostrarMensaje(
+texto
+) {
+
+```
+const mensaje =
+    document.getElementById(
+        "mensajePedido"
     );
+
+
+if (!mensaje) {
+
+    alert(
+        texto
+    );
+
+    return;
 
 }
 
 
+mensaje.textContent =
+    texto;
+
+
+setTimeout(
+    () => {
+
+        mensaje.textContent =
+            "";
+
+    },
+    4000
+);
+```
+
+}
+
 /* ============================================================
-   VISOR DE IMÁGENES
+VISOR
 ============================================================ */
 
 function abrirVisor(
-    src,
-    alt
+src,
+alt
 ) {
 
-    const visor =
-        document.getElementById(
-            "visorImagen"
-        );
+```
+const visor =
+    document.getElementById(
+        "visorImagen"
+    );
 
-
-    const imagen =
-        document.getElementById(
-            "imagenGrande"
-        );
-
-
-    if (
-        !visor ||
-        !imagen
-    ) {
-
-        return;
-
-    }
-
-
-    imagen.src =
-        src;
-
-
-    imagen.alt =
-        alt || "";
-
-
-    visor.classList.remove(
-        "oculto"
+const imagen =
+    document.getElementById(
+        "imagenGrande"
     );
 
 
-    document.body.classList.add(
-        "visor-abierto"
-    );
+if (
+    !visor ||
+    !imagen
+) {
+
+    return;
 
 }
 
 
+imagen.src =
+    src;
+
+
+imagen.alt =
+    alt || "";
+
+
+visor.classList.remove(
+    "oculto"
+);
+
+
+document.body.classList.add(
+    "visor-abierto"
+);
+```
+
+}
+
 /* ============================================================
-   CERRAR VISOR
+CERRAR VISOR
 ============================================================ */
 
 function cerrarVisor() {
 
-    const visor =
-        document.getElementById(
-            "visorImagen"
-        );
-
-
-    if (!visor) {
-
-        return;
-
-    }
-
-
-    visor.classList.add(
-        "oculto"
+```
+const visor =
+    document.getElementById(
+        "visorImagen"
     );
 
 
-    document.body.classList.remove(
-        "visor-abierto"
-    );
+if (!visor) {
 
-
-    const imagen =
-        document.getElementById(
-            "imagenGrande"
-        );
-
-
-    if (imagen) {
-
-        imagen.src =
-            "";
-
-        imagen.alt =
-            "";
-
-    }
+    return;
 
 }
 
 
+visor.classList.add(
+    "oculto"
+);
+
+
+document.body.classList.remove(
+    "visor-abierto"
+);
+
+
+const imagen =
+    document.getElementById(
+        "imagenGrande"
+    );
+
+
+if (imagen) {
+
+    imagen.src =
+        "";
+
+    imagen.alt =
+        "";
+
+}
+```
+
+}
+
 /* ============================================================
-   FORMATO PRECIO
+FORMATO PRECIO
 ============================================================ */
 
 function formatearPrecio(
-    valor
+valor
 ) {
 
-    return new Intl.NumberFormat(
-        "es-AR",
-        {
+```
+return new Intl.NumberFormat(
+    "es-AR",
+    {
 
-            style:
-                "currency",
+        style:
+            "currency",
 
-            currency:
-                "ARS",
+        currency:
+            "ARS",
 
-            maximumFractionDigits:
-                0
+        maximumFractionDigits:
+            0
 
-        }
-    ).format(
-        Number(
-            valor || 0
-        )
-    );
+    }
+).format(
+    Number(
+        valor || 0
+    )
+);
+```
 
 }
