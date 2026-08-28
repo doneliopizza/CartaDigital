@@ -25,7 +25,7 @@ URL_FOTOS + "logo.png";
 * Se usa solamente para generar el mensaje.
   */
   const WHATSAPP =
-  "54117067389";
+  "541170667389";
 
 /* ============================================================
 ESTADO
@@ -775,7 +775,8 @@ try {
     productos =
         productos.filter(
             producto =>
-                producto.activo !== false
+                producto.activo !== false &&
+                producto.nombre !== "1/2 PIZZAS MITAD MITAD"
         );
 
 
