@@ -11,7 +11,7 @@ const URL_GITHUB =
 "https://raw.githubusercontent.com/doneliopizza/CartaDigital/main";
 
 const URL_PRODUCTOS =
-API_URL + "/productos/";
+API_URL + "/carta/productos/";
 
 const URL_FOTOS =
 URL_GITHUB + "/fotos/";
