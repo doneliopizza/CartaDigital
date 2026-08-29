@@ -831,9 +831,132 @@ function abrirDatosCliente() {
     if (totalConfirmacion) totalConfirmacion.textContent = formatearPrecio(total);
 
     seleccionarMedioPago("EFECTIVO");
+    inicializarProgramarPedido();
 
     const modal = document.getElementById("modalCliente");
     if (modal) modal.classList.remove("oculto");
+}
+
+
+/* ============================================================
+   PROGRAMAR PEDIDO — "Ahora" o elegir hora dentro del horario
+   ============================================================ */
+
+let pedidoProgramado = false;
+
+async function inicializarProgramarPedido() {
+
+    const btnAhora = document.getElementById("btnPedirAhora");
+    const btnProgramar = document.getElementById("btnProgramarPedido");
+    const opcionProgramar = document.getElementById("opcionProgramar");
+
+    if (!btnAhora || !btnProgramar) return;
+
+    pedidoProgramado = false;
+
+    btnAhora.addEventListener("click", () => {
+
+        pedidoProgramado = false;
+
+        btnAhora.classList.add("activo");
+        btnProgramar.classList.remove("activo");
+
+        if (opcionProgramar) opcionProgramar.classList.add("oculto");
+    });
+
+    btnProgramar.addEventListener("click", async () => {
+
+        pedidoProgramado = true;
+
+        btnProgramar.classList.add("activo");
+        btnAhora.classList.remove("activo");
+
+        if (opcionProgramar) opcionProgramar.classList.remove("oculto");
+
+        await cargarHorariosDisponibles();
+    });
+
+    // Chequear si está abierto ahora — si no, forzar "Programar"
+
+    try {
+
+        const respuesta = await fetch(`${API_URL}/horarios/estado-publico`);
+        const estado = await respuesta.json();
+
+        if (!estado.abierto) {
+
+            btnProgramar.click();
+        }
+
+    } catch (error) {
+
+        console.error("ERROR CONSULTANDO ESTADO DEL LOCAL:", error);
+    }
+}
+
+async function cargarHorariosDisponibles() {
+
+    const select = document.getElementById("horaProgramada");
+    const mensajeSinTurnos = document.getElementById("mensajeSinTurnos");
+
+    if (!select) return;
+
+    select.innerHTML = "";
+
+    try {
+
+        const respuesta = await fetch(`${API_URL}/horarios/turnos-hoy-publico`);
+        const turnos = await respuesta.json();
+
+        const ahora = new Date();
+
+        const opciones = [];
+
+        turnos.forEach(turno => {
+
+            const [hIni, mIni] = turno.hora_apertura.split(":").map(Number);
+            const [hFin, mFin] = turno.hora_cierre.split(":").map(Number);
+
+            let cursor = new Date(ahora);
+            cursor.setHours(hIni, mIni, 0, 0);
+
+            const fin = new Date(ahora);
+            fin.setHours(hFin, mFin, 0, 0);
+
+            if (fin <= cursor) fin.setDate(fin.getDate() + 1); // cruza medianoche
+
+            while (cursor < fin) {
+
+                if (cursor > ahora) {
+
+                    opciones.push(
+                        cursor.toTimeString().slice(0, 5)
+                    );
+                }
+
+                cursor = new Date(cursor.getTime() + 15 * 60000);
+            }
+        });
+
+        if (!opciones.length) {
+
+            if (mensajeSinTurnos) mensajeSinTurnos.style.display = "block";
+
+            select.innerHTML = `<option value="">—</option>`;
+
+            return;
+        }
+
+        if (mensajeSinTurnos) mensajeSinTurnos.style.display = "none";
+
+        select.innerHTML = opciones
+            .map(hora => `<option value="${hora}">${hora}</option>`)
+            .join("");
+
+    } catch (error) {
+
+        console.error("ERROR CARGANDO HORARIOS DISPONIBLES:", error);
+    }
 }
 
 function cerrarCliente() {
@@ -880,6 +1003,18 @@ async function enviarPedido() {
             : []
     }));
 
+    const horaProgramadaSelect = document.getElementById("horaProgramada");
+
+    const horaProgramada =
+        pedidoProgramado && horaProgramadaSelect
+            ? horaProgramadaSelect.value
+            : null;
+
+    if (pedidoProgramado && !horaProgramada) {
+
+        return mostrarMensaje("Elegí a qué hora querés el pedido.");
+    }
+
     const pedido = {
         nombre,
         telefono,
@@ -890,6 +1025,7 @@ async function enviarPedido() {
             medioPagoSeleccionado === "EFECTIVO" && montoEfectivo > 0
                 ? `Paga con: ${formatearPrecio(montoEfectivo)}`
                 : null,
+        hora_programada: horaProgramada,
         items
     };
 
