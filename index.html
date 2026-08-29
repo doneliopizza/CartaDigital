@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -19,7 +18,7 @@
 
     <link
         rel="stylesheet"
-        href="./style.css?v=3"
+        href="./style.css?v=4"
     >
 </head>
 
@@ -322,13 +321,63 @@
                 placeholder="Localidad"
             >
 
-            
-            <div class="medio-pago">
-            
-                <h3>Medio de pago</h3>
-            
+
+            <!-- =====================================================
+                 ¿CUÁNDO LO QUERÉS? — Ahora / Programar
+            ====================================================== -->
+
+            <div class="programar-pedido">
+
+                <h3>¿Cuándo lo querés?</h3>
+
                 <div class="medios-pago-botones">
-            
+
+                    <button
+                        type="button"
+                        id="btnPedirAhora"
+                        class="boton-medio-pago activo"
+                    >
+                        Ahora
+                    </button>
+
+                    <button
+                        type="button"
+                        id="btnProgramarPedido"
+                        class="boton-medio-pago"
+                    >
+                        Programar
+                    </button>
+
+                </div>
+
+                <div
+                    id="opcionProgramar"
+                    class="opcion-pago oculto"
+                >
+
+                    <label>¿A qué hora lo querés?</label>
+
+                    <select id="horaProgramada"></select>
+
+                    <p
+                        id="mensajeSinTurnos"
+                        class="mensaje-pedido"
+                        style="display:none;"
+                    >
+                        Hoy no tenemos más turnos disponibles para programar.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="medio-pago">
+
+                <h3>Medio de pago</h3>
+
+                <div class="medios-pago-botones">
+
                     <button
                         id="btnPagoEfectivo"
                         class="boton-medio-pago activo"
@@ -336,7 +385,7 @@
                     >
                         💵 Efectivo
                     </button>
-            
+
                     <button
                         id="btnPagoTransferencia"
                         class="boton-medio-pago"
@@ -344,7 +393,7 @@
                     >
                         🏦 Transferencia
                     </button>
-            
+
                     <button
                         id="btnPagoQR"
                         class="boton-medio-pago"
@@ -352,21 +401,21 @@
                     >
                         📱 Mercado Pago QR
                     </button>
-            
+
                 </div>
-            
-            
+
+
                 <!-- EFECTIVO -->
-            
+
                 <div
                     id="opcionEfectivo"
                     class="opcion-pago"
                 >
-            
+
                     <label>
                         ¿Con cuánto pagás?
                     </label>
-            
+
                     <input
                         id="montoEfectivo"
                         type="number"
@@ -374,27 +423,27 @@
                         step="1"
                         placeholder="Ej: 30000"
                     >
-            
+
                 </div>
-            
-            
+
+
                 <!-- TRANSFERENCIA -->
-            
+
                 <div
                     id="opcionTransferencia"
                     class="opcion-pago oculto"
                 >
-            
+
                     <p>
                         Transferí el total del pedido al siguiente alias:
                     </p>
-            
+
                     <div class="alias-transferencia">
-            
+
                         <strong id="aliasTransferencia">
                             donelio.pizza
                         </strong>
-            
+
                         <button
                             id="btnCopiarAlias"
                             type="button"
@@ -402,43 +451,43 @@
                         >
                             📋 COPIAR ALIAS
                         </button>
-            
+
                     </div>
-            
+
                     <p
                         id="mensajeAlias"
                         class="mensaje-alias"
                     ></p>
-            
+
                 </div>
-            
-            
+
+
                 <!-- MERCADO PAGO QR -->
-            
+
                 <div
                     id="opcionQR"
                     class="opcion-pago oculto"
                 >
-            
+
                     <p class="aviso-qr">
-            
+
                         📱 <strong>Mercado Pago QR</strong>
-            
+
                         <br><br>
-            
+
                         No necesitás pagar ahora.
-            
+
                         <br><br>
-            
+
                         <strong>
                             Te llevaremos el posnet a la puerta de tu casa
                             para que puedas realizar el pago con Mercado Pago QR.
                         </strong>
-            
+
                     </p>
-            
+
                 </div>
-            
+
             </div>
 
             <div class="confirmacion-total">
@@ -514,7 +563,7 @@
 
 
     <script
-        src="./app.js?v=3"
+        src="./app.js?v=4"
         defer
     ></script>
 
