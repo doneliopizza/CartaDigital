@@ -71,10 +71,6 @@
         }
 
 
-        /* ====================================================
-           LOGO
-        ==================================================== */
-
         .logo {
 
             display:
@@ -123,10 +119,6 @@
         }
 
 
-        /* ====================================================
-           ESTADO ACTUAL
-        ==================================================== */
-
         .estado {
 
             text-align:
@@ -160,10 +152,6 @@
 
         }
 
-
-        /* ====================================================
-           SEGUIMIENTO
-        ==================================================== */
 
         .seguimiento {
 
@@ -269,6 +257,69 @@
 
 
         /* ====================================================
+           PENDIENTE DE APROBACIÓN (nuevo — no existía antes)
+        ==================================================== */
+
+        .pendiente {
+
+            text-align:
+                center;
+
+            background:
+                #e3f2fd;
+
+            border:
+                1px solid #90caf9;
+
+            border-radius:
+                12px;
+
+            padding:
+                20px;
+
+            margin:
+                20px 0;
+
+        }
+
+
+        .pendiente-icono {
+
+            font-size:
+                42px;
+
+            margin-bottom:
+                10px;
+
+        }
+
+
+        .pendiente-titulo {
+
+            color:
+                #1565c0;
+
+            font-size:
+                23px;
+
+            font-weight:
+                bold;
+
+        }
+
+
+        .pendiente-mensaje {
+
+            color:
+                #0d47a1;
+
+            margin-top:
+                10px;
+
+        }
+
+
+        /* ====================================================
            CANCELADO
         ==================================================== */
 
@@ -330,10 +381,6 @@
 
         }
 
-
-        /* ====================================================
-           DETALLE
-        ==================================================== */
 
         .detalle {
 
@@ -416,10 +463,6 @@
         }
 
 
-        /* ====================================================
-           ERROR
-        ==================================================== */
-
         .error {
 
             text-align:
@@ -451,10 +494,6 @@
         }
 
 
-        /* ====================================================
-           ACTUALIZACIÓN
-        ==================================================== */
-
         .actualizando {
 
             text-align:
@@ -484,10 +523,6 @@
     <div class="tarjeta">
 
 
-        <!-- =================================================
-             LOGO
-        ================================================== -->
-
         <img
             id="logo"
             class="logo"
@@ -499,10 +534,6 @@
             Seguimiento de pedido
         </h1>
 
-
-        <!-- =================================================
-             CONTENIDO
-        ================================================== -->
 
         <div
             id="contenido"
@@ -527,7 +558,7 @@
 ============================================================ */
 
 const API_URL =
-    "https://cartadigitalapi.onrender.com";
+    "https://lightpos-api.doneliopizzeria.com.ar";
 
 
 const URL_GITHUB =
@@ -540,14 +571,8 @@ const URL_LOGO =
     "/fotos/logo.png";
 
 
-/* ============================================================
-   LOGO
-============================================================ */
-
 const logo =
-    document.getElementById(
-        "logo"
-    );
+    document.getElementById("logo");
 
 
 if (logo) {
@@ -561,7 +586,7 @@ if (logo) {
 
 
 /* ============================================================
-   OBTENER TOKEN
+   TOKEN — viene como ?t=XXXX en el link
 ============================================================ */
 
 const parametros =
@@ -574,10 +599,6 @@ const token =
     parametros.get("t");
 
 
-/* ============================================================
-   CONTENIDO
-============================================================ */
-
 const contenido =
     document.getElementById(
         "contenido"
@@ -585,103 +606,45 @@ const contenido =
 
 
 /* ============================================================
-   ESTADOS DE COCINA
-===============================================================
-   
-   IMPORTANTE:
-
-   Estos IDs corresponden DIRECTAMENTE
-   a la tabla estados_cocina:
-
-   1 = En preparación
-   2 = Listo
-   3 = Enviar delivery
-   4 = Finalizado
-   5 = Cancelado
-
+   PASOS DEL SEGUIMIENTO (estado_cocina_id 1-4; el 0 y el 5
+   se muestran aparte, con su propio cartel)
 ============================================================ */
 
 const estados = [
 
-    {
-        id: 1,
-        nombre: "En preparación"
-    },
-
-    {
-        id: 2,
-        nombre: "Listo"
-    },
-
-    {
-        id: 3,
-        nombre: "Enviar delivery"
-    },
-
-    {
-        id: 4,
-        nombre: "Finalizado"
-    }
+    { id: 1, nombre: "En preparación" },
+    { id: 2, nombre: "Listo" },
+    { id: 3, nombre: "Enviar delivery" },
+    { id: 4, nombre: "Finalizado" }
 
 ];
 
 
-/* ============================================================
-   MENSAJE SEGÚN ESTADO
-============================================================ */
+function obtenerMensaje(estadoId) {
 
-function obtenerMensaje(
-    estadoId
-) {
+    switch (Number(estadoId)) {
 
-    switch (
-        Number(estadoId)
-    ) {
+        case 0:
+            return "Todavía no confirmamos tu pedido — en breve te avisamos.";
 
         case 1:
-
-            return (
-                "Recibimos tu pedido y " +
-                "ya estamos preparándolo."
-            );
-
+            return "Recibimos tu pedido y ya estamos preparándolo.";
 
         case 2:
-
-            return (
-                "¡Tu pedido está listo!"
-            );
-
+            return "¡Tu pedido está listo!";
 
         case 3:
-
-            return (
-                "Tu pedido está en camino."
-            );
-
+            return "Tu pedido está en camino.";
 
         case 4:
-
-            return (
-                "¡Tu pedido fue entregado!"
-            );
-
+            return "¡Tu pedido fue entregado!";
 
         case 5:
-
-            return (
-                "Este pedido fue cancelado."
-            );
-
+            return "Este pedido fue cancelado o no pudo confirmarse.";
 
         default:
-
-            return (
-                "Consultando estado del pedido."
-            );
-
+            return "Consultando estado del pedido.";
     }
-
 }
 
 
@@ -691,107 +654,43 @@ function obtenerMensaje(
 
 async function cargarPedido() {
 
-
     if (!token) {
 
-        contenido.innerHTML = `
-
-            <div class="error">
-
-                Enlace de seguimiento inválido.
-
-            </div>
-
-        `;
+        contenido.innerHTML = `<div class="error">Enlace de seguimiento inválido.</div>`;
 
         return;
-
     }
-
 
     try {
 
-
-        const respuesta =
-            await fetch(
-
-                API_URL +
-                "/pedidos/seguimiento/" +
-                encodeURIComponent(
-                    token
-                ) +
-                "?v=" +
-                Date.now()
-
-            );
-
+        const respuesta = await fetch(
+            API_URL + "/carta/seguimiento/" + encodeURIComponent(token) + "?v=" + Date.now()
+        );
 
         let datos;
 
-
         try {
-
-            datos =
-                await respuesta.json();
-
+            datos = await respuesta.json();
         } catch {
-
             datos = {};
-
         }
-
 
         if (!respuesta.ok) {
-
-            throw new Error(
-
-                datos.detail ||
-                "No se pudo consultar el pedido."
-
-            );
-
+            throw new Error(datos.detail || "No se pudo consultar el pedido.");
         }
 
-
-        if (
-            !datos.pedido
-        ) {
-
-            throw new Error(
-                "La API no devolvió el pedido."
-            );
-
+        if (!datos.pedido) {
+            throw new Error("La API no devolvió el pedido.");
         }
 
-
-        mostrarPedido(
-            datos.pedido
-        );
-
+        mostrarPedido(datos.pedido);
 
     } catch (error) {
 
+        console.error("Error seguimiento:", error);
 
-        console.error(
-            "Error seguimiento:",
-            error
-        );
-
-
-        contenido.innerHTML = `
-
-            <div class="error">
-
-                ${escapeHtml(
-                    error.message
-                )}
-
-            </div>
-
-        `;
-
+        contenido.innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
     }
-
 }
 
 
@@ -799,385 +698,137 @@ async function cargarPedido() {
    MOSTRAR PEDIDO
 ============================================================ */
 
-function mostrarPedido(
-    pedido
-) {
+function mostrarPedido(pedido) {
 
-
-    const estadoId =
-        Number(
-            pedido.estado_cocina_id
-        );
-
-
-    const estadoNombre =
-        pedido.estado_cocina ||
-        "Estado desconocido";
-
+    const estadoId = Number(pedido.estado_cocina_id);
+    const estadoNombre = pedido.estado_cocina || "Estado desconocido";
 
     let estadoHtml = "";
 
 
-    /* ========================================================
-       CANCELADO
-    ======================================================== */
+    /* --------------------------------------------------------
+       PENDIENTE DE APROBACIÓN (nuevo)
+    -------------------------------------------------------- */
 
-    if (
-        estadoId === 5
-    ) {
-
+    if (estadoId === 0) {
 
         estadoHtml = `
-
-            <div class="cancelado">
-
-                <div class="cancelado-icono">
-                    🔴
-                </div>
-
-                <div class="cancelado-titulo">
-
-                    Pedido cancelado
-
-                </div>
-
-                <div class="cancelado-mensaje">
-
-                    ${escapeHtml(
-                        obtenerMensaje(
-                            estadoId
-                        )
-                    )}
-
-                </div>
-
+            <div class="pendiente">
+                <div class="pendiente-icono">⏳</div>
+                <div class="pendiente-titulo">Esperando confirmación</div>
+                <div class="pendiente-mensaje">${escapeHtml(obtenerMensaje(estadoId))}</div>
             </div>
-
         `;
 
+    /* --------------------------------------------------------
+       CANCELADO / RECHAZADO
+    -------------------------------------------------------- */
+
+    } else if (estadoId === 5) {
+
+        estadoHtml = `
+            <div class="cancelado">
+                <div class="cancelado-icono">🔴</div>
+                <div class="cancelado-titulo">Pedido cancelado</div>
+                <div class="cancelado-mensaje">${escapeHtml(obtenerMensaje(estadoId))}</div>
+            </div>
+        `;
 
     } else {
 
-
-        /* ====================================================
-           ESTADO ACTUAL
-        ==================================================== */
-
-        const posicion =
-            estados.findIndex(
-                estado =>
-                    estado.id ===
-                    estadoId
-            );
-
+        const posicion = estados.findIndex(estado => estado.id === estadoId);
 
         let pasos = "";
 
+        estados.forEach((estado, indice) => {
 
-        estados.forEach(
-            (
-                estado,
-                indice
-            ) => {
+            let claseCirculo = "";
+            let claseTexto = "";
 
-
-                let claseCirculo =
-                    "";
-
-
-                let claseTexto =
-                    "";
-
-
-                /* ============================================
-                   ESTADOS YA COMPLETADOS
-                ============================================ */
-
-                if (
-                    posicion >= 0 &&
-                    indice < posicion
-                ) {
-
-                    claseCirculo =
-                        "activo";
-
-                    claseTexto =
-                        "activo";
-
-                }
-
-
-                /* ============================================
-                   ESTADO ACTUAL
-                ============================================ */
-
-                else if (
-                    indice === posicion
-                ) {
-
-                    claseCirculo =
-                        "actual";
-
-                    claseTexto =
-                        "actual";
-
-                }
-
-
-                pasos += `
-
-                    <div class="linea">
-
-                        <div
-                            class="circulo ${claseCirculo}"
-                        ></div>
-
-                        <div
-                            class="texto-estado ${claseTexto}"
-                        >
-
-                            ${escapeHtml(
-                                estado.nombre
-                            )}
-
-                        </div>
-
-                    </div>
-
-                `;
-
+            if (posicion >= 0 && indice < posicion) {
+                claseCirculo = "activo";
+                claseTexto = "activo";
+            } else if (indice === posicion) {
+                claseCirculo = "actual";
+                claseTexto = "actual";
             }
-        );
 
+            pasos += `
+                <div class="linea">
+                    <div class="circulo ${claseCirculo}"></div>
+                    <div class="texto-estado ${claseTexto}">${escapeHtml(estado.nombre)}</div>
+                </div>
+            `;
+        });
 
         estadoHtml = `
-
-            <div class="estado">
-
-                ${escapeHtml(
-                    estadoNombre
-                )}
-
-            </div>
-
-
-            <div class="mensaje">
-
-                ${escapeHtml(
-                    obtenerMensaje(
-                        estadoId
-                    )
-                )}
-
-            </div>
-
-
-            <div class="seguimiento">
-
-                ${pasos}
-
-            </div>
-
+            <div class="estado">${escapeHtml(estadoNombre)}</div>
+            <div class="mensaje">${escapeHtml(obtenerMensaje(estadoId))}</div>
+            <div class="seguimiento">${pasos}</div>
         `;
-
     }
 
-
-    /* ========================================================
-       DETALLE
-    ======================================================== */
 
     let detalleHtml = "";
 
+    if (Array.isArray(pedido.detalle)) {
 
-    if (
-        Array.isArray(
-            pedido.detalle
-        )
-    ) {
+        pedido.detalle.forEach(item => {
 
-
-        pedido.detalle.forEach(
-            item => {
-
-
-                detalleHtml += `
-
-                    <div class="producto">
-
-                        <div class="producto-nombre">
-
-                            ${escapeHtml(
-                                item.cantidad
-                            )}
-
-                            x
-
-                            ${escapeHtml(
-                                item.nombre_producto
-                            )}
-
-                        </div>
-
-
-                        <div class="producto-precio">
-
-                            ${formatearPrecio(
-                                item.subtotal
-                            )}
-
-                        </div>
-
+            detalleHtml += `
+                <div class="producto">
+                    <div class="producto-nombre">
+                        ${escapeHtml(item.cantidad)} x ${escapeHtml(item.nombre_producto)}
                     </div>
-
-                `;
-
-            }
-        );
-
+                    <div class="producto-precio">${formatearPrecio(item.subtotal)}</div>
+                </div>
+            `;
+        });
     }
 
-
-    /* ========================================================
-       HTML FINAL
-    ======================================================== */
-
     contenido.innerHTML = `
-
-        <div class="numero">
-
-            Pedido #${escapeHtml(
-                pedido.numero_pedido
-            )}
-
-        </div>
-
+        <div class="numero">Pedido #${escapeHtml(pedido.numero_pedido)}</div>
 
         ${estadoHtml}
 
-
         <div class="detalle">
-
-            <h3>
-                Detalle
-            </h3>
-
-
+            <h3>Detalle</h3>
             ${detalleHtml}
-
-
             <div class="total">
-
-                <span>
-                    TOTAL
-                </span>
-
-
-                <span>
-
-                    ${formatearPrecio(
-                        pedido.total
-                    )}
-
-                </span>
-
+                <span>TOTAL</span>
+                <span>${formatearPrecio(pedido.total)}</span>
             </div>
-
         </div>
 
-
-        <div class="actualizando">
-
-            El estado se actualiza automáticamente.
-
-        </div>
-
+        <div class="actualizando">El estado se actualiza automáticamente.</div>
     `;
-
 }
 
 
-/* ============================================================
-   FORMATEAR PRECIO
-============================================================ */
+function formatearPrecio(valor) {
 
-function formatearPrecio(
-    valor
-) {
-
-    return new Intl.NumberFormat(
-        "es-AR",
-        {
-
-            style:
-                "currency",
-
-            currency:
-                "ARS",
-
-            maximumFractionDigits:
-                0
-
-        }
-    ).format(
-        Number(
-            valor || 0
-        )
-    );
-
+    return new Intl.NumberFormat("es-AR", {
+        style: "currency",
+        currency: "ARS",
+        maximumFractionDigits: 0
+    }).format(Number(valor || 0));
 }
 
 
-/* ============================================================
-   SEGURIDAD HTML
-============================================================ */
+function escapeHtml(valor) {
 
-function escapeHtml(
-    valor
-) {
-
-    return String(
-        valor ?? ""
-    )
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-    .replace(
-        /</g,
-        "&lt;"
-    )
-    .replace(
-        />/g,
-        "&gt;"
-    )
-    .replace(
-        /"/g,
-        "&quot;"
-    )
-    .replace(
-        /'/g,
-        "&#039;"
-    );
-
+    return String(valor ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
-
-/* ============================================================
-   INICIO
-============================================================ */
 
 cargarPedido();
 
-
-/* ============================================================
-   ACTUALIZAR CADA 10 SEGUNDOS
-============================================================ */
-
-setInterval(
-    cargarPedido,
-    10000
-);
+setInterval(cargarPedido, 10000);
 
 </script>
 
