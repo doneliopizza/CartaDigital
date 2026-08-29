@@ -957,27 +957,21 @@ function crearLinkSeguimiento(token, numeroPedidoElemento) {
         return;
     }
 
-    // Guardar en la URL del navegador para que el cliente
-    // pueda volver a este link después (compartir/guardar).
-
-    const url = new URL(window.location.href);
-    url.searchParams.set("pedido", token);
-    window.history.replaceState({}, "", url);
-
     let enlace = document.getElementById("linkSeguimiento");
 
     if (!enlace) {
 
         enlace = document.createElement("a");
         enlace.id = "linkSeguimiento";
-        enlace.target = "_self";
+        enlace.target = "_blank";
+        enlace.rel = "noopener noreferrer";
 
         if (numeroPedidoElemento && numeroPedidoElemento.parentNode) {
             numeroPedidoElemento.parentNode.appendChild(enlace);
         }
     }
 
-    enlace.href = "?pedido=" + token;
+    enlace.href = "./seguimiento.html?t=" + encodeURIComponent(token);
     enlace.textContent = "📦 Ver seguimiento del pedido";
     enlace.style.display = "block";
     enlace.style.marginTop = "15px";
@@ -985,46 +979,6 @@ function crearLinkSeguimiento(token, numeroPedidoElemento) {
     enlace.style.fontWeight = "bold";
     enlace.style.cursor = "pointer";
 }
-
-
-/* ============================================================
-   VER SEGUIMIENTO — si la URL trae ?pedido=TOKEN al cargar
-   ========================================================= */
-
-async function revisarSeguimientoEnURL() {
-
-    const params = new URLSearchParams(window.location.search);
-
-    const token = params.get("pedido");
-
-    if (!token) return;
-
-    try {
-
-        const respuesta = await fetch(API_URL + "/carta/seguimiento/" + token);
-
-        if (!respuesta.ok) return;
-
-        const datos = await respuesta.json();
-
-        const numeroPedido = document.getElementById("numeroPedido");
-        if (numeroPedido) numeroPedido.textContent = "#" + datos.pedido_id;
-
-        const totalConfirmacion = document.getElementById("totalConfirmacion");
-        if (totalConfirmacion) totalConfirmacion.textContent = formatearPrecio(datos.total);
-
-        mostrarMensaje(datos.mensaje);
-
-        const modalExito = document.getElementById("modalExito");
-        if (modalExito) modalExito.classList.remove("oculto");
-
-    } catch (error) {
-
-        console.error("ERROR CONSULTANDO SEGUIMIENTO:", error);
-    }
-}
-
-document.addEventListener("DOMContentLoaded", revisarSeguimientoEnURL);
 
 
 /* ============================================================
