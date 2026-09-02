@@ -5,7 +5,7 @@
 ============================================================ */
 
 const API_URL =
-    "https://posapi.doneliopizzeria.com.ar";
+    "https://api.lightpos.com.ar";
 
 const URL_CARTA_PRODUCTOS =
     API_URL + "/carta/productos";
